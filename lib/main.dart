@@ -1,20 +1,14 @@
+import 'package:app/views/homepage_screen.dart';
+import 'package:app/views/medicine/medicine_register_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+  runApp(MaterialApp(
+    initialRoute: '/',
+    routes: {
+      '/': (BuildContext context) => const HomePageScreen(),
+      '/medicine_registration': (BuildContext context) =>
+          const MedicineRegisterScreen()
+    },
+  ));
 }
