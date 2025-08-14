@@ -1,3 +1,4 @@
+import 'package:app/views/components/navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePageScreen extends StatelessWidget {
@@ -6,18 +7,25 @@ class HomePageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Listagem'),
+      ),
       body: Center(
           child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const Text('Homepage'),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/medicine_registration');
-            },
-            child: Text('Launch screen'),
-          ),
         ],
       )),
+      bottomNavigationBar: NavBar(),
+      floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
+        child: Icon(Icons.add, size: 35),
+        onPressed: () =>
+            {Navigator.pushNamed(context, '/medicine_registration')},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
