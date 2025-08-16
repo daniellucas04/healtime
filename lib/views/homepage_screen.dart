@@ -11,19 +11,20 @@ class HomePageScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Text('Listagem'),
       ),
-      body: Center(
+      body: const Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text('Homepage'),
+          Text('Homepage'),
         ],
       )),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: const NavBar(),
       floatingActionButton: FloatingActionButton(
-        shape: CircleBorder(),
-        child: Icon(Icons.add, size: 35),
-        onPressed: () =>
-            {Navigator.pushNamed(context, '/medicine_registration')},
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, size: 35),
+        onPressed: () => {
+          Navigator.pushNamed(context, '/medicine_registration')
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

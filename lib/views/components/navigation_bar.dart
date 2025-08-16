@@ -38,7 +38,7 @@ class _NavBar extends State<NavBar> {
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
