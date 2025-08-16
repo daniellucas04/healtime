@@ -1,32 +1,26 @@
-import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
+import 'package:sqflite/sqflite.dart';
 
 class MedicationDao {
-  final dbHelper = DatabaseHelper.instance;
-  final table = 'medications';
+  final Database database;
+  String table = 'medications';
+
+  MedicationDao({required this.database});
 
   Future<int> insert(Medication medication) async {
-    final db = await dbHelper.database;
-
-    return await db.insert(table, medication.toMap());
+    return await database.insert(table, medication.toMap());
   }
 
   Future<int> update(Medication medication) async {
-    final db = await dbHelper.database;
-
-    return await db.update(table, medication.toMap(), where: 'id = ?', whereArgs: [medication.id]);
+    return await database.update(table, medication.toMap(), where: 'id = ?', whereArgs: [medication.id]);
   }
 
   Future<int> delete(Medication medication) async {
-    final db = await dbHelper.database;
-
-    return await db.delete(table, where: 'id = ?', whereArgs: [medication.id]);
+    return await database.delete(table, where: 'id = ?', whereArgs: [medication.id]);
   }
 
   Future<List<Medication>> getAll() async {
-    final db = await dbHelper.database;
-
-    final medications = await db.query(table);
+    final medications = await database.query(table);
     return medications.map((json) => Medication.fromMap(json)).toList();
   }
 }
