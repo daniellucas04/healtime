@@ -23,4 +23,14 @@ class MedicationDao {
     final medications = await database.query(table);
     return medications.map((json) => Medication.fromMap(json)).toList();
   }
+
+  Future<Medication?> getById(int id) async {
+    final medication = await database.query(table, where: 'id = ?', whereArgs: [id]);
+
+    if (medication.isNotEmpty) {
+      return Medication.fromMap(medication.first);
+    }
+
+    return null;
+  }
 }
