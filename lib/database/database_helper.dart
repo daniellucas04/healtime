@@ -31,6 +31,24 @@ class DatabaseHelper {
         name TEXT NOT NULL
       );
     ''');
+
+    await db.execute('''
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      nascimento INTEGER
+    )
+  ''');
+
+    await db.execute('''
+  CREATE TABLE usuario_medicamento (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    medicamento_id INTEGER NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES users(id),
+    FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id)
+  )
+''');
   }
 
   Future close() async {
