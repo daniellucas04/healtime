@@ -14,6 +14,7 @@ class CreateHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 200,
+      padding: const EdgeInsets.only(left: 34, right: 34),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
@@ -25,17 +26,21 @@ class CreateHeader extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(padding: EdgeInsets.only(top: 60)),
+              const Padding(padding: EdgeInsets.only(top: 54)),
               icon,
               const SizedBox(
-                height: 14,
+                height: 18,
               ),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.white,
+              Expanded(
+                child: Text(
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
