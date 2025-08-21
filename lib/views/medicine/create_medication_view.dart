@@ -12,7 +12,7 @@ class CreateMedicationScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             const CreateHeader(
-              icon: const Icon(
+              icon: Icon(
                 Icons.medication,
                 size: 65,
                 color: Colors.white,
@@ -40,22 +40,10 @@ class CreateMedicationScreen extends StatelessWidget {
                     height: 45,
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll<Color>(Colors.blue),
-                        foregroundColor:
-                            WidgetStatePropertyAll<Color>(Colors.white),
-                      ),
                       onPressed: () {
                         print('Proxima tela de cadastro');
                       },
-                      child: const Text(
-                        'Próximo',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: const Text('Próximo'),
                     ),
                   ),
                 ],

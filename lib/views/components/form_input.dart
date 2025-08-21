@@ -15,21 +15,7 @@ class FormInput extends StatelessWidget {
     return TextFormField(
       key: key,
       decoration: InputDecoration(
-        floatingLabelAlignment: FloatingLabelAlignment.start,
-        floatingLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.black54,
-        ),
         label: Text(label),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black26, width: 2.0),
-          borderRadius: BorderRadius.circular(100),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black12, width: 2.0),
-          borderRadius: BorderRadius.circular(100),
-        ),
         suffixIcon: icon,
       ),
     );
