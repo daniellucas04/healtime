@@ -1,26 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:app/models/usermedication.dart';
-import 'package:app/dao/usermedication_dao.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import '../../../lib/models/usermedication.dart';
+import '../../../lib/dao/usermedication_dao.dart';
+import '../../helpers/memory_database.dart';
 
 void main() {
   late Database db;
   late UsuarioMedicamentoDao dao;
 
   setUp(() async {
-    db = await openDatabase(
-      inMemoryDatabasePath,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE usuario_medicamento (
-            usuario_id INTEGER NOT NULL,
-            medicamento_id INTEGER NOT NULL,
-            PRIMARY KEY (usuario_id, medicamento_id)
-          )
-        ''');
-      },
-    );
+    db = await createTestDb();
     dao = UsuarioMedicamentoDao(database: db);
   });
 

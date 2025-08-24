@@ -18,7 +18,6 @@ Future<Database> createTestDb() async {
     )
   ''');
 
-  // Cria a tabela users com o tipo INTEGER corrigido
   await db.execute('''
     CREATE TABLE users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
