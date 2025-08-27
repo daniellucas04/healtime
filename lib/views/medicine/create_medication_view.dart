@@ -24,7 +24,6 @@ class CreateMedicationScreen extends StatelessWidget {
               icon: Icon(
                 Icons.medication,
                 size: 65,
-                color: Colors.white,
               ),
               title: "Adicione informações sobre o medicamento",
             ),
@@ -37,14 +36,13 @@ class CreateMedicationScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
+                  const Column(
                     spacing: 36,
                     children: [
-                      const FormInput(
+                      FormInput(
                         key: Key('medication_name'),
                         icon: Icon(
                           Icons.search,
-                          color: Colors.black87,
                         ),
                         label: 'Nome',
                       ),
@@ -52,28 +50,11 @@ class CreateMedicationScreen extends StatelessWidget {
                         width: double.infinity,
                         child: DropdownMenu(
                           width: double.infinity,
-                          label: const Text(
+                          label: Text(
                             'Tipo',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                            ),
                           ),
                           initialSelection: MedicationType.comprimido,
-                          inputDecorationTheme: InputDecorationTheme(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Colors.black26, width: 2.0),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Colors.black12, width: 2.0),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                          dropdownMenuEntries: const <DropdownMenuEntry<
+                          dropdownMenuEntries: <DropdownMenuEntry<
                               MedicationType>>[
                             DropdownMenuEntry(
                               value: MedicationType.comprimido,

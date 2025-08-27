@@ -14,7 +14,7 @@ class _NavBar extends State<NavBar> {
     setState(() {
       switch (index) {
         case 0:
-          if (index != _selectedIndex) Navigator.pushNamed(context, '/');
+          if (index != _selectedIndex) Navigator.pushReplacementNamed(context, '/');
           break;
         case 1:
           // Navigator.pushNamed(context, '/calendar');

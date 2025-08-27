@@ -7,19 +7,20 @@ const Color backgroundLightTheme100 = Color.fromARGB(255, 207, 252, 245);
 const Color backgroundLightTheme50 = Color.fromARGB(255, 231, 253, 250);
 const Color primaryLightTheme = Color.fromARGB(255, 32, 243, 222);
 const Color secondaryLightTheme = Color.fromARGB(255, 110, 178, 247);
-const Color secondaryLightTheme1 = Color.fromARGB(255, 61, 153, 245);
+const Color secondaryLightTheme400 = Color.fromARGB(255, 61, 153, 245);
 const Color accentLightTheme = Color.fromARGB(255, 77, 127, 245);
 
 const Color textDarkTheme = Color.fromARGB(255, 231, 254, 251);
-const Color backgroundDarkTheme = Color.fromARGB(255, 2, 24, 21);
+const Color backgroundDarkTheme = Color.fromARGB(255, 1, 14, 12);
+const Color backgroundDarkTheme50 = Color.fromARGB(255, 2, 24, 21);
 const Color primaryDarkTheme = Color.fromARGB(255, 12, 223, 202);
 const Color secondaryDarkTheme = Color.fromARGB(255, 8, 76, 255);
+const Color secondaryDarkTheme500 = Color.fromARGB(255, 0, 72, 255);
 const Color accentDarkTheme = Color.fromARGB(255, 10, 61, 178);
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
       brightness: Brightness.light,
-      primarySwatch: Colors.blue,
       scaffoldBackgroundColor: backgroundLightTheme,
       appBarTheme: const AppBarTheme(
         backgroundColor: accentLightTheme,
@@ -51,7 +52,7 @@ class AppThemes {
           backgroundColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.pressed)) {
-                return secondaryLightTheme1;
+                return secondaryLightTheme400;
               } else {
                 return secondaryLightTheme;
               }
@@ -80,11 +81,19 @@ class AppThemes {
           borderSide: const BorderSide(color: Colors.black12, width: 2.0),
           borderRadius: BorderRadius.circular(100),
         ),
-      ));
+      ),
+      dropdownMenuTheme: const DropdownMenuThemeData(
+        textStyle: TextStyle(
+          color: textLightTheme
+        ),
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStatePropertyAll(backgroundLightTheme50),
+        ),
+      ),
+    );
 
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primarySwatch: Colors.cyan,
     scaffoldBackgroundColor: backgroundDarkTheme,
     appBarTheme: const AppBarTheme(
       backgroundColor: secondaryDarkTheme,
@@ -95,16 +104,61 @@ class AppThemes {
       bodyLarge: TextStyle(color: textDarkTheme),
       bodyMedium: TextStyle(color: textDarkTheme),
     ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: secondaryDarkTheme,
-      foregroundColor: backgroundDarkTheme,
-    ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: backgroundDarkTheme,
+      backgroundColor: backgroundDarkTheme50,
       selectedIconTheme: IconThemeData(size: 32, color: secondaryDarkTheme),
       selectedItemColor: secondaryDarkTheme,
       unselectedIconTheme: IconThemeData(size: 32, color: textDarkTheme),
       unselectedItemColor: textDarkTheme,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            return textDarkTheme; // Default color
+          },
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.pressed)) {
+              return secondaryDarkTheme;
+            } else {
+              return secondaryDarkTheme500;
+            }
+          },
+        ),
+        textStyle: WidgetStateProperty.all(
+          const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: secondaryDarkTheme,
+      foregroundColor: backgroundDarkTheme,
+    ),
+    inputDecorationTheme: InputDecorationThemeData(
+      floatingLabelAlignment: FloatingLabelAlignment.start,
+      floatingLabelStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        color: textDarkTheme,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white, width: 2.0),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white60, width: 2.0),
+        borderRadius: BorderRadius.circular(100),
+      ),
+    ),
+    dropdownMenuTheme: const DropdownMenuThemeData(
+      textStyle: TextStyle(
+        color: textDarkTheme
+      ),
+      menuStyle: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(backgroundDarkTheme50),
+      ),
     ),
   );
 }

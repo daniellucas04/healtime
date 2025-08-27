@@ -1,3 +1,4 @@
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CreateHeader extends StatelessWidget {
@@ -9,16 +10,17 @@ class CreateHeader extends StatelessWidget {
     required this.icon,
     required this.title,
   }) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 200,
       padding: const EdgeInsets.only(left: 28, right: 28),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
-        color: Colors.blue,
+        color: Theme.of(context).brightness == Brightness.dark ? secondaryDarkTheme : secondaryLightTheme
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -37,10 +39,10 @@ class CreateHeader extends StatelessWidget {
                   title,
                   softWrap: true,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Theme.of(context).brightness == Brightness.dark ? textDarkTheme : textLightTheme
                   ),
                 ),
               ),
