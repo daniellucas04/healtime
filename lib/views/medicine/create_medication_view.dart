@@ -26,13 +26,13 @@ class CreateMedicationScreen extends StatelessWidget {
                 size: 65,
                 color: Colors.white,
               ),
-              title: "Adicione informações sobre o medicamentoaaaaaaaaaa",
+              title: "Adicione informações sobre o medicamento",
             ),
             const SizedBox(
               height: 60,
             ),
             Container(
-              height: 520,
+              height: 400,
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
