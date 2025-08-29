@@ -1,7 +1,7 @@
+import 'package:app/views/medicine/create_medication_view.dart';
 import 'package:flutter/material.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:app/views/homepage_screen.dart';
-import 'package:app/views/medicine/create_medication_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (BuildContext context) => const HomePageScreen(),
         '/medicine_registration': (BuildContext context) =>
-            const CreateMedicationScreen(),
+            const CreateMedication(),
       },
     );
   }
