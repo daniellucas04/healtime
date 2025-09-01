@@ -14,17 +14,14 @@ class HomePageScreen extends StatelessWidget {
       body: const Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text('Homepage'),
-        ],
+        children: <Widget>[],
       )),
       bottomNavigationBar: const NavBar(),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         child: const Icon(Icons.add, size: 35),
-        onPressed: () => {
-          Navigator.pushNamed(context, '/medicine_registration')
-        },
+        onPressed: () =>
+            {Navigator.pushNamed(context, '/medicine_registration')},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

@@ -12,11 +12,13 @@ class MedicationDao {
   }
 
   Future<int> update(Medication medication) async {
-    return await database.update(table, medication.toMap(), where: 'id = ?', whereArgs: [medication.id]);
+    return await database.update(table, medication.toMap(),
+        where: 'id = ?', whereArgs: [medication.id]);
   }
 
   Future<int> delete(Medication medication) async {
-    return await database.delete(table, where: 'id = ?', whereArgs: [medication.id]);
+    return await database
+        .delete(table, where: 'id = ?', whereArgs: [medication.id]);
   }
 
   Future<List<Medication>> getAll() async {
@@ -25,7 +27,8 @@ class MedicationDao {
   }
 
   Future<Medication?> getById(int id) async {
-    final medication = await database.query(table, where: 'id = ?', whereArgs: [id]);
+    final medication =
+        await database.query(table, where: 'id = ?', whereArgs: [id]);
 
     if (medication.isNotEmpty) {
       return Medication.fromMap(medication.first);
