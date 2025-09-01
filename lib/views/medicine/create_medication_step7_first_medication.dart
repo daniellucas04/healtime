@@ -1,0 +1,109 @@
+import 'package:app/dao/medication_dao.dart';
+import 'package:app/database/database_helper.dart';
+import 'package:app/models/medication.dart';
+import 'package:app/views/components/alert.dart';
+import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/date_time_picker.dart';
+import 'package:app/views/medicine/create_medication_step2_type.dart';
+import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
+import 'package:flutter/material.dart';
+
+
+class CreateMedicationStep6FirstMedication extends StatelessWidget {
+  CreateMedicationStep6FirstMedication({super.key, required this.medicationName, required this.medicationType, required this.medicationFrequencyType, required this.medicationFrequencyValue, required this.medicationQuantity, required this.medicationDuration,});
+
+  final TextEditingController medicationName;
+  final MedicationType medicationType;
+  final MedicationFrequencyType medicationFrequencyType;
+  final TextEditingController medicationFrequencyValue;
+  final TextEditingController medicationDuration;
+  final TextEditingController medicationQuantity;
+  final TextEditingController medicationDate = TextEditingController();
+  DateTime? medicationFirstDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const CreateHeader(
+                icon: Icon(
+                  Icons.medication,
+                  size: 65,
+                ),
+                title: "Adicione informações sobre o medicamento",
+              ),
+              const SizedBox(
+                height: 60,
+              ),
+              Container(
+                height: 400,
+                margin: const EdgeInsets.only(left: 30, right: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        TextField(
+                          controller: medicationDate,
+                          readOnly: true, // Impede digitação manual
+                          decoration: const InputDecoration(
+                            labelText: "Data e Hora",
+                            border: OutlineInputBorder(),
+                          ),
+                          onTap: () async => {
+                            medicationFirstDate = await dateTimePicker(context: context),
+                            medicationDate.text = dateFormat(medicationFirstDate!),     
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 45,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          MedicationDao medicationDao = MedicationDao(database: await DatabaseHelper.instance.database);
+                          if(medicationFirstDate != null){
+                            int x = await medicationDao.insert(Medication(name: medicationName.text, type: medicationType.name, duration: int.parse(medicationFrequencyValue.text), frequencyType: medicationFrequencyType.name, frequencyValue: int.parse(medicationFrequencyValue.text) , quantity: int.parse(medicationQuantity.text), firstMedication: medicationFirstDate.toString()));
+                            if(!context.mounted) return;
+                            if( x != 0){
+                            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                            }else{
+                              showDialog<void>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Alert(
+                                  message: 'Ocorreu um erro ao cadastrar o medicamento',
+                                  title: 'Erro ao Cadastrar',
+                                  buttonMessage: 'ok',
+                                ),
+                              );
+                            }
+                          }else{
+                            if(!context.mounted) return;
+                            showDialog<void>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Alert(
+                                  message: 'Adicione a data',
+                                  title: 'Campo Invalido',
+                                ),
+                              );
+                          }
+                        },
+                        child: const Text('Próximo'),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        )
+      ),
+    );
+  }
+}

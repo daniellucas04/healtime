@@ -2,18 +2,19 @@ import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/create_header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
-import 'package:app/views/medicine/create_medication_step5_frequency_value.dart';
+import 'package:app/views/medicine/create_medication_step6_quantity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 
-class CreateMedicationStep4Duration extends StatelessWidget {
-  CreateMedicationStep4Duration({super.key, required this.medicationName, required this.medicationType, required this.medicationFrequencyType,});
+class CreateMedicationStep5FrequencyValue extends StatelessWidget {
+  CreateMedicationStep5FrequencyValue({super.key, required this.medicationName, required this.medicationType, required this.medicationFrequencyType, required this.medicationDuration,});
 
   final TextEditingController medicationName;
   final MedicationType medicationType;
   final MedicationFrequencyType medicationFrequencyType;
-  final TextEditingController medicationDuration = TextEditingController();
+  final TextEditingController medicationDuration;
+  final TextEditingController medicationFrequencyValue = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +41,33 @@ class CreateMedicationStep4Duration extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        const Text('A Cada'),
+                        const Text('Total'),
                         SizedBox(
                           width: 50,
                           child: TextField(
-                          controller: medicationDuration,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly 
-                          ],
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
-                              borderSide: BorderSide(color: Colors.grey, width: 1),
+                            controller: medicationFrequencyValue,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly 
+                            ],
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide(color: Colors.grey, width: 1),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide(color: Colors.blue, width: 2),
+                              ),
+                              contentPadding: EdgeInsets.all(12),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
-                              borderSide: BorderSide(color: Colors.blue, width: 2),
-                            ),
-                            contentPadding: EdgeInsets.all(12),
                           ),
                         ),
-                      ),
-                      Text(medicationFrequencyType == MedicationFrequencyType.vezesAoDia ? "vezes ao dia" : medicationFrequencyType.name)
+                        const Text('Dias'),
                       ],
                     ),
                     SizedBox(
@@ -71,9 +75,9 @@ class CreateMedicationStep4Duration extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          if(medicationDuration.text != ""){
+                          if(medicationFrequencyValue.text != ""){
                             Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => CreateMedicationStep5FrequencyValue(medicationName: medicationName, medicationType: medicationType, medicationFrequencyType: medicationFrequencyType, medicationDuration: medicationDuration)));
+                              builder: (context) => CreateMedicationStep6Quantity(medicationName: medicationName, medicationType: medicationType, medicationFrequencyType: medicationFrequencyType, medicationFrequencyValue: medicationFrequencyValue, medicationDuration: medicationDuration,)));
                           }else{
                             showDialog<void>(
                               context: context,

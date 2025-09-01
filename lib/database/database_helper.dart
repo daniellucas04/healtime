@@ -17,7 +17,6 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-
     return await openDatabase(
       path,
       version: 1,
@@ -27,6 +26,24 @@ class DatabaseHelper {
 
   Future _createDB(Database db, int version) async {
     await db.execute(Tables.medications());
+
+    await db.execute('''
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      nascimento INTEGER
+    )
+  ''');
+
+    await db.execute('''
+  CREATE TABLE usuario_medicamento (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    medicamento_id INTEGER NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES users(id),
+    FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id)
+  )
+''');
   }
 
   Future close() async {

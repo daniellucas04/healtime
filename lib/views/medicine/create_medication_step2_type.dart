@@ -1,5 +1,5 @@
 import 'package:app/views/components/create_header.dart';
-import 'package:app/views/medicine/create_medication_step3_frequency.dart';
+import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:flutter/material.dart';
 
 enum MedicationType {
@@ -43,52 +43,70 @@ class CreateMedicationStep2Type extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextButton(
-                          onPressed: () => {
-                            medicationType = MedicationType.comprimido,
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3Frequency(medicationName: medicationName, medicationType: medicationType)))
-                          }, 
-                          child: const Text('Comprimido'),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              medicationType = MedicationType.comprimido,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3FrequencyType(medicationName: medicationName, medicationType: medicationType)))
+                            }, 
+                            child: const Text('Comprimido'),
+                          ),
                         ),
                         const Divider(),
-                        TextButton(
-                          onPressed: () => {
-                            medicationType = MedicationType.injecao,
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3Frequency(medicationName: medicationName, medicationType: medicationType)))
-                          }, 
-                          child: const Text('Injeção'),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              medicationType = MedicationType.injecao,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3FrequencyType(medicationName: medicationName, medicationType: medicationType)))
+                            }, 
+                            child: const Text('Injeção'),
+                          ),
                         ),
                         const Divider(),
-                        TextButton(
-                          onPressed: () => {
-                            medicationType = MedicationType.gotas,
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3Frequency(medicationName: medicationName, medicationType: medicationType)))
-                          }, 
-                          child: const Text('Gotas'),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              medicationType = MedicationType.gotas,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3FrequencyType(medicationName: medicationName, medicationType: medicationType)))
+                            }, 
+                            child: const Text('Gotas'),
+                          ),
                         ),
                         const Divider(),
-                        TextButton(
-                          onPressed: () => {
-                            medicationType = MedicationType.pomada,
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3Frequency(medicationName: medicationName, medicationType: medicationType)))
-                          }, 
-                          child: const Text('Pomada'),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              medicationType = MedicationType.pomada,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3FrequencyType(medicationName: medicationName, medicationType: medicationType)))
+                            }, 
+                            child: const Text('Pomada'),
+                          ),
                         ),
                         const Divider(),
-                        TextButton(
-                          onPressed: () => {
-                            medicationType = MedicationType.inalador,
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3Frequency(medicationName: medicationName, medicationType: medicationType)))
-                          }, 
-                          child: const Text('Inalador'),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              medicationType = MedicationType.inalador,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3FrequencyType(medicationName: medicationName, medicationType: medicationType)))
+                            }, 
+                            child: const Text('Inalador'),
+                          ),
                         ),
                         const Divider(),
-                        TextButton(
-                          onPressed: () => {
-                            medicationType = MedicationType.liquido,
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3Frequency(medicationName: medicationName, medicationType: medicationType)))
-                          }, 
-                          child: const Text('Liquido'),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () => {
+                              medicationType = MedicationType.liquido,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateMedicationStep3FrequencyType(medicationName: medicationName, medicationType: medicationType)))
+                            }, 
+                            child: const Text('Liquido'),
+                          ),
                         ),
                         const Divider(),
                       ],

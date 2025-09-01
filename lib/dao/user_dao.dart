@@ -1,0 +1,36 @@
+import 'package:app/models/user.dart';
+import 'package:sqflite/sqflite.dart';
+
+class UserDao {
+  final Database database;
+  String table = 'users';
+
+  UserDao({required this.database});
+
+  Future<int> insert(User user) async {
+    return await database.insert(table, user.toMap());
+  }
+
+  Future<int> update(User user) async {
+    return await database
+        .update(table, user.toMap(), where: 'id = ?', whereArgs: [user.id]);
+  }
+
+  Future<int> delete(User user) async {
+    return await database.delete(table, where: 'id = ?', whereArgs: [user.id]);
+  }
+
+  Future<List<User>> getAll() async {
+    final users = await database.query(table);
+    return users.map((json) => User.fromMap(json)).toList();
+  }
+
+  Future<User?> getById(int id) async {
+    final user = await database.query(table, where: 'id = ?', whereArgs: [id]);
+    if (user.isNotEmpty) {
+      return User.fromMap((user.first));
+    }
+
+    return null;
+  }
+}

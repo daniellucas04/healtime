@@ -1,19 +1,20 @@
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/create_header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
-import 'package:app/views/medicine/create_medication_step3_frequency.dart';
-import 'package:app/views/medicine/create_medication_step6_first_medication.dart';
+import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
+import 'package:app/views/medicine/create_medication_step7_first_medication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 
-class CreateMedicationStep5Quantity extends StatelessWidget {
-  CreateMedicationStep5Quantity({super.key, required this.medicationName, required this.medicationType, required this.medicationFrequency, required this.medicationDuration,});
+class CreateMedicationStep6Quantity extends StatelessWidget {
+  CreateMedicationStep6Quantity({super.key, required this.medicationName, required this.medicationType, required this.medicationFrequencyType, required this.medicationFrequencyValue, required this.medicationDuration,});
 
   final TextEditingController medicationName;
   final MedicationType medicationType;
-  final MedicationFrequency medicationFrequency;
-  final TextEditingController medicationDuration;
+  final MedicationFrequencyType medicationFrequencyType;
+  final TextEditingController medicationFrequencyValue;
+  final TextEditingController medicationDuration; 
   final TextEditingController medicationQuantity = TextEditingController();
 
   @override
@@ -42,26 +43,29 @@ class CreateMedicationStep5Quantity extends StatelessWidget {
                     Column(
                       children: [
                         const Text('Total'),
-                        TextField(
-                          controller: medicationQuantity,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly 
-                          ],
-                          textAlign: TextAlign.center, 
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero, 
+                        SizedBox(
+                          width: 50,
+                          child: TextField(
+                            controller: medicationQuantity,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly 
+                            ],
+                            textAlign: TextAlign.center, 
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero, 
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide(color: Colors.grey, width: 1),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide(color: Colors.blue, width: 2),
+                              ),
+                              contentPadding: EdgeInsets.all(12),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
-                              borderSide: BorderSide(color: Colors.grey, width: 1),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
-                              borderSide: BorderSide(color: Colors.blue, width: 2),
-                            ),
-                            contentPadding: EdgeInsets.all(12),
                           ),
                         ),
                         Text(medicationType == MedicationType.comprimido ? 
@@ -77,14 +81,14 @@ class CreateMedicationStep5Quantity extends StatelessWidget {
                         onPressed: () {
                           if(medicationQuantity.text != ""){
                             Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => CreateMedicationStep6FirstMedication(medicationName: medicationName, medicationType: medicationType, medicationFrequency: medicationFrequency, medicationDuration: medicationDuration, medicationQuantity: medicationQuantity)));
+                              builder: (context) => CreateMedicationStep6FirstMedication(medicationName: medicationName, medicationType: medicationType, medicationFrequencyType: medicationFrequencyType, medicationFrequencyValue: medicationFrequencyValue, medicationDuration: medicationDuration, medicationQuantity: medicationQuantity)));
                           }else{
                             showDialog<void>(
                               context: context,
                               barrierDismissible: false,
                               builder: (context) => const Alert(
-                                message: 'Teste',
-                                title: 'title',
+                                message: 'Adicione a quantidade',
+                                title: 'Campo Invalido',
                               ),
                             );
                           }
