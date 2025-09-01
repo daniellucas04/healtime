@@ -20,77 +20,101 @@ const Color accentDarkTheme = Color.fromARGB(255, 10, 61, 178);
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
-      brightness: Brightness.light,
-      scaffoldBackgroundColor: backgroundLightTheme,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: accentLightTheme,
-        foregroundColor: textLightTheme,
-        elevation: 0,
-      ),
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: textLightTheme),
-        bodyMedium: TextStyle(color: textLightTheme),
-      ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: secondaryLightTheme,
-        foregroundColor: textDarkTheme,
-      ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: backgroundLightTheme50,
-        selectedIconTheme: IconThemeData(size: 32, color: secondaryLightTheme),
-        selectedItemColor: secondaryLightTheme,
-        unselectedIconTheme: IconThemeData(size: 32, color: textLightTheme900),
-        unselectedItemColor: textLightTheme900,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.resolveWith<Color?>(
-            (Set<WidgetState> states) {
-              return textLightTheme; // Default color
-            },
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-            (Set<WidgetState> states) {
-              if (states.contains(WidgetState.pressed)) {
-                return secondaryLightTheme400;
-              } else {
-                return secondaryLightTheme;
-              }
-            },
-          ),
-          textStyle: WidgetStateProperty.all(
-            const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: backgroundLightTheme,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: accentLightTheme,
+      foregroundColor: textLightTheme,
+      elevation: 0,
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: textLightTheme),
+      bodyMedium: TextStyle(color: textLightTheme),
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: secondaryLightTheme,
+      foregroundColor: textDarkTheme,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: backgroundLightTheme50,
+      selectedIconTheme: IconThemeData(size: 32, color: secondaryLightTheme),
+      selectedItemColor: secondaryLightTheme,
+      unselectedIconTheme: IconThemeData(size: 32, color: textLightTheme900),
+      unselectedItemColor: textLightTheme900,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            return textLightTheme; // Default color
+          },
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.pressed)) {
+              return secondaryLightTheme400;
+            } else {
+              return accentLightTheme;
+            }
+          },
+        ),
+        textStyle: WidgetStateProperty.all(
+          const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
-      inputDecorationTheme: InputDecorationThemeData(
-        floatingLabelAlignment: FloatingLabelAlignment.start,
-        floatingLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: textLightTheme,
-        ),
-        labelStyle: const TextStyle(
-          color: textLightTheme,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black87, width: 2.0),
-          borderRadius: BorderRadius.circular(100),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black12, width: 2.0),
-          borderRadius: BorderRadius.circular(100),
-        ),
+    ),
+    inputDecorationTheme: InputDecorationThemeData(
+      floatingLabelAlignment: FloatingLabelAlignment.start,
+      floatingLabelStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        color: textLightTheme,
       ),
-      dropdownMenuTheme: const DropdownMenuThemeData(
-        textStyle: TextStyle(
-          color: textLightTheme
-        ),
-        menuStyle: MenuStyle(
-          backgroundColor: WidgetStatePropertyAll(backgroundLightTheme50),
-        ),
+      labelStyle: const TextStyle(
+        color: textLightTheme,
       ),
-    );
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.black87, width: 2.0),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.black12, width: 2.0),
+        borderRadius: BorderRadius.circular(100),
+      ),
+    ),
+    dropdownMenuTheme: const DropdownMenuThemeData(
+      textStyle: TextStyle(
+        color: textLightTheme
+      ),
+      menuStyle: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(backgroundLightTheme50),
+      ),
+    ),
+    cardTheme: const CardThemeData(
+    color: accentLightTheme,
+    shadowColor: Colors.black38,
+    ),
+    listTileTheme: const ListTileThemeData(
+      iconColor: primaryLightTheme,
+      textColor: textLightTheme,
+    ),
+    dialogTheme: const DialogThemeData(
+      backgroundColor: backgroundLightTheme50,
+      shadowColor: Colors.black38,
+      iconColor: textLightTheme,
+      titleTextStyle: TextStyle(
+        color: textLightTheme,
+        fontSize: 24,
+      ),
+      contentTextStyle: TextStyle(color: textLightTheme),
+    ),
+    textButtonTheme: const TextButtonThemeData(
+      style: ButtonStyle(
+        alignment: Alignment.centerLeft,
+        foregroundColor: WidgetStatePropertyAll(textLightTheme),
+      ),
+    ),
+  );
 
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
@@ -158,6 +182,30 @@ class AppThemes {
       ),
       menuStyle: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(backgroundDarkTheme50),
+      ),
+    ),
+    cardTheme: const CardThemeData(
+      color: accentDarkTheme,
+      shadowColor: Colors.white30,
+    ),
+    dialogTheme: const DialogThemeData(
+      backgroundColor: backgroundDarkTheme50,
+      shadowColor: Colors.white30,
+      iconColor: textDarkTheme,
+      titleTextStyle: TextStyle(
+        color: textDarkTheme,
+        fontSize: 24,
+      ),
+      contentTextStyle: TextStyle(color: textDarkTheme),
+    ),
+    listTileTheme: const ListTileThemeData(
+      iconColor: primaryDarkTheme,
+      textColor: textDarkTheme,
+    ),
+    textButtonTheme: const TextButtonThemeData(
+      style: ButtonStyle(
+        alignment: Alignment.centerLeft,
+        foregroundColor: WidgetStatePropertyAll(textDarkTheme),
       ),
     ),
   );
