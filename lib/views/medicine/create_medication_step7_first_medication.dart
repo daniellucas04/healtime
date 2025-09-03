@@ -9,8 +9,8 @@ import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:flutter/material.dart';
 
-class CreateMedicationStep6FirstMedication extends StatelessWidget {
-  CreateMedicationStep6FirstMedication({
+class CreateMedicationStep7FirstMedication extends StatelessWidget {
+  CreateMedicationStep7FirstMedication({
     super.key,
     required this.medicationName,
     required this.medicationType,
