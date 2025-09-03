@@ -26,7 +26,8 @@ void main() {
       frequencyValue: 1,
       duration: 10,
       quantity: 1,
-      firstMedication: 'Sim',));
+      firstMedication: 'Sim',
+    ));
     await medicationDao.insert(Medication(
       name: 'Dipirona',
       type: 'Gota',
@@ -34,7 +35,8 @@ void main() {
       frequencyValue: 1,
       duration: 10,
       quantity: 1,
-      firstMedication: 'Sim',));
+      firstMedication: 'Sim',
+    ));
     final results = await medicationDao.getAll();
 
     expect(results, isA<List<Medication>>());
@@ -67,8 +69,10 @@ void main() {
       duration: 10,
       quantity: 1,
       firstMedication: 'Sim',
-      ));
-    var medication = Medication(id: insertedId, name: 'Dipirona',
+    ));
+    var medication = Medication(
+      id: insertedId,
+      name: 'Dipirona',
       type: 'Comprimido',
       frequencyType: 'diária',
       frequencyValue: 1,

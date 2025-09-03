@@ -1,3 +1,4 @@
+import 'package:app/controllers/medication_controller.dart';
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
@@ -8,9 +9,16 @@ import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:flutter/material.dart';
 
-
 class CreateMedicationStep6FirstMedication extends StatelessWidget {
-  CreateMedicationStep6FirstMedication({super.key, required this.medicationName, required this.medicationType, required this.medicationFrequencyType, required this.medicationFrequencyValue, required this.medicationQuantity, required this.medicationDuration,});
+  CreateMedicationStep6FirstMedication({
+    super.key,
+    required this.medicationName,
+    required this.medicationType,
+    required this.medicationFrequencyType,
+    required this.medicationFrequencyValue,
+    required this.medicationQuantity,
+    required this.medicationDuration,
+  });
 
   final TextEditingController medicationName;
   final MedicationType medicationType;
@@ -21,89 +29,107 @@ class CreateMedicationStep6FirstMedication extends StatelessWidget {
   final TextEditingController medicationDate = TextEditingController();
   DateTime? medicationFirstDate;
 
+  Future<void> saveMedication(context) async {
+    if (!context.mounted) return;
+
+    if (medicationFirstDate != null) {
+      MedicationDao medicationDao =
+          MedicationDao(database: await DatabaseHelper.instance.database);
+
+      var insertedMedication = MedicationController(
+        medicationDao: medicationDao,
+        name: medicationName.text,
+        type: medicationType.name,
+        frequencyType: medicationFrequencyType.name,
+        frequencyValue: int.parse(medicationFrequencyValue.text),
+        duration: int.parse(medicationFrequencyValue.text),
+        quantity: int.parse(medicationQuantity.text),
+        firstMedication: medicationFirstDate.toString(),
+      ).save();
+
+      if (insertedMedication != 0) {
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        return;
+      }
+
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Alert(
+          message: 'Ocorreu um erro ao cadastrar o medicamento',
+          title: 'Erro ao Cadastrar',
+          buttonMessage: 'ok',
+        ),
+      );
+    }
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Alert(
+        message: 'Adicione a data',
+        title: 'Campo Invalido',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              const CreateHeader(
-                icon: Icon(
-                  Icons.medication,
-                  size: 65,
-                ),
-                title: "Adicione informações sobre o medicamento",
+          child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const CreateHeader(
+              icon: Icon(
+                Icons.medication,
+                size: 65,
               ),
-              const SizedBox(
-                height: 60,
-              ),
-              Container(
-                height: 400,
-                margin: const EdgeInsets.only(left: 30, right: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        TextField(
-                          controller: medicationDate,
-                          readOnly: true, // Impede digitação manual
-                          decoration: const InputDecoration(
-                            labelText: "Data e Hora",
-                            border: OutlineInputBorder(),
-                          ),
-                          onTap: () async => {
-                            medicationFirstDate = await dateTimePicker(context: context),
-                            medicationDate.text = dateFormat(medicationFirstDate!),     
-                          },
+              title: "Adicione informações sobre o medicamento",
+            ),
+            const SizedBox(
+              height: 60,
+            ),
+            Container(
+              height: 400,
+              margin: const EdgeInsets.only(left: 30, right: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      TextField(
+                        controller: medicationDate,
+                        readOnly: true, // Impede digitação manual
+                        decoration: const InputDecoration(
+                          labelText: "Data e Hora",
+                          border: OutlineInputBorder(),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 45,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          MedicationDao medicationDao = MedicationDao(database: await DatabaseHelper.instance.database);
-                          if(medicationFirstDate != null){
-                            int x = await medicationDao.insert(Medication(name: medicationName.text, type: medicationType.name, duration: int.parse(medicationFrequencyValue.text), frequencyType: medicationFrequencyType.name, frequencyValue: int.parse(medicationFrequencyValue.text) , quantity: int.parse(medicationQuantity.text), firstMedication: medicationFirstDate.toString()));
-                            if(!context.mounted) return;
-                            if( x != 0){
-                            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-                            }else{
-                              showDialog<void>(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => const Alert(
-                                  message: 'Ocorreu um erro ao cadastrar o medicamento',
-                                  title: 'Erro ao Cadastrar',
-                                  buttonMessage: 'ok',
-                                ),
-                              );
-                            }
-                          }else{
-                            if(!context.mounted) return;
-                            showDialog<void>(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => const Alert(
-                                  message: 'Adicione a data',
-                                  title: 'Campo Invalido',
-                                ),
-                              );
-                          }
+                        onTap: () async => {
+                          medicationFirstDate =
+                              await dateTimePicker(context: context),
+                          medicationDate.text =
+                              dateFormat(medicationFirstDate!),
                         },
-                        child: const Text('Próximo'),
                       ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 45,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        saveMedication(context);
+                      },
+                      child: const Text('Próximo'),
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        )
-      ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      )),
     );
   }
 }

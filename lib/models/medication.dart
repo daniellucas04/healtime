@@ -6,9 +6,18 @@ class Medication {
   final int frequencyValue;
   final int duration;
   final int quantity;
-  final String firstMedication; 
+  final String firstMedication;
 
-  Medication({this.id, required this.name, required this.type,  required this.frequencyType, required this.frequencyValue , required this.duration, required this.quantity, required this.firstMedication});
+  Medication({
+    this.id,
+    required this.name,
+    required this.type,
+    required this.frequencyType,
+    required this.frequencyValue,
+    required this.duration,
+    required this.quantity,
+    required this.firstMedication,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -18,7 +27,7 @@ class Medication {
       'frequency_type': frequencyType,
       'frequency_value': frequencyValue,
       'duration': duration,
-      'quantity' : quantity,
+      'quantity': quantity,
       'first_medication': firstMedication
     };
   }
@@ -26,12 +35,12 @@ class Medication {
   factory Medication.fromMap(Map<String, dynamic> map) {
     return Medication(
       id: map['id'] as int?,
-      name: map['name'] as String, 
-      type: map['type'] as String, 
+      name: map['name'] as String,
+      type: map['type'] as String,
       frequencyType: map['frequency_type'] as String,
-      frequencyValue: map['frequency_value'] as int, 
-      duration: map['duration'] as int, 
-      quantity: map['quantity'] as int, 
+      frequencyValue: map['frequency_value'] as int,
+      duration: map['duration'] as int,
+      quantity: map['quantity'] as int,
       firstMedication: map['first_medication'] as String,
     );
   }

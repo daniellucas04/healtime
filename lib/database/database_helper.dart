@@ -17,6 +17,8 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
+    await deleteDatabase(path);
+
     return await openDatabase(
       path,
       version: 1,
