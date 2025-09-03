@@ -51,7 +51,8 @@ class CreateMedicationStep4Duration extends StatelessWidget {
                           controller: medicationDuration,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2)
                           ],
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(

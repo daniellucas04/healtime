@@ -54,7 +54,8 @@ class CreateMedicationStep5FrequencyValue extends StatelessWidget {
                           controller: medicationFrequencyValue,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(3)
                           ],
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(

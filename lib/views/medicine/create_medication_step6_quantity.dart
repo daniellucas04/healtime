@@ -55,7 +55,8 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                           controller: medicationQuantity,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2)
                           ],
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(
