@@ -23,17 +23,11 @@ class CreateMedicationStep2Type extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Header(title: 'Olá 2'),
       body: Center(
           child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const CreateHeader(
-              icon: Icon(
-                Icons.medication,
-                size: 65,
-              ),
-              title: "Adicione informações sobre o medicamento",
-            ),
             const SizedBox(
               height: 60,
             ),

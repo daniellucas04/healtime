@@ -1,12 +1,14 @@
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
+import 'package:app/views/components/create_header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-Future<List<Medication>> getAll () async {
-  return MedicationDao(database: await DatabaseHelper.instance.database).getAll();
+Future<List<Medication>> getAll() async {
+  return MedicationDao(database: await DatabaseHelper.instance.database)
+      .getAll();
 }
 
 class HomePageScreen extends StatelessWidget {
@@ -15,10 +17,7 @@ class HomePageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Listagem'),
-      ),
+      appBar: Header(title: 'olá'),
       body: FutureBuilder<List<Medication>>(
         future: getAll(),
         builder: (context, snapshot) {
@@ -46,12 +45,17 @@ class HomePageScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ListTile(
-                            leading: const Icon(Icons.medication,size: 35,),
+                            leading: const Icon(
+                              Icons.medication,
+                              size: 35,
+                            ),
                             title: Text(medication.name),
-                            subtitle: Text('${medication.type}: ${medication.quantity}'),
+                            subtitle: Text(
+                                '${medication.type}: ${medication.quantity}'),
                           ),
                         ),
-                        Text(timeFormat(DateTime.parse(medication.firstMedication))),
+                        Text(timeFormat(
+                            DateTime.parse(medication.firstMedication))),
                       ],
                     ),
                   ),

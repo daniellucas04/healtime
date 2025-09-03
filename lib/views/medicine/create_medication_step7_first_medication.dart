@@ -33,11 +33,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
     if (!context.mounted) return;
 
     if (medicationFirstDate != null) {
-      MedicationDao medicationDao =
-          MedicationDao(database: await DatabaseHelper.instance.database);
-
       var insertedMedication = MedicationController(
-        medicationDao: medicationDao,
         name: medicationName.text,
         type: medicationType.name,
         frequencyType: medicationFrequencyType.name,
@@ -76,17 +72,11 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Header(title: 'olá 4'),
       body: Center(
           child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const CreateHeader(
-              icon: Icon(
-                Icons.medication,
-                size: 65,
-              ),
-              title: "Adicione informações sobre o medicamento",
-            ),
             const SizedBox(
               height: 60,
             ),
