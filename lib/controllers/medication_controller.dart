@@ -1,4 +1,5 @@
 import 'package:app/dao/medication_dao.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
 
 class MedicationController {
@@ -10,10 +11,7 @@ class MedicationController {
   int? quantity;
   String? firstMedication;
 
-  final MedicationDao medicationDao;
-
   MedicationController({
-    required this.medicationDao,
     required this.name,
     required this.type,
     required this.frequencyType,
@@ -34,7 +32,8 @@ class MedicationController {
       quantity: quantity!,
       firstMedication: firstMedication!,
     );
-
+    final medicationDao =
+        new MedicationDao(database: await DatabaseHelper.instance.database);
     return await medicationDao.insert(medication);
   }
 }
