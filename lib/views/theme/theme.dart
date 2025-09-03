@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const Color textLightTheme = Color.fromARGB(255, 1, 24, 21);
 const Color textLightTheme900 = Color.fromARGB(255, 2, 49, 43);
@@ -23,9 +24,11 @@ class AppThemes {
     brightness: Brightness.light,
     scaffoldBackgroundColor: backgroundLightTheme,
     appBarTheme: const AppBarTheme(
+      toolbarHeight: 300,
       backgroundColor: accentLightTheme,
       foregroundColor: textLightTheme,
       elevation: 0,
+      titleTextStyle: TextStyle(color: textDarkTheme, fontSize: 24),
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: textLightTheme),
@@ -83,16 +86,14 @@ class AppThemes {
       ),
     ),
     dropdownMenuTheme: const DropdownMenuThemeData(
-      textStyle: TextStyle(
-        color: textLightTheme
-      ),
+      textStyle: TextStyle(color: textLightTheme),
       menuStyle: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(backgroundLightTheme50),
       ),
     ),
     cardTheme: const CardThemeData(
-    color: accentLightTheme,
-    shadowColor: Colors.black38,
+      color: accentLightTheme,
+      shadowColor: Colors.black38,
     ),
     listTileTheme: const ListTileThemeData(
       iconColor: primaryLightTheme,
@@ -177,9 +178,7 @@ class AppThemes {
       ),
     ),
     dropdownMenuTheme: const DropdownMenuThemeData(
-      textStyle: TextStyle(
-        color: textDarkTheme
-      ),
+      textStyle: TextStyle(color: textDarkTheme),
       menuStyle: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(backgroundDarkTheme50),
       ),
