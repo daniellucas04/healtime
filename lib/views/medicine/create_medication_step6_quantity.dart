@@ -95,7 +95,7 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      CreateMedicationStep6FirstMedication(
+                                      CreateMedicationStep7FirstMedication(
                                           medicationName: medicationName,
                                           medicationType: medicationType,
                                           medicationFrequencyType:
