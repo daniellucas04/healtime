@@ -121,7 +121,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                       onPressed: () {
                         saveMedication(context);
                       },
-                      child: const Text('Próximo'),
+                      child: const Text('Finalizar'),
                     ),
                   ),
                 ],
