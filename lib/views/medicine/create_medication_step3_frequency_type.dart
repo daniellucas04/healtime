@@ -1,6 +1,6 @@
 import 'package:app/views/components/create_header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
-import 'package:app/views/medicine/create_medication_step4_duration.dart';
+import 'package:app/views/medicine/create_medication_step4_frequency_value.dart';
 import 'package:flutter/material.dart';
 
 enum MedicationFrequencyType {
@@ -25,9 +25,9 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'Olá 2'),
-      body: Center(
-          child: SingleChildScrollView(
+      resizeToAvoidBottomInset: false,
+      appBar: Header(title: 'Qual frequência deve tomar?'),
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             const SizedBox(
@@ -49,14 +49,17 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
                             medicationFrequencyType =
                                 MedicationFrequencyType.vezesAoDia,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep4Duration(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType,
-                                            medicationFrequencyType:
-                                                medicationFrequencyType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep4FrequencyValue(
+                                  medicationName: medicationName,
+                                  medicationType: medicationType,
+                                  medicationFrequencyType:
+                                      medicationFrequencyType,
+                                ),
+                              ),
+                            ),
                           },
                           child: const Text('X Vezes ao Dia'),
                         ),
@@ -69,14 +72,17 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
                             medicationFrequencyType =
                                 MedicationFrequencyType.horas,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep4Duration(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType,
-                                            medicationFrequencyType:
-                                                medicationFrequencyType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep4FrequencyValue(
+                                  medicationName: medicationName,
+                                  medicationType: medicationType,
+                                  medicationFrequencyType:
+                                      medicationFrequencyType,
+                                ),
+                              ),
+                            ),
                           },
                           child: const Text('De X em X Horas'),
                         ),
@@ -89,14 +95,17 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
                             medicationFrequencyType =
                                 MedicationFrequencyType.dias,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep4Duration(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType,
-                                            medicationFrequencyType:
-                                                medicationFrequencyType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep4FrequencyValue(
+                                  medicationName: medicationName,
+                                  medicationType: medicationType,
+                                  medicationFrequencyType:
+                                      medicationFrequencyType,
+                                ),
+                              ),
+                            ),
                           },
                           child: const Text('De X em X Dias'),
                         ),
@@ -109,14 +118,16 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
                             medicationFrequencyType =
                                 MedicationFrequencyType.semanas,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep4Duration(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType,
-                                            medicationFrequencyType:
-                                                medicationFrequencyType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep4FrequencyValue(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType,
+                                        medicationFrequencyType:
+                                            medicationFrequencyType),
+                              ),
+                            ),
                           },
                           child: const Text('De X em X semanas'),
                         ),
@@ -129,7 +140,7 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

@@ -26,7 +26,8 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'olá 5'),
+      resizeToAvoidBottomInset: false,
+      appBar: Header(title: 'Quantidade'),
       body: Center(
           child: SingleChildScrollView(
         child: Column(
@@ -107,7 +108,7 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                             barrierDismissible: false,
                             builder: (context) => const Alert(
                               message: 'Adicione a quantidade',
-                              title: 'Campo Invalido',
+                              title: 'Campo Inválido',
                             ),
                           );
                         }

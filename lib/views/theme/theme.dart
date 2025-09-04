@@ -49,7 +49,7 @@ class AppThemes {
       style: ButtonStyle(
         foregroundColor: WidgetStateProperty.resolveWith<Color?>(
           (Set<WidgetState> states) {
-            return textLightTheme; // Default color
+            return textDarkTheme; // Default color
           },
         ),
         backgroundColor: WidgetStateProperty.resolveWith<Color?>(

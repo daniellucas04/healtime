@@ -14,18 +14,18 @@ class CreateMedicationStep1Name extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: Header(
-        title: "Informe o nome do medicamento",
+        title: "Nome do medicamento",
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             const SizedBox(
               height: 60,
             ),
             Container(
-              height: 400,
+              height: 500,
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,9 +36,6 @@ class CreateMedicationStep1Name extends StatelessWidget {
                       FormInput(
                         controller: medicationName,
                         key: const Key('medication_name'),
-                        icon: const Icon(
-                          Icons.search,
-                        ),
                         label: 'Nome',
                       ),
                     ],
@@ -50,23 +47,27 @@ class CreateMedicationStep1Name extends StatelessWidget {
                       onPressed: () {
                         if (medicationName.text != "") {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateMedicationStep2Type(
-                                          medicationName: medicationName)));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateMedicationStep2Type(
+                                medicationName: medicationName,
+                              ),
+                            ),
+                          );
                         } else {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => const Alert(
                               message: 'Digite o nome do medicamento',
-                              title: 'Campo Invalido',
+                              title: 'Campo Inválido',
                             ),
                           );
                         }
                       },
-                      child: const Text('Próximo'),
+                      child: const Text(
+                        'Próximo',
+                      ),
                     ),
                   ),
                 ],
@@ -74,7 +75,7 @@ class CreateMedicationStep1Name extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

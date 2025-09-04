@@ -23,7 +23,8 @@ class CreateMedicationStep2Type extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'Olá 2'),
+      resizeToAvoidBottomInset: false,
+      appBar: Header(title: 'Forma de consumo'),
       body: Center(
           child: SingleChildScrollView(
         child: Column(
@@ -46,12 +47,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
                           onPressed: () => {
                             medicationType = MedicationType.comprimido,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep3FrequencyType(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep3FrequencyType(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType),
+                              ),
+                            ),
                           },
                           child: const Text('Comprimido'),
                         ),
@@ -63,12 +66,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
                           onPressed: () => {
                             medicationType = MedicationType.injecao,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep3FrequencyType(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep3FrequencyType(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType),
+                              ),
+                            ),
                           },
                           child: const Text('Injeção'),
                         ),
@@ -80,12 +85,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
                           onPressed: () => {
                             medicationType = MedicationType.gotas,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep3FrequencyType(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep3FrequencyType(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType),
+                              ),
+                            ),
                           },
                           child: const Text('Gotas'),
                         ),
@@ -97,12 +104,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
                           onPressed: () => {
                             medicationType = MedicationType.pomada,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep3FrequencyType(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep3FrequencyType(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType),
+                              ),
+                            ),
                           },
                           child: const Text('Pomada'),
                         ),
@@ -114,12 +123,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
                           onPressed: () => {
                             medicationType = MedicationType.inalador,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep3FrequencyType(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep3FrequencyType(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType),
+                              ),
+                            ),
                           },
                           child: const Text('Inalador'),
                         ),
@@ -131,12 +142,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
                           onPressed: () => {
                             medicationType = MedicationType.liquido,
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateMedicationStep3FrequencyType(
-                                            medicationName: medicationName,
-                                            medicationType: medicationType)))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateMedicationStep3FrequencyType(
+                                        medicationName: medicationName,
+                                        medicationType: medicationType),
+                              ),
+                            ),
                           },
                           child: const Text('Liquido'),
                         ),

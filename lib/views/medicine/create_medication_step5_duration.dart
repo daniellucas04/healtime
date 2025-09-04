@@ -6,8 +6,8 @@ import 'package:app/views/medicine/create_medication_step6_quantity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CreateMedicationStep5FrequencyValue extends StatelessWidget {
-  CreateMedicationStep5FrequencyValue({
+class CreateMedicationStep5Duration extends StatelessWidget {
+  CreateMedicationStep5Duration({
     super.key,
     required this.medicationName,
     required this.medicationType,
@@ -25,16 +25,14 @@ class CreateMedicationStep5FrequencyValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'olá 5'),
+      resizeToAvoidBottomInset: false,
+      appBar: Header(title: 'Duração do tratamento'),
       body: Center(
           child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 60,
-            ),
             Container(
-              height: 400,
+              height: MediaQuery.of(context).size.height * 0.65,
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,26 +41,25 @@ class CreateMedicationStep5FrequencyValue extends StatelessWidget {
                     children: [
                       const Text('Total'),
                       SizedBox(
-                        width: 50,
+                        width: 100,
                         child: TextField(
-                          controller: medicationFrequencyValue,
+                          controller: medicationDuration,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(3)
+                            LengthLimitingTextInputFormatter(2)
                           ],
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
                               borderSide:
                                   BorderSide(color: Colors.grey, width: 1),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
                               borderSide:
                                   BorderSide(color: Colors.blue, width: 2),
                             ),
@@ -78,27 +75,29 @@ class CreateMedicationStep5FrequencyValue extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationFrequencyValue.text != "") {
+                        if (medicationDuration.text != "") {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateMedicationStep6Quantity(
-                                        medicationName: medicationName,
-                                        medicationType: medicationType,
-                                        medicationFrequencyType:
-                                            medicationFrequencyType,
-                                        medicationFrequencyValue:
-                                            medicationFrequencyValue,
-                                        medicationDuration: medicationDuration,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateMedicationStep6Quantity(
+                                medicationName: medicationName,
+                                medicationType: medicationType,
+                                medicationFrequencyType:
+                                    medicationFrequencyType,
+                                medicationFrequencyValue:
+                                    medicationFrequencyValue,
+                                medicationDuration: medicationDuration,
+                              ),
+                            ),
+                          );
                         } else {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => const Alert(
                               message: 'Adicione o intervalo de tempo',
-                              title: 'Campo Invalido',
+                              title: 'Campo Inválido',
                             ),
                           );
                         }

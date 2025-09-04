@@ -17,7 +17,8 @@ class HomePageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'olá'),
+      resizeToAvoidBottomInset: false,
+      appBar: Header(title: 'Seja bem-vindo!'),
       body: FutureBuilder<List<Medication>>(
         future: getAll(),
         builder: (context, snapshot) {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class FormInput extends StatelessWidget {
-  final Icon icon;
+  final Icon? icon;
   final String label;
   final TextEditingController controller;
 
   const FormInput({
     Key? key,
-    required this.icon,
+    this.icon,
     required this.label,
     required this.controller,
   });

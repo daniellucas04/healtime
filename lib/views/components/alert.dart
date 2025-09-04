@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Alert extends StatelessWidget{
-  
+class Alert extends StatelessWidget {
   final String title;
   final String message;
   final String? buttonMessage;
 
   const Alert({
-    Key? key, 
+    Key? key,
     required this.title,
-    required this.message, 
+    required this.message,
     this.buttonMessage,
   }) : super(key: key);
-  
-  
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -27,7 +25,9 @@ class Alert extends StatelessWidget{
       ),
       actions: <Widget>[
         TextButton(
-          child: buttonMessage != null ? Text(buttonMessage!) : const Text('Comfirmar'),
+          child: buttonMessage != null
+              ? Text(buttonMessage!)
+              : const Text('Confirmar'),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -35,4 +35,4 @@ class Alert extends StatelessWidget{
       ],
     );
   }
-} 
+}

@@ -1,7 +1,4 @@
 import 'package:app/controllers/medication_controller.dart';
-import 'package:app/dao/medication_dao.dart';
-import 'package:app/database/database_helper.dart';
-import 'package:app/models/medication.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/create_header.dart';
 import 'package:app/views/components/date_time_picker.dart';
@@ -64,7 +61,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       barrierDismissible: false,
       builder: (context) => const Alert(
         message: 'Adicione a data',
-        title: 'Campo Invalido',
+        title: 'Campo Inválido',
       ),
     );
   }
@@ -72,7 +69,8 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'olá 4'),
+      resizeToAvoidBottomInset: false,
+      appBar: Header(title: 'Data da primeira dose'),
       body: Center(
           child: SingleChildScrollView(
         child: Column(
@@ -98,8 +96,11 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                         onTap: () async => {
                           medicationFirstDate =
                               await dateTimePicker(context: context),
-                          medicationDate.text =
-                              dateFormat(medicationFirstDate!),
+                          if (medicationFirstDate != null)
+                            {
+                              medicationDate.text =
+                                  dateFormat(medicationFirstDate!),
+                            }
                         },
                       ),
                     ],
