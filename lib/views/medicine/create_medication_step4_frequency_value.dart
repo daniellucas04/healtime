@@ -17,7 +17,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
   final TextEditingController medicationName;
   final MedicationType medicationType;
   final MedicationFrequencyType medicationFrequencyType;
-  final TextEditingController medicationDuration = TextEditingController();
+  final TextEditingController medicationFrequencyValue = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                       SizedBox(
                         width: 100,
                         child: TextField(
-                          controller: medicationDuration,
+                          controller: medicationFrequencyValue,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
@@ -87,7 +87,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationDuration.text != "") {
+                        if (medicationFrequencyValue.text != "") {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -97,7 +97,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                                 medicationType: medicationType,
                                 medicationFrequencyType:
                                     medicationFrequencyType,
-                                medicationDuration: medicationDuration,
+                                medicationFrequencyValue: medicationFrequencyValue,
                               ),
                             ),
                           );

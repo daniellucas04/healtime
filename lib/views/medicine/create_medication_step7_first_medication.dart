@@ -28,27 +28,20 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
 
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
-    print(medicationName);
-    print(medicationType);
-    print(medicationFrequencyType);
-    print(medicationFrequencyValue);
-    print(medicationQuantity);
-    print(medicationFirstDate);
-    print(medicationName);
-    print(medicationName);
-    print(medicationName);
     if (medicationFirstDate != null) {
       var insertedMedication = MedicationController(
         name: medicationName.text,
         type: medicationType.name,
         frequencyType: medicationFrequencyType.name,
-        frequencyValue: int.parse(medicationFrequencyValue.text!),
+        frequencyValue: int.parse(medicationFrequencyValue.text),
         duration: int.parse(medicationFrequencyValue.text),
         quantity: int.parse(medicationQuantity.text),
         firstMedication: medicationFirstDate.toString(),
       ).save();
 
-      if (insertedMedication != 0) {
+      print(await insertedMedication);
+
+      if (await insertedMedication != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return;
       }

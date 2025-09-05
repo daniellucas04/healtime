@@ -12,14 +12,14 @@ class CreateMedicationStep5Duration extends StatelessWidget {
     required this.medicationName,
     required this.medicationType,
     required this.medicationFrequencyType,
-    required this.medicationDuration,
+    required this.medicationFrequencyValue,
   });
 
   final TextEditingController medicationName;
   final MedicationType medicationType;
   final MedicationFrequencyType medicationFrequencyType;
-  final TextEditingController medicationDuration;
-  final TextEditingController medicationFrequencyValue =
+  final TextEditingController medicationFrequencyValue;
+  final TextEditingController medicationDuration =
       TextEditingController();
 
   @override
