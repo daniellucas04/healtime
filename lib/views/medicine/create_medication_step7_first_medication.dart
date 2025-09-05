@@ -1,6 +1,6 @@
 import 'package:app/controllers/medication_controller.dart';
 import 'package:app/views/components/alert.dart';
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
@@ -28,13 +28,21 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
 
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
-
+    print(medicationName);
+    print(medicationType);
+    print(medicationFrequencyType);
+    print(medicationFrequencyValue);
+    print(medicationQuantity);
+    print(medicationFirstDate);
+    print(medicationName);
+    print(medicationName);
+    print(medicationName);
     if (medicationFirstDate != null) {
       var insertedMedication = MedicationController(
         name: medicationName.text,
         type: medicationType.name,
         frequencyType: medicationFrequencyType.name,
-        frequencyValue: int.parse(medicationFrequencyValue.text),
+        frequencyValue: int.parse(medicationFrequencyValue.text!),
         duration: int.parse(medicationFrequencyValue.text),
         quantity: int.parse(medicationQuantity.text),
         firstMedication: medicationFirstDate.toString(),
@@ -70,7 +78,10 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Data da primeira dose'),
+      appBar: Header(
+        title: 'Data da primeira dose',
+        subtitle: 'Qual a data que irá começar o tratamento?',
+      ),
       body: Center(
           child: SingleChildScrollView(
         child: Column(

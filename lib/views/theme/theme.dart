@@ -12,8 +12,9 @@ const Color secondaryLightTheme400 = Color.fromARGB(255, 61, 153, 245);
 const Color accentLightTheme = Color.fromARGB(255, 77, 127, 245);
 
 const Color textDarkTheme = Color.fromARGB(255, 231, 254, 251);
-const Color backgroundDarkTheme = Color.fromARGB(255, 1, 14, 12);
-const Color backgroundDarkTheme50 = Color.fromARGB(255, 2, 24, 21);
+const Color backgroundDarkTheme = Color.fromARGB(255, 32, 32, 32);
+const Color backgroundDarkTheme50 = Color.fromARGB(255, 49, 49, 49);
+const Color backgroundDarkTheme100 = Color.fromARGB(255, 78, 78, 78);
 const Color primaryDarkTheme = Color.fromARGB(255, 12, 223, 202);
 const Color secondaryDarkTheme = Color.fromARGB(255, 8, 76, 255);
 const Color secondaryDarkTheme500 = Color.fromARGB(255, 0, 72, 255);
@@ -24,8 +25,7 @@ class AppThemes {
     brightness: Brightness.light,
     scaffoldBackgroundColor: backgroundLightTheme,
     appBarTheme: const AppBarTheme(
-      toolbarHeight: 300,
-      backgroundColor: accentLightTheme,
+      backgroundColor: Colors.transparent,
       foregroundColor: textLightTheme,
       elevation: 0,
       titleTextStyle: TextStyle(color: textDarkTheme, fontSize: 24),
@@ -129,12 +129,10 @@ class AppThemes {
       bodyLarge: TextStyle(color: textDarkTheme),
       bodyMedium: TextStyle(color: textDarkTheme),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    navigationBarTheme: const NavigationBarThemeData(
+      elevation: 0,
       backgroundColor: backgroundDarkTheme50,
-      selectedIconTheme: IconThemeData(size: 32, color: secondaryDarkTheme),
-      selectedItemColor: secondaryDarkTheme,
-      unselectedIconTheme: IconThemeData(size: 32, color: textDarkTheme),
-      unselectedItemColor: textDarkTheme,
+      indicatorColor: backgroundDarkTheme100,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -158,8 +156,9 @@ class AppThemes {
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: secondaryDarkTheme,
-      foregroundColor: backgroundDarkTheme,
+      elevation: 2,
+      backgroundColor: secondaryLightTheme400,
+      foregroundColor: textDarkTheme,
     ),
     inputDecorationTheme: InputDecorationThemeData(
       floatingLabelAlignment: FloatingLabelAlignment.start,

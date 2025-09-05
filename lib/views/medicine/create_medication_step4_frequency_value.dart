@@ -1,5 +1,5 @@
 import 'package:app/views/components/alert.dart';
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step5_duration.dart';
@@ -23,7 +23,10 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Intervalo entre as doses'),
+      appBar: Header(
+        title: 'Intervalo entre as doses',
+        subtitle: 'Em que intervalo irá tomar as doses?',
+      ),
       body: Center(
           child: SingleChildScrollView(
         child: Column(

@@ -14,7 +14,8 @@ class _NavBar extends State<NavBar> {
     setState(() {
       switch (index) {
         case 0:
-          if (index != _selectedIndex) Navigator.pushReplacementNamed(context, '/');
+          if (index != _selectedIndex)
+            Navigator.pushReplacementNamed(context, '/');
           break;
         case 1:
           // Navigator.pushNamed(context, '/calendar');
@@ -33,25 +34,23 @@ class _NavBar extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 75,
-      child: BottomNavigationBar(
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+      child: NavigationBar(
+        onDestinationSelected: _onItemTapped,
+        selectedIndex: _selectedIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.calendar_month),
             label: 'Calendário',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.people),
             label: 'Pessoas',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.list),
             label: 'Menu',
           ),

@@ -1,5 +1,5 @@
 import 'package:app/views/components/alert.dart';
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step7_first_medication.dart';
@@ -27,7 +27,10 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Quantidade'),
+      appBar: Header(
+        title: 'Quantidade',
+        subtitle: 'Quantas unidades do medicamento possui?',
+      ),
       body: Center(
           child: SingleChildScrollView(
         child: Column(

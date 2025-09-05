@@ -1,4 +1,4 @@
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +24,10 @@ class CreateMedicationStep2Type extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Forma de consumo'),
+      appBar: Header(
+        title: 'Forma de consumo',
+        subtitle: 'Qual a forma de consumo?',
+      ),
       body: Center(
           child: SingleChildScrollView(
         child: Column(

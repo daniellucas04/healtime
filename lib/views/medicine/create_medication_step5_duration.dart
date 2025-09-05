@@ -1,5 +1,5 @@
 import 'package:app/views/components/alert.dart';
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step6_quantity.dart';
@@ -26,7 +26,10 @@ class CreateMedicationStep5Duration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Duração do tratamento'),
+      appBar: Header(
+        title: 'Duração do tratamento',
+        subtitle: 'Quantos dias o tratamento irá durar?',
+      ),
       body: Center(
           child: SingleChildScrollView(
         child: Column(

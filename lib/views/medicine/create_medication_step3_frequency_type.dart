@@ -1,4 +1,4 @@
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step4_frequency_value.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,10 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Qual frequência deve tomar?'),
+      appBar: Header(
+        title: 'Frequência de consumo',
+        subtitle: 'Qual a freqência que deve tomar?',
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

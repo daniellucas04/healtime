@@ -1,5 +1,5 @@
 import 'package:app/views/components/alert.dart';
-import 'package:app/views/components/create_header.dart';
+import 'package:app/views/components/header.dart';
 import 'package:app/views/components/form_input.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ class CreateMedicationStep1Name extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: Header(
         title: "Nome do medicamento",
+        subtitle: 'Qual o nome do medicamento?',
       ),
       body: SingleChildScrollView(
         child: Column(
