@@ -66,9 +66,10 @@ class HomePageScreen extends StatelessWidget {
                         child: Text(
                           'Nenhum registro encontrado',
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -83,6 +84,7 @@ class HomePageScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final medication = items[index];
               return Card(
+                shadowColor: Colors.black87,
                 elevation: 8,
                 margin: const EdgeInsets.all(12),
                 child: Container(
@@ -91,7 +93,7 @@ class HomePageScreen extends StatelessWidget {
                     gradient: const LinearGradient(
                       colors: [
                         accentLightTheme,
-                        Color.fromARGB(255, 13, 67, 192),
+                        Color.fromARGB(255, 8, 50, 150),
                       ],
                       begin: AlignmentGeometry.bottomLeft,
                       end: AlignmentGeometry.topRight,
@@ -103,23 +105,19 @@ class HomePageScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ListTile(
-                            iconColor: Colors.white,
+                            dense: true,
                             textColor: Colors.white,
-                            leading: const Icon(
-                              Icons.medication,
-                              size: 35,
-                              color: Colors.white,
-                            ),
                             title: Text(
-                              medication.name,
+                              medication.name.toUpperCase(),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             subtitle: Text(
                               '${medication.type}: ${medication.quantity}',
-                              style: TextStyle(
-                                color: Colors.grey,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
@@ -128,7 +126,10 @@ class HomePageScreen extends StatelessWidget {
                           timeFormat(
                             DateTime.parse(medication.firstMedication),
                           ),
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ],
                     ),
@@ -141,13 +142,16 @@ class HomePageScreen extends StatelessWidget {
       ),
       bottomNavigationBar: const NavBar(),
       floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add, size: 35),
+        child: const Icon(
+          Icons.add,
+          size: 35,
+          color: backgroundDarkTheme50,
+        ),
         onPressed: () => {
           Navigator.pushNamed(context, '/medicine_registration'),
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

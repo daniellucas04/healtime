@@ -1,5 +1,6 @@
 import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 enum MedicationType {
@@ -28,15 +29,14 @@ class CreateMedicationStep2Type extends StatelessWidget {
         title: 'Forma de consumo',
         subtitle: 'Qual a forma de consumo?',
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 60,
+            SizedBox(
+              height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: 440,
+              height: (context.heightPercentage(0.95) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,7 +165,7 @@ class CreateMedicationStep2Type extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

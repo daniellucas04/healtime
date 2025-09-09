@@ -4,6 +4,7 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CreateMedicationStep7FirstMedication extends StatelessWidget {
@@ -39,8 +40,6 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
         firstMedication: medicationFirstDate.toString(),
       ).save();
 
-      print(await insertedMedication);
-
       if (await insertedMedication != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return;
@@ -75,15 +74,14 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
         title: 'Data da primeira dose',
         subtitle: 'Qual a data que irá começar o tratamento?',
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 60,
+            SizedBox(
+              height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: 400,
+              height: (context.heightPercentage(0.95) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,7 +122,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

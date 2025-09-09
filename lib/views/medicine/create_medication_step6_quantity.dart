@@ -3,6 +3,7 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step7_first_medication.dart';
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -31,24 +32,26 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
         title: 'Quantidade',
         subtitle: 'Quantas unidades do medicamento possui?',
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 60,
+            SizedBox(
+              height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: 400,
+              height: (context.heightPercentage(0.95) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     children: [
-                      const Text('Total'),
+                      const Text(
+                        'Total',
+                        style: TextStyle(fontSize: 20),
+                      ),
                       SizedBox(
-                        width: 50,
+                        width: 100,
                         child: TextField(
                           controller: medicationQuantity,
                           keyboardType: TextInputType.number,
@@ -58,16 +61,15 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                           ],
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
                               borderSide:
                                   BorderSide(color: Colors.grey, width: 1),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.zero,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
                               borderSide:
                                   BorderSide(color: Colors.blue, width: 2),
                             ),
@@ -75,13 +77,16 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(medicationType == MedicationType.comprimido
-                          ? 'Comprimidos'
-                          : medicationType == MedicationType.gotas
-                              ? 'Gotas'
-                              : medicationType == MedicationType.liquido
-                                  ? 'Ml'
-                                  : 'Quantidade')
+                      Text(
+                        medicationType == MedicationType.comprimido
+                            ? 'Comprimidos'
+                            : medicationType == MedicationType.gotas
+                                ? 'Gotas'
+                                : medicationType == MedicationType.liquido
+                                    ? 'Ml'
+                                    : 'Quantidade',
+                        style: const TextStyle(fontSize: 20),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -91,20 +96,20 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                       onPressed: () {
                         if (medicationQuantity.text != "") {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateMedicationStep7FirstMedication(
-                                          medicationName: medicationName,
-                                          medicationType: medicationType,
-                                          medicationFrequencyType:
-                                              medicationFrequencyType,
-                                          medicationFrequencyValue:
-                                              medicationFrequencyValue,
-                                          medicationDuration:
-                                              medicationDuration,
-                                          medicationQuantity:
-                                              medicationQuantity)));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateMedicationStep7FirstMedication(
+                                      medicationName: medicationName,
+                                      medicationType: medicationType,
+                                      medicationFrequencyType:
+                                          medicationFrequencyType,
+                                      medicationFrequencyValue:
+                                          medicationFrequencyValue,
+                                      medicationDuration: medicationDuration,
+                                      medicationQuantity: medicationQuantity),
+                            ),
+                          );
                         } else {
                           showDialog<void>(
                             context: context,
@@ -124,7 +129,7 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

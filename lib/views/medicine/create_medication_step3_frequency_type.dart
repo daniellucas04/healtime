@@ -1,6 +1,7 @@
 import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step4_frequency_value.dart';
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 enum MedicationFrequencyType {
@@ -33,11 +34,11 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 60,
+            SizedBox(
+              height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: 400,
+              height: (context.heightPercentage(0.95) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

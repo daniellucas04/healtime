@@ -20,6 +20,14 @@ const Color secondaryDarkTheme = Color.fromARGB(255, 8, 76, 255);
 const Color secondaryDarkTheme500 = Color.fromARGB(255, 0, 72, 255);
 const Color accentDarkTheme = Color.fromARGB(255, 10, 61, 178);
 
+extension ScreenSizeExtension on BuildContext {
+  double get screenWidth => MediaQuery.of(this).size.width;
+  double get screenHeight => MediaQuery.of(this).size.height;
+
+  double widthPercentage(double percent) => screenWidth * percent;
+  double heightPercentage(double percent) => screenHeight * percent;
+}
+
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
@@ -35,8 +43,8 @@ class AppThemes {
       bodyMedium: TextStyle(color: textLightTheme),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: accentDarkTheme,
-      foregroundColor: textDarkTheme,
+      backgroundColor: accentLightTheme,
+      foregroundColor: textLightTheme900,
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
@@ -166,8 +174,8 @@ class AppThemes {
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       elevation: 1,
-      backgroundColor: secondaryDarkTheme500,
-      foregroundColor: textDarkTheme,
+      backgroundColor: primaryDarkTheme,
+      foregroundColor: secondaryLightTheme,
     ),
     inputDecorationTheme: InputDecorationThemeData(
       floatingLabelAlignment: FloatingLabelAlignment.start,

@@ -3,6 +3,7 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step5_duration.dart';
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,7 +18,8 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
   final TextEditingController medicationName;
   final MedicationType medicationType;
   final MedicationFrequencyType medicationFrequencyType;
-  final TextEditingController medicationFrequencyValue = TextEditingController();
+  final TextEditingController medicationFrequencyValue =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +29,14 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
         title: 'Intervalo entre as doses',
         subtitle: 'Em que intervalo irá tomar as doses?',
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 60,
+            SizedBox(
+              height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: 400,
+              height: (context.heightPercentage(0.95) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,7 +98,8 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                                 medicationType: medicationType,
                                 medicationFrequencyType:
                                     medicationFrequencyType,
-                                medicationFrequencyValue: medicationFrequencyValue,
+                                medicationFrequencyValue:
+                                    medicationFrequencyValue,
                               ),
                             ),
                           );
@@ -120,7 +122,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

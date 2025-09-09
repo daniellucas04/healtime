@@ -3,6 +3,7 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step6_quantity.dart';
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,8 +20,7 @@ class CreateMedicationStep5Duration extends StatelessWidget {
   final MedicationType medicationType;
   final MedicationFrequencyType medicationFrequencyType;
   final TextEditingController medicationFrequencyValue;
-  final TextEditingController medicationDuration =
-      TextEditingController();
+  final TextEditingController medicationDuration = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +30,24 @@ class CreateMedicationStep5Duration extends StatelessWidget {
         title: 'Duração do tratamento',
         subtitle: 'Quantos dias o tratamento irá durar?',
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            SizedBox(
+              height: (context.heightPercentage(0.05)),
+            ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.65,
+              height: (context.heightPercentage(0.95) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     children: [
-                      const Text('Total'),
+                      const Text(
+                        'Total',
+                        style: TextStyle(fontSize: 20),
+                      ),
                       SizedBox(
                         width: 100,
                         child: TextField(
@@ -70,7 +75,10 @@ class CreateMedicationStep5Duration extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Text('Dias'),
+                      const Text(
+                        'Dias',
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -113,7 +121,7 @@ class CreateMedicationStep5Duration extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }
