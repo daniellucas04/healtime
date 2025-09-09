@@ -35,15 +35,23 @@ class AppThemes {
       bodyMedium: TextStyle(color: textLightTheme),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: secondaryLightTheme,
+      backgroundColor: accentDarkTheme,
       foregroundColor: textDarkTheme,
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: backgroundLightTheme50,
-      selectedIconTheme: IconThemeData(size: 32, color: secondaryLightTheme),
-      selectedItemColor: secondaryLightTheme,
-      unselectedIconTheme: IconThemeData(size: 32, color: textLightTheme900),
-      unselectedItemColor: textLightTheme900,
+    navigationBarTheme: NavigationBarThemeData(
+      elevation: 0,
+      backgroundColor: secondaryLightTheme400,
+      indicatorColor: const Color.fromARGB(255, 27, 84, 216),
+      labelTextStyle: WidgetStateTextStyle.resolveWith((states) {
+        return const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.w600);
+      }),
+      iconTheme: WidgetStateProperty.resolveWith<IconThemeData?>(
+        (Set<WidgetState> states) {
+          return const IconThemeData(
+              color: backgroundLightTheme); // Default theme
+        },
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -94,6 +102,7 @@ class AppThemes {
     cardTheme: const CardThemeData(
       color: accentLightTheme,
       shadowColor: Colors.black38,
+      elevation: 1,
     ),
     listTileTheme: const ListTileThemeData(
       iconColor: primaryLightTheme,
@@ -156,8 +165,8 @@ class AppThemes {
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      elevation: 2,
-      backgroundColor: secondaryLightTheme400,
+      elevation: 1,
+      backgroundColor: secondaryDarkTheme500,
       foregroundColor: textDarkTheme,
     ),
     inputDecorationTheme: InputDecorationThemeData(
@@ -185,6 +194,7 @@ class AppThemes {
     cardTheme: const CardThemeData(
       color: accentDarkTheme,
       shadowColor: Colors.white30,
+      elevation: 1,
     ),
     dialogTheme: const DialogThemeData(
       backgroundColor: backgroundDarkTheme50,

@@ -27,11 +27,14 @@ class HomePageScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
+
           if (snapshot.hasError) {
             return Center(child: Text('Erro: ${snapshot.error}'));
           }
-          final dados = snapshot.data ?? [];
-          if (dados.isEmpty) {
+
+          final items = snapshot.data ?? [];
+
+          if (items.isEmpty) {
             return Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -53,7 +56,6 @@ class HomePageScreen extends StatelessWidget {
                   const Center(
                     child: Card(
                       elevation: 0,
-                      color: backgroundDarkTheme100,
                       child: Padding(
                         padding: EdgeInsets.only(
                           left: 50,
@@ -64,9 +66,9 @@ class HomePageScreen extends StatelessWidget {
                         child: Text(
                           'Nenhum registro encontrado',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
                         ),
                       ),
                     ),
@@ -75,45 +77,66 @@ class HomePageScreen extends StatelessWidget {
               ),
             );
           }
-          return Scaffold(
-              body: Column(
-            children: [
-              Text(''),
-              ListView.builder(
-                itemCount: dados.length,
-                itemBuilder: (context, index) {
-                  final medication = dados[index];
-                  return Card(
-                    elevation: 4,
-                    margin: const EdgeInsets.all(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.medication,
-                                size: 35,
-                              ),
-                              title: Text(medication.name),
-                              subtitle: Text(
-                                  '${medication.type}: ${medication.quantity}'),
-                            ),
-                          ),
-                          Text(
-                            timeFormat(
-                              DateTime.parse(medication.firstMedication),
-                            ),
-                          ),
-                        ],
-                      ),
+
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final medication = items[index];
+              return Card(
+                elevation: 8,
+                margin: const EdgeInsets.all(12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    gradient: const LinearGradient(
+                      colors: [
+                        accentLightTheme,
+                        Color.fromARGB(255, 13, 67, 192),
+                      ],
+                      begin: AlignmentGeometry.bottomLeft,
+                      end: AlignmentGeometry.topRight,
                     ),
-                  );
-                },
-              ),
-            ],
-          ));
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            iconColor: Colors.white,
+                            textColor: Colors.white,
+                            leading: const Icon(
+                              Icons.medication,
+                              size: 35,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              medication.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${medication.type}: ${medication.quantity}',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          timeFormat(
+                            DateTime.parse(medication.firstMedication),
+                          ),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
       bottomNavigationBar: const NavBar(),
