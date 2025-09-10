@@ -21,7 +21,7 @@ class _NavBar extends State<NavBar> {
           // Navigator.pushNamed(context, '/calendar');
           break;
         case 2:
-          // Navigator.pushNamed(context, '/people');
+          Navigator.pushNamed(context, '/people');
           break;
         case 3:
           // Navigator.pushNamed(context, '/menu');
