@@ -81,7 +81,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

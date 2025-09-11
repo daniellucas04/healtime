@@ -4,6 +4,7 @@ import 'package:app/models/medication.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/navigation_bar.dart';
+import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -83,55 +84,64 @@ class HomePageScreen extends StatelessWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final medication = items[index];
-              return Card(
-                shadowColor: Colors.black87,
-                elevation: 8,
-                margin: const EdgeInsets.all(12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    gradient: const LinearGradient(
-                      colors: [
-                        accentLightTheme,
-                        Color.fromARGB(255, 8, 50, 150),
-                      ],
-                      begin: AlignmentGeometry.bottomLeft,
-                      end: AlignmentGeometry.topRight,
-                    ),
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        EditMedication(medication: medication),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ListTile(
-                            dense: true,
-                            textColor: Colors.white,
-                            title: Text(
-                              medication.name.toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
+                ),
+                child: Card(
+                  shadowColor: Colors.black87,
+                  elevation: 8,
+                  margin: const EdgeInsets.all(12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      gradient: const LinearGradient(
+                        colors: [
+                          accentLightTheme,
+                          Color.fromARGB(255, 8, 50, 150),
+                        ],
+                        begin: AlignmentGeometry.bottomLeft,
+                        end: AlignmentGeometry.topRight,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ListTile(
+                              dense: true,
+                              textColor: Colors.white,
+                              title: Text(
+                                medication.name.toUpperCase(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${medication.type}: ${medication.quantity}',
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
-                            subtitle: Text(
-                              '${medication.type}: ${medication.quantity}',
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.w700,
-                              ),
+                          ),
+                          Text(
+                            timeFormat(
+                              DateTime.parse(medication.firstMedication),
+                            ),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
-                        ),
-                        Text(
-                          timeFormat(
-                            DateTime.parse(medication.firstMedication),
-                          ),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

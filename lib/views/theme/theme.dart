@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 const Color textLightTheme = Color.fromARGB(255, 1, 24, 21);
 const Color textLightTheme900 = Color.fromARGB(255, 2, 49, 43);
@@ -30,6 +29,7 @@ extension ScreenSizeExtension on BuildContext {
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.light,
     scaffoldBackgroundColor: backgroundLightTheme,
     appBarTheme: const AppBarTheme(
@@ -135,6 +135,7 @@ class AppThemes {
   );
 
   static final ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: backgroundDarkTheme,
     appBarTheme: const AppBarTheme(

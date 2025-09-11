@@ -6,7 +6,7 @@ class FormInput extends StatelessWidget {
   final TextEditingController controller;
 
   const FormInput({
-    Key? key,
+    super.key,
     this.icon,
     required this.label,
     required this.controller,
