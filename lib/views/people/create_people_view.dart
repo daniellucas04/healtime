@@ -1,4 +1,4 @@
-import 'package:app/views/people/create_peope_step1_name.dart';
+import 'package:app/views/people/create_people_step1_name.dart';
 import 'package:flutter/material.dart';
 
 class CreatePeopleView extends StatelessWidget {
