@@ -33,7 +33,7 @@ class MedicationController {
       firstMedication: firstMedication!,
     );
     final medicationDao =
-        new MedicationDao(database: await DatabaseHelper.instance.database);
+        MedicationDao(database: await DatabaseHelper.instance.database);
     return await medicationDao.insert(medication);
   }
 }

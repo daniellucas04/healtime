@@ -1,4 +1,7 @@
 import 'package:app/controllers/medication_controller.dart';
+import 'package:app/dao/medicationschedule_dao.dart';
+import 'package:app/database/database_helper.dart';
+import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
@@ -30,6 +33,13 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
     if (medicationFirstDate != null) {
+      var interval = 0;
+      var duration = int.parse(medicationDuration.text);
+      DateTime incrementDate = medicationFirstDate!;
+      DateTime finalDate =
+          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
+      finalDate = finalDate.add(Duration(days: duration));
+
       var insertedMedication = MedicationController(
         name: medicationName.text,
         type: medicationType.name,
@@ -41,6 +51,24 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       ).save();
 
       if (await insertedMedication != 0) {
+        if (medicationFrequencyType == MedicationFrequencyType.dias) {
+          interval = int.parse(medicationFrequencyValue.text) * 24;
+        } else if (medicationFrequencyType == MedicationFrequencyType.semanas) {
+          interval = int.parse(medicationFrequencyValue.text) * 168;
+        } else {
+          interval = int.parse(medicationFrequencyValue.text);
+        }
+
+        while (incrementDate.isBefore(finalDate)) {
+          await MedicationScheduleDao(
+                  database: await DatabaseHelper.instance.database)
+              .insert(MedicationSchedule(
+                  date: incrementDate.toString(),
+                  status: "status",
+                  medicationId: 1));
+          incrementDate = incrementDate.add(Duration(hours: interval));
+        }
+
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return;
       }
