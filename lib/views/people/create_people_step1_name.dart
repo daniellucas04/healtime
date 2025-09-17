@@ -2,6 +2,7 @@ import 'package:app/helpers/screen_size.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/form_input.dart';
+import 'package:app/views/people/create_people_step2_date.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -49,14 +50,15 @@ class CreatePeopleStep1Name extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         if (peopleName.text != "") {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => CreatePeopeStep2Name(
-                          //       peopleName: peopleName,
-                          //     ),
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreatePeopleStep2Date(
+                                peopleName: peopleName,
+                                controlerDate: TextEditingController(),
+                              ),
+                            ),
+                          );
                         } else {
                           showDialog<void>(
                             context: context,
