@@ -1,4 +1,3 @@
-
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/user.dart';
@@ -9,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 Future<List<User>> getAll() async {
-  return UserDao(database: await DatabaseHelper.instance.database)
-      .getAll();
+  return UserDao(database: await DatabaseHelper.instance.database).getAll();
 }
 
 class HomePeople extends StatelessWidget {
@@ -108,10 +106,14 @@ class HomePeople extends StatelessWidget {
                             dense: true,
                             textColor: Colors.white,
                             title: Text(
-                              user.name.toUpperCase(),
+                              user.name,
                               style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
+                                  fontWeight: FontWeight.w600, fontSize: 18),
+                            ),
+                            subtitle: Text(
+                              DateFormat('dd/MM/yyyy').format(user.nascimento),
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),

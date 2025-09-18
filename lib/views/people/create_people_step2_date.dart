@@ -1,10 +1,10 @@
 import 'package:app/controllers/user_controller.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
-import 'package:app/views/people/create_people_step1_name.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CreatePeopleStep2Date extends StatelessWidget {
   CreatePeopleStep2Date({
     super.key,
