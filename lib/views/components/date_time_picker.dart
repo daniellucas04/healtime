@@ -37,6 +37,34 @@ Future<DateTime?> dateTimePicker({
   );
 }
 
+Future<DateTime?> datePicker({
+  required BuildContext context,
+  DateTime? initialDate,
+  DateTime? firstDate,
+  DateTime? lastDate,
+}) async {
+  initialDate ??= DateTime.now();
+  firstDate ??= DateTime(2000);
+  lastDate ??= DateTime(2100);
+
+  final DateTime? selectedDate = await showDatePicker(
+    context: context,
+    initialDate: initialDate,
+    firstDate: firstDate,
+    lastDate: lastDate,
+  );
+
+  if (selectedDate == null) return null;
+
+  if (!context.mounted) return null;
+
+  return DateTime(
+    selectedDate.year,
+    selectedDate.month,
+    selectedDate.day,
+  );
+}
+
 String dateFormat(DateTime date) {
   return '${date.day}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().padLeft(2, '0')} '
       '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';

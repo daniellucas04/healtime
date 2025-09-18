@@ -64,8 +64,8 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                   database: await DatabaseHelper.instance.database)
               .insert(MedicationSchedule(
                   date: incrementDate.toString(),
-                  status: "status",
-                  medicationId: 1));
+                  status: "N",
+                  medicationId: await insertedMedication));
           incrementDate = incrementDate.add(Duration(hours: interval));
         }
 
@@ -118,7 +118,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                     children: [
                       TextField(
                         controller: medicationDate,
-                        readOnly: true, // Impede digitação manual
+                        readOnly: true,
                         decoration: const InputDecoration(
                           labelText: "Data e Hora",
                           border: OutlineInputBorder(),
