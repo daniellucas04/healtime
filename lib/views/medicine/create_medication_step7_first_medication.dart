@@ -1,4 +1,5 @@
 import 'package:app/controllers/medication_controller.dart';
+import 'package:app/models/medication.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
@@ -29,8 +30,9 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
 
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
+
     if (medicationFirstDate != null) {
-      var insertedMedication = MedicationController(
+      Medication medication = Medication(
         name: medicationName.text,
         type: medicationType.name,
         frequencyType: medicationFrequencyType.name,
@@ -38,7 +40,9 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
         duration: int.parse(medicationFrequencyValue.text),
         quantity: int.parse(medicationQuantity.text),
         firstMedication: medicationFirstDate.toString(),
-      ).save();
+      );
+
+      var insertedMedication = MedicationController().save(medication);
 
       if (await insertedMedication != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -48,10 +52,15 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Alert(
+        builder: (context) => Alert(
           message: 'Ocorreu um erro ao cadastrar o medicamento',
           title: 'Erro ao Cadastrar',
-          buttonMessage: 'ok',
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: Text('OK'),
+            )
+          ],
         ),
       );
     }
@@ -62,6 +71,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       builder: (context) => const Alert(
         message: 'Adicione a data',
         title: 'Campo Inválido',
+        actions: [],
       ),
     );
   }

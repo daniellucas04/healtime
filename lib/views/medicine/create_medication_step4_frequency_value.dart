@@ -107,9 +107,15 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Adicione o intervalo de tempo',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }

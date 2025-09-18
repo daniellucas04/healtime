@@ -62,9 +62,15 @@ class CreateMedicationStep1Name extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Digite o nome do medicamento',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }

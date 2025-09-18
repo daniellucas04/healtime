@@ -114,9 +114,15 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Adicione a quantidade',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }
