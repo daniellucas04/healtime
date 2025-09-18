@@ -1,8 +1,6 @@
-import 'package:app/views/medicine/create_medication_view.dart';
 import 'package:app/views/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:app/views/theme/theme.dart';
-import 'package:app/views/homepage_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
