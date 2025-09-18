@@ -137,100 +137,104 @@ class HomePageScreen extends StatelessWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final medication = items[index];
-              return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        EditMedication(medication: medication),
-                  ),
-                ),
-                onLongPress: () async {
-                  final navigator = Navigator.of(context);
-                  var authenticated = await _authenticate();
-
-                  if (!context.mounted) return;
-
-                  if (authenticated) {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (context) => Alert(
-                        title:
-                            'O medicamento ${medication.name} será removido!',
-                        message: 'Tem certeza que deseja realizar esta ação?',
-                        actions: <Widget>[
-                          TextButton(
-                              onPressed: () {
-                                navigator.pop();
-                              },
-                              child: const Text('Cancelar')),
-                          TextButton(
-                            onPressed: () async {
-                              if (await _deleteMedication(medication)) {
-                                navigator.pushNamed('/');
-                              }
-                            },
-                            child: const Text('Confirmar'),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Falha na autenticação')),
-                    );
-                  }
-                },
-                child: Card(
-                  shadowColor: Colors.black87,
-                  elevation: 8,
-                  margin: const EdgeInsets.all(12),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      gradient: const LinearGradient(
-                        colors: [
-                          accentLightTheme,
-                          Color.fromARGB(255, 8, 50, 150),
-                        ],
-                        begin: AlignmentGeometry.bottomLeft,
-                        end: AlignmentGeometry.topRight,
-                      ),
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    gradient: const LinearGradient(
+                      colors: [
+                        accentLightTheme,
+                        Color.fromARGB(255, 8, 50, 150),
+                      ],
+                      begin: AlignmentGeometry.bottomLeft,
+                      end: AlignmentGeometry.topRight,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ListTile(
-                              dense: true,
-                              textColor: Colors.white,
-                              title: Text(
-                                medication.name.toUpperCase(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      highlightColor: Colors.blue.withAlpha(100),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditMedication(medication: medication),
+                        ),
+                      ),
+                      onLongPress: () async {
+                        final navigator = Navigator.of(context);
+                        var authenticated = await _authenticate();
+
+                        if (!context.mounted) return;
+
+                        if (authenticated) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) => Alert(
+                              title:
+                                  'O medicamento ${medication.name} será removido!',
+                              message:
+                                  'Tem certeza que deseja realizar esta ação?',
+                              actions: <Widget>[
+                                TextButton(
+                                    onPressed: () {
+                                      navigator.pop();
+                                    },
+                                    child: const Text('Cancelar')),
+                                TextButton(
+                                  onPressed: () async {
+                                    if (await _deleteMedication(medication)) {
+                                      navigator.pushNamed('/');
+                                    }
+                                  },
+                                  child: const Text('Confirmar'),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Falha na autenticação')),
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ListTile(
+                                dense: true,
+                                textColor: Colors.white,
+                                title: Text(
+                                  medication.name.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '${medication.type}: ${medication.quantity}',
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
-                              subtitle: Text(
-                                '${medication.type}: ${medication.quantity}',
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                            ),
+                            Text(
+                              timeFormat(
+                                DateTime.parse(medication.firstMedication),
+                              ),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
                               ),
                             ),
-                          ),
-                          Text(
-                            timeFormat(
-                              DateTime.parse(medication.firstMedication),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
