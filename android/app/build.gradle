@@ -23,9 +23,8 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.app"
-    compileSdkVersion 34
-    // compileSdkVersion flutter.compileSdkVersion
+    namespace "com.healtime.app"
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
