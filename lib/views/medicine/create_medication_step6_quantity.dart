@@ -94,7 +94,8 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationQuantity.text != "") {
+                        if (medicationQuantity.text != "" &&
+                            int.parse(medicationQuantity.text) != 0) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

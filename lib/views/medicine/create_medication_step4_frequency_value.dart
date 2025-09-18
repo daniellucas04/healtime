@@ -1,3 +1,4 @@
+import 'package:app/views/components/max_value_input_formatter.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
@@ -54,7 +55,16 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(2)
+                            LengthLimitingTextInputFormatter(2),
+                            (medicationFrequencyType ==
+                                        MedicationFrequencyType.vezesAoDia ||
+                                    medicationFrequencyType ==
+                                        MedicationFrequencyType.horas)
+                                ? MaxValueInputFormatter(23)
+                                : medicationFrequencyType ==
+                                        MedicationFrequencyType.dias
+                                    ? MaxValueInputFormatter(6)
+                                    : MaxValueInputFormatter(99)
                           ],
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(
@@ -79,7 +89,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                                 MedicationFrequencyType.vezesAoDia
                             ? "vezes ao dia"
                             : medicationFrequencyType.name,
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                       )
                     ],
                   ),
@@ -88,7 +98,8 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationFrequencyValue.text != "") {
+                        if (medicationFrequencyValue.text != "" &&
+                            int.parse(medicationFrequencyValue.text) != 0) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

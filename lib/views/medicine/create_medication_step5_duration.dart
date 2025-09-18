@@ -86,7 +86,8 @@ class CreateMedicationStep5Duration extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationDuration.text != "") {
+                        if (medicationDuration.text != "" &&
+                            int.parse(medicationDuration.text) != 0) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

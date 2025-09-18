@@ -40,78 +40,74 @@ class _HomePageScreenState extends State<HomePageScreen> {
           final items = snapshot.data ?? [];
 
           if (items.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          onPressed: () async {
-                            setState(() {
-                              searchDate =
-                                  searchDate.add(const Duration(days: -1));
-                            });
-                          },
-                          icon: const Icon(
-                              Icons.keyboard_double_arrow_left_outlined)),
-                      TextButton(
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
                         onPressed: () async {
-                          DateTime? selectedDate = await datePicker(
-                              context: context, initialDate: searchDate);
                           setState(() {
-                            if (selectedDate != null) {
-                              searchDate = selectedDate;
-                            }
+                            searchDate =
+                                searchDate.add(const Duration(days: -1));
                           });
                         },
-                        child: Text(
-                          DateFormat('dd/MM').format(searchDate),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        icon: const Icon(
+                            Icons.keyboard_double_arrow_left_outlined)),
+                    TextButton(
+                      onPressed: () async {
+                        DateTime? selectedDate = await datePicker(
+                            context: context, initialDate: searchDate);
+                        setState(() {
+                          if (selectedDate != null) {
+                            searchDate = selectedDate;
+                          }
+                        });
+                      },
+                      child: Text(
+                        DateFormat('dd/MM').format(searchDate),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      IconButton(
-                          onPressed: () async {
-                            setState(() {
-                              searchDate =
-                                  searchDate.add(const Duration(days: 1));
-                            });
-                          },
-                          icon: const Icon(
-                              Icons.keyboard_double_arrow_right_outlined))
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 18,
-                  ),
-                  const Center(
-                    child: Card(
-                      elevation: 0,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 50,
-                          right: 50,
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        child: Text(
-                          'Nenhum registro encontrado',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          setState(() {
+                            searchDate =
+                                searchDate.add(const Duration(days: 1));
+                          });
+                        },
+                        icon: const Icon(
+                            Icons.keyboard_double_arrow_right_outlined))
+                  ],
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                const Center(
+                  child: Card(
+                    elevation: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 50,
+                        right: 50,
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      child: Text(
+                        'Nenhum registro encontrado',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }
 

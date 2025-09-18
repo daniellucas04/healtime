@@ -55,6 +55,9 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
           interval = int.parse(medicationFrequencyValue.text) * 24;
         } else if (medicationFrequencyType == MedicationFrequencyType.semanas) {
           interval = int.parse(medicationFrequencyValue.text) * 168;
+        } else if (medicationFrequencyType ==
+            MedicationFrequencyType.vezesAoDia) {
+          interval = (24 ~/ int.parse(medicationFrequencyValue.text));
         } else {
           interval = int.parse(medicationFrequencyValue.text);
         }
