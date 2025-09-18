@@ -1,6 +1,8 @@
+import 'package:app/controllers/medication_controller.dart';
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
+import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/navigation_bar.dart';
@@ -8,6 +10,9 @@ import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
+import 'package:local_auth_darwin/local_auth_darwin.dart';
 
 Future<List<Medication>> getAll() async {
   return MedicationDao(database: await DatabaseHelper.instance.database)
@@ -15,7 +20,55 @@ Future<List<Medication>> getAll() async {
 }
 
 class HomePageScreen extends StatelessWidget {
-  const HomePageScreen({super.key});
+  final LocalAuthentication _localAuth = LocalAuthentication();
+  HomePageScreen({super.key});
+
+  Future<bool> _deleteMedication(Medication medication) async {
+    var deletedMedication = MedicationController().delete(medication);
+
+    if (await deletedMedication != 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool> _authenticate() async {
+    try {
+      bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
+
+      if (!canCheckBiometrics) {
+        return false;
+      }
+
+      bool authenticated = await _localAuth.authenticate(
+        authMessages: const <AuthMessages>[
+          AndroidAuthMessages(
+            biometricSuccess: 'Autenticação realizada com sucesso!',
+            signInTitle: 'Autenticação',
+            biometricHint: '',
+          ),
+          IOSAuthMessages(),
+        ],
+        localizedReason: 'Realize a autenticação para liberar este recurso',
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+      );
+
+      return authenticated;
+    } catch (e) {
+      print('Erro na autenticação: $e');
+      return false;
+    }
+  }
+
+  void _closeAlert(context) {
+    if (!context.mounted) return;
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +145,43 @@ class HomePageScreen extends StatelessWidget {
                         EditMedication(medication: medication),
                   ),
                 ),
+                onLongPress: () async {
+                  final navigator = Navigator.of(context);
+                  var authenticated = await _authenticate();
+
+                  if (!context.mounted) return;
+
+                  if (authenticated) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) => Alert(
+                        title:
+                            'O medicamento ${medication.name} será removido!',
+                        message: 'Tem certeza que deseja realizar esta ação?',
+                        actions: <Widget>[
+                          TextButton(
+                              onPressed: () {
+                                navigator.pop();
+                              },
+                              child: const Text('Cancelar')),
+                          TextButton(
+                            onPressed: () async {
+                              if (await _deleteMedication(medication)) {
+                                navigator.pushNamed('/');
+                              }
+                            },
+                            child: const Text('Confirmar'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Falha na autenticação')),
+                    );
+                  }
+                },
                 child: Card(
                   shadowColor: Colors.black87,
                   elevation: 8,

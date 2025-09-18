@@ -1,6 +1,8 @@
+import 'package:app/controllers/medication_controller.dart';
 import 'package:app/helpers/medication_validations.dart';
 import 'package:app/models/medication.dart';
 import 'package:app/types/medication_info.dart';
+import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/form_input.dart';
 import 'package:app/views/components/header.dart';
@@ -16,46 +18,113 @@ class EditMedication extends StatefulWidget {
 }
 
 class _EditMedicationState extends State<EditMedication> {
-  late Object? selectedMedicationType = widget.medication.type;
-  late Object? selectedMedicationFrequencyType =
-      widget.medication.frequencyType;
+  late int? medicationId;
+  late String medicationName;
+  late int medicationDuration;
+  late int medicationQuantity;
+  late DateTime? firstMedication;
+  late Object? selectedType;
+  late Object? selectedFrequencyType;
+  late TextEditingController nameInputController;
+  late TextEditingController durationInputController;
+  late TextEditingController quantityInputController;
+  late TextEditingController firstMedicationController;
 
   Future<void> updateMedication(context) async {
     if (!context.mounted) return;
 
-    // TODO: Implement validation
+    Medication medication = Medication(
+      //TODO: Adicionar o valor da frequência na tela
+      id: medicationId,
+      name: nameInputController.text,
+      type: selectedType.toString(),
+      frequencyType: selectedFrequencyType.toString(),
+      frequencyValue: 1,
+      duration: int.parse(durationInputController.text),
+      quantity: int.parse(quantityInputController.text),
+      firstMedication: firstMedicationController.text,
+    );
+
+    MedicationValidations validations =
+        MedicationValidations(medication: medication);
+
+    if (validations.validate()) {
+      var updatedMedication = MedicationController().update(medication);
+
+      if (await updatedMedication != 0) {
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        return;
+      }
+
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Alert(
+          message: 'Ocorreu um erro ao atualizar o medicamento',
+          title: 'Erro ao Atualizar',
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Alert(
+          message: 'Dados inválidos',
+          title: 'Preencha os dados corretamente',
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: Text('OK'),
+            )
+          ]),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    medicationId = widget.medication.id;
+    medicationName = widget.medication.name;
+    medicationDuration = widget.medication.duration;
+    medicationQuantity = widget.medication.quantity;
+    firstMedication = DateTime.tryParse(widget.medication.firstMedication);
+
+    selectedType = widget.medication.type;
+    selectedFrequencyType = widget.medication.frequencyType;
+
+    nameInputController = TextEditingController(text: medicationName);
+    durationInputController =
+        TextEditingController(text: medicationDuration.toString());
+    quantityInputController =
+        TextEditingController(text: medicationQuantity.toString());
+    firstMedicationController =
+        TextEditingController(text: firstMedication?.toUtc().toString() ?? '');
   }
 
   @override
   Widget build(BuildContext context) {
-    String medicationName = widget.medication.name;
-    int medicationDuration = widget.medication.duration;
-    int medicationQuantity = widget.medication.quantity;
-    DateTime? firstMedication =
-        DateTime.parse(widget.medication.firstMedication);
-
-    final TextEditingController nameInputController =
-        TextEditingController(text: medicationName);
-    final TextEditingController durationInputController =
-        TextEditingController(text: medicationDuration.toString());
-    final TextEditingController quantityInputController =
-        TextEditingController(text: medicationQuantity.toString());
-    final TextEditingController firstMedicationController =
-        TextEditingController(text: firstMedication.toUtc().toString());
-
     return Scaffold(
       appBar: Header(
-        title: '${medicationName.toUpperCase()}',
+        title: medicationName.toUpperCase(),
         subtitle: 'Edite as informações do medicamento',
       ),
       body: Center(
         child: Container(
-          margin: const EdgeInsets.only(left: 30, right: 30),
+          margin: const EdgeInsets.only(left: 24, right: 24),
           child: Column(
-            spacing: context.heightPercentage(0.04),
+            spacing: context.heightPercentage(0.03),
             children: [
-              SizedBox(
-                height: context.heightPercentage(0.05),
+              const SizedBox(
+                height: 2.0,
               ),
               FormInput(
                 label: 'Nome do medicamento',
@@ -65,18 +134,18 @@ class _EditMedicationState extends State<EditMedication> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tipo de medicamento'),
+                  const Text('Tipo de medicamento'),
                   DropdownButton(
-                    value: selectedMedicationType,
+                    value: selectedType,
                     onChanged: (Object? value) {
                       setState(
                         () {
-                          selectedMedicationType = value;
+                          selectedType = value;
                         },
                       );
                     },
                     isExpanded: true,
-                    icon: Icon(Icons.numbers),
+                    icon: const Icon(Icons.numbers),
                     items: medicationTypes.map((item) {
                       return DropdownMenuItem(
                           value: item.key, child: Text(item.value));
@@ -87,18 +156,18 @@ class _EditMedicationState extends State<EditMedication> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tipo de frequência'),
+                  const Text('Tipo de frequência'),
                   DropdownButton(
-                    value: selectedMedicationFrequencyType,
+                    value: selectedFrequencyType,
                     onChanged: (Object? value) {
                       setState(
                         () {
-                          selectedMedicationFrequencyType = value;
+                          selectedFrequencyType = value;
                         },
                       );
                     },
                     isExpanded: true,
-                    icon: Icon(Icons.calendar_month),
+                    icon: const Icon(Icons.calendar_month),
                     items: medicationFrequencyTypes.map((item) {
                       return DropdownMenuItem(
                           value: item.key, child: Text(item.value));
@@ -133,7 +202,6 @@ class _EditMedicationState extends State<EditMedication> {
                 },
               ),
               SizedBox(
-                height: 45,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
