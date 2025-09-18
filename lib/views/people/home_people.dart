@@ -7,12 +7,42 @@ import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Future<List<User>> getAll() async {
-  return UserDao(database: await DatabaseHelper.instance.database).getAll();
+class HomePeople extends StatefulWidget {
+  const HomePeople({super.key});
+
+  @override
+  State<HomePeople> createState() => _HomePeopleState();
 }
 
-class HomePeople extends StatelessWidget {
-  const HomePeople({super.key});
+class _HomePeopleState extends State<HomePeople> {
+  late Future<List<User>> _userList;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+  }
+
+  void _loadUsers() {
+    _userList = _getUsersWithDefault();
+  }
+
+  Future<List<User>> _getUsersWithDefault() async {
+    final db = await DatabaseHelper.instance.database;
+    final users = await UserDao(database: db).getAll();
+
+    if (users.isEmpty) {
+      users.add(
+        User(
+          id: null,
+          name: 'Você',
+          nascimento: DateTime.now(), // ou qualquer outra data representativa
+        ),
+      );
+    }
+
+    return users;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +50,7 @@ class HomePeople extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: Header(title: 'Seja bem-vindo!'),
       body: FutureBuilder<List<User>>(
-        future: getAll(),
+        future: _userList,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -30,57 +60,12 @@ class HomePeople extends StatelessWidget {
             return Center(child: Text('Erro: ${snapshot.error}'));
           }
 
-          final items = snapshot.data ?? [];
-
-          if (items.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      DateFormat('dd/MM').format(DateTime.now()),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 18,
-                  ),
-                  const Center(
-                    child: Card(
-                      elevation: 0,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 50,
-                          right: 50,
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        child: Text(
-                          'Nenhum usuário cadastrado',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
+          final users = snapshot.data ?? [];
 
           return ListView.builder(
-            itemCount: items.length,
+            itemCount: users.length,
             itemBuilder: (context, index) {
-              final user = items[index];
+              final user = users[index];
               return Card(
                 shadowColor: Colors.black87,
                 elevation: 8,
@@ -93,8 +78,8 @@ class HomePeople extends StatelessWidget {
                         accentLightTheme,
                         Color.fromARGB(255, 8, 50, 150),
                       ],
-                      begin: AlignmentGeometry.bottomLeft,
-                      end: AlignmentGeometry.topRight,
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
                     ),
                   ),
                   child: Padding(
@@ -133,8 +118,12 @@ class HomePeople extends StatelessWidget {
           size: 35,
           color: backgroundDarkTheme50,
         ),
-        onPressed: () => {
-          Navigator.pushNamed(context, '/create_people'),
+        onPressed: () async {
+          // Aguarda o cadastro e recarrega a lista
+          await Navigator.pushNamed(context, '/create_people');
+          setState(() {
+            _loadUsers(); // Recarrega a lista ao voltar
+          });
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
