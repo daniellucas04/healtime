@@ -11,29 +11,24 @@ class MedicationController {
   int? quantity;
   String? firstMedication;
 
-  MedicationController({
-    required this.name,
-    required this.type,
-    required this.frequencyType,
-    required this.frequencyValue,
-    required this.duration,
-    required this.quantity,
-    required this.firstMedication,
-  });
+  Future<int> save(Medication medication) async {
+    final MedicationDao medicationDao =
+        MedicationDao(database: await DatabaseHelper.instance.database);
 
-  Future<int> save() async {
-    final medication = Medication(
-      id: null,
-      name: name!,
-      type: type!,
-      frequencyType: frequencyType!,
-      frequencyValue: frequencyValue!,
-      duration: duration!,
-      quantity: quantity!,
-      firstMedication: firstMedication!,
-    );
+    return await medicationDao.insert(medication);
+  }
+
+  Future<int> update(Medication medication) async {
     final medicationDao =
         MedicationDao(database: await DatabaseHelper.instance.database);
-    return await medicationDao.insert(medication);
+
+    return medicationDao.update(medication);
+  }
+
+  Future<int> delete(Medication medication) async {
+    final medicationDao =
+        MedicationDao(database: await DatabaseHelper.instance.database);
+
+    return medicationDao.delete(medication);
   }
 }

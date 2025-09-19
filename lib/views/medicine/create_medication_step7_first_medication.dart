@@ -1,6 +1,7 @@
 import 'package:app/controllers/medication_controller.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
+import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
@@ -32,15 +33,16 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
 
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
-    if (medicationFirstDate != null) {
-      var interval = 0;
-      var duration = int.parse(medicationDuration.text);
-      DateTime incrementDate = medicationFirstDate!;
-      DateTime finalDate =
-          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
-      finalDate = finalDate.add(Duration(days: duration));
 
-      var insertedMedication = MedicationController(
+    var interval = 0;
+    var duration = int.parse(medicationDuration.text);
+    DateTime incrementDate = medicationFirstDate!;
+    DateTime finalDate =
+        DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
+    finalDate = finalDate.add(Duration(days: duration));
+
+    if (medicationFirstDate != null) {
+      Medication medication = Medication(
         name: medicationName.text,
         type: medicationType.name,
         frequencyType: medicationFrequencyType.name,
@@ -48,7 +50,9 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
         duration: int.parse(medicationFrequencyValue.text),
         quantity: int.parse(medicationQuantity.text),
         firstMedication: medicationFirstDate.toString(),
-      ).save();
+      );
+
+      var insertedMedication = MedicationController().save(medication);
 
       if (await insertedMedication != 0) {
         if (medicationFrequencyType == MedicationFrequencyType.dias) {
@@ -71,7 +75,9 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                   medicationId: await insertedMedication));
           incrementDate = incrementDate.add(Duration(hours: interval));
         }
+      }
 
+      if (await insertedMedication != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return;
       }
@@ -79,10 +85,15 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Alert(
+        builder: (context) => Alert(
           message: 'Ocorreu um erro ao cadastrar o medicamento',
           title: 'Erro ao Cadastrar',
-          buttonMessage: 'ok',
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: Text('OK'),
+            )
+          ],
         ),
       );
     }
@@ -93,6 +104,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       builder: (context) => const Alert(
         message: 'Adicione a data',
         title: 'Campo Inválido',
+        actions: [],
       ),
     );
   }
@@ -112,7 +124,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,7 +133,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                     children: [
                       TextField(
                         controller: medicationDate,
-                        readOnly: true,
+                        readOnly: true, // Impede digitação manual
                         decoration: const InputDecoration(
                           labelText: "Data e Hora",
                           border: OutlineInputBorder(),

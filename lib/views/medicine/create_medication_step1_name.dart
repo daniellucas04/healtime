@@ -1,3 +1,4 @@
+import 'package:app/helpers/screen_size.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/form_input.dart';
@@ -28,7 +29,7 @@ class CreateMedicationStep1Name extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,9 +62,15 @@ class CreateMedicationStep1Name extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Digite o nome do medicamento',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class Alert extends StatelessWidget {
   final String title;
   final String message;
-  final String? buttonMessage;
+  final List<Widget> actions;
 
   const Alert({
     Key? key,
     required this.title,
     required this.message,
-    this.buttonMessage,
+    required this.actions,
   }) : super(key: key);
 
   @override
@@ -23,16 +23,7 @@ class Alert extends StatelessWidget {
           ],
         ),
       ),
-      actions: <Widget>[
-        TextButton(
-          child: buttonMessage != null
-              ? Text(buttonMessage!)
-              : const Text('Confirmar'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
+      actions: actions,
     );
   }
 }

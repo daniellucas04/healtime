@@ -39,7 +39,7 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,8 +94,7 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationQuantity.text != "" &&
-                            int.parse(medicationQuantity.text) != 0) {
+                        if (medicationQuantity.text != "") {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -115,9 +114,15 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Adicione a quantidade',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }

@@ -1,6 +1,6 @@
-import 'package:app/views/components/max_value_input_formatter.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
+import 'package:app/views/components/max_value_input_formatter.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step5_duration.dart';
@@ -37,7 +37,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,7 +89,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                                 MedicationFrequencyType.vezesAoDia
                             ? "vezes ao dia"
                             : medicationFrequencyType.name,
-                        style: const TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20),
                       )
                     ],
                   ),
@@ -98,8 +98,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationFrequencyValue.text != "" &&
-                            int.parse(medicationFrequencyValue.text) != 0) {
+                        if (medicationFrequencyValue.text != "") {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -118,9 +117,15 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Adicione o intervalo de tempo',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }

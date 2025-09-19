@@ -37,7 +37,7 @@ class CreateMedicationStep5Duration extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,8 +86,7 @@ class CreateMedicationStep5Duration extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (medicationDuration.text != "" &&
-                            int.parse(medicationDuration.text) != 0) {
+                        if (medicationDuration.text != "") {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -107,9 +106,15 @@ class CreateMedicationStep5Duration extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => const Alert(
+                            builder: (context) => Alert(
                               message: 'Adicione o intervalo de tempo',
                               title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('OK'),
+                                )
+                              ],
                             ),
                           );
                         }

@@ -12,6 +12,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  local_auth: ^2.3.0
   path: ^1.8.3
   sqflite: ^2.3.2
   wheel_slider: ^1.2.2
