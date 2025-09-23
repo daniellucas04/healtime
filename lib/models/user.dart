@@ -1,7 +1,7 @@
 class User {
   final int? id;
   final String name;
-  final DateTime birthDate;
+  final String birthDate;
 
   User({this.id, required this.name, required this.birthDate});
 
@@ -9,15 +9,15 @@ class User {
     return {
       'id': id,
       'name': name,
-      'birth_date': birthDate.toIso8601String(),
+      'birth_date': birthDate,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
-      name: map['name'],
-      birthDate: DateTime.parse(map['birth_date']),
+      id: map['id'] as int,
+      name: map['name'] as String,
+      birthDate: map['birth_date'] as String,
     );
   }
 }

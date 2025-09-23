@@ -22,12 +22,14 @@ class _EditMedicationState extends State<EditMedication> {
   late String medicationName;
   late int medicationDuration;
   late int medicationQuantity;
+  late int medicationFrequencyValue;
   late DateTime? firstMedication;
   late Object? selectedType;
   late Object? selectedFrequencyType;
   late TextEditingController nameInputController;
   late TextEditingController durationInputController;
   late TextEditingController quantityInputController;
+  late TextEditingController frequencyValueInputController;
   late TextEditingController firstMedicationController;
 
   Future<void> updateMedication(context) async {
@@ -39,10 +41,10 @@ class _EditMedicationState extends State<EditMedication> {
       name: nameInputController.text,
       type: selectedType.toString(),
       frequencyType: selectedFrequencyType.toString(),
-      frequencyValue: 1,
+      frequencyValue: int.parse(frequencyValueInputController.text),
       duration: int.parse(durationInputController.text),
       quantity: int.parse(quantityInputController.text),
-      firstMedication: firstMedicationController.text,
+      firstMedication: firstMedication.toString(),
     );
 
     MedicationValidations validations =
@@ -96,6 +98,7 @@ class _EditMedicationState extends State<EditMedication> {
     medicationName = widget.medication.name;
     medicationDuration = widget.medication.duration;
     medicationQuantity = widget.medication.quantity;
+    medicationFrequencyValue = widget.medication.frequencyValue;
     firstMedication = DateTime.tryParse(widget.medication.firstMedication);
 
     selectedType = widget.medication.type;
@@ -106,8 +109,9 @@ class _EditMedicationState extends State<EditMedication> {
         TextEditingController(text: medicationDuration.toString());
     quantityInputController =
         TextEditingController(text: medicationQuantity.toString());
+    frequencyValueInputController = TextEditingController(text: medicationFrequencyValue.toString());
     firstMedicationController =
-        TextEditingController(text: dateFormat(firstMedication!));
+        TextEditingController(text: dateHourFormat(firstMedication!));
   }
 
   @override
@@ -117,100 +121,107 @@ class _EditMedicationState extends State<EditMedication> {
         title: medicationName.toUpperCase(),
         subtitle: 'Edite as informações do medicamento',
       ),
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.only(left: 24, right: 24),
-          child: Column(
-            spacing: context.heightPercentage(0.03),
-            children: [
-              const SizedBox(
-                height: 2.0,
-              ),
-              FormInput(
-                label: 'Nome do medicamento',
-                key: const Key('medication_name'),
-                controller: nameInputController,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Tipo de medicamento'),
-                  DropdownButton(
-                    value: selectedType,
-                    onChanged: (Object? value) {
-                      setState(
-                        () {
-                          selectedType = value;
-                        },
-                      );
-                    },
-                    isExpanded: true,
-                    icon: const Icon(Icons.numbers),
-                    items: medicationTypes.map((item) {
-                      return DropdownMenuItem(
-                          value: item.key, child: Text(item.value));
-                    }).toList(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.only(left: 24, right: 24),
+            child: Column(
+              spacing: context.heightPercentage(0.03),
+              children: [
+                const SizedBox(
+                  height: 2.0,
+                ),
+                FormInput(
+                  label: 'Nome do medicamento',
+                  key: const Key('medication_name'),
+                  controller: nameInputController,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Tipo de medicamento'),
+                    DropdownButton(
+                      value: selectedType,
+                      onChanged: (Object? value) {
+                        setState(
+                          () {
+                            selectedType = value;
+                          },
+                        );
+                      },
+                      isExpanded: true,
+                      icon: const Icon(Icons.numbers),
+                      items: medicationTypes.map((item) {
+                        return DropdownMenuItem(
+                            value: item.key, child: Text(item.value));
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Tipo de frequência'),
+                    DropdownButton(
+                      value: selectedFrequencyType,
+                      onChanged: (Object? value) {
+                        setState(
+                          () {
+                            selectedFrequencyType = value;
+                          },
+                        );
+                      },
+                      isExpanded: true,
+                      icon: const Icon(Icons.calendar_month),
+                      items: medicationFrequencyTypes.map((item) {
+                        return DropdownMenuItem(
+                            value: item.key, child: Text(item.value));
+                      }).toList(),
+                    )
+                  ],
+                ),
+                FormInput(
+                  label: 'Valor da Frequência',
+                  key: const Key('medication_frequency_value'),
+                  controller: frequencyValueInputController,
+                ),
+                FormInput(
+                  label: 'Duração',
+                  key: const Key('medication_duration'),
+                  controller: durationInputController,
+                ),
+                FormInput(
+                  label: 'Quantidade',
+                  key: const Key('medication_quantity'),
+                  controller: quantityInputController,
+                ),
+                TextField(
+                  controller: firstMedicationController,
+                  readOnly: true, // Impede digitação manual
+                  decoration: const InputDecoration(
+                    labelText: "Data e Hora",
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Tipo de frequência'),
-                  DropdownButton(
-                    value: selectedFrequencyType,
-                    onChanged: (Object? value) {
-                      setState(
-                        () {
-                          selectedFrequencyType = value;
-                        },
-                      );
-                    },
-                    isExpanded: true,
-                    icon: const Icon(Icons.calendar_month),
-                    items: medicationFrequencyTypes.map((item) {
-                      return DropdownMenuItem(
-                          value: item.key, child: Text(item.value));
-                    }).toList(),
-                  )
-                ],
-              ),
-              FormInput(
-                label: 'Duração',
-                key: const Key('medication_duration'),
-                controller: durationInputController,
-              ),
-              FormInput(
-                label: 'Quantidade',
-                key: const Key('medication_quantity'),
-                controller: quantityInputController,
-              ),
-              TextField(
-                controller: firstMedicationController,
-                readOnly: true, // Impede digitação manual
-                decoration: const InputDecoration(
-                  labelText: "Data e Hora",
-                  border: OutlineInputBorder(),
-                ),
-                onTap: () async => {
-                  firstMedication = await dateTimePicker(context: context),
-                  if (firstMedication != null)
-                    {
-                      firstMedicationController.text =
-                          dateFormat(firstMedication!),
-                    }
-                },
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    updateMedication(context);
+                  onTap: () async => {
+                    firstMedication = await dateTimePicker(context: context),
+                    if (firstMedication != null)
+                      {
+                        firstMedicationController.text =
+                            dateHourFormat(firstMedication!),
+                      }
                   },
-                  child: const Text('Finalizar'),
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      updateMedication(context);
+                    },
+                    child: const Text('Finalizar'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

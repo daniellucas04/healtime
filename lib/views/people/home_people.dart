@@ -1,11 +1,17 @@
+import 'package:app/controllers/user_controller.dart';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/user.dart';
+import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/navigation_bar.dart';
+import 'package:app/views/people/edit_people_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
+import 'package:local_auth_darwin/local_auth_darwin.dart';
 
 class HomePeople extends StatefulWidget {
   const HomePeople({super.key});
@@ -31,12 +37,62 @@ class _HomePeopleState extends State<HomePeople> {
     var users = await UserDao(database: await DatabaseHelper.instance.database).getAll();
 
     if (users.isEmpty) {
-      UserDao(database: await DatabaseHelper.instance.database).insert(User(name: 'Você', birthDate: DateTime(2000,1,1)));
+      UserDao(database: await DatabaseHelper.instance.database).insert(User(name: 'Você', birthDate: DateTime(2000,1,1).toString()));
     }
 
     users = await UserDao(database: await DatabaseHelper.instance.database).getAll();
 
     return users;
+  }
+
+  final LocalAuthentication _localAuth = LocalAuthentication();
+
+  Future<bool> _deleteUser(User user) async {
+
+    var deletedUser = UserController().delete(user);
+
+    if (await deletedUser != 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool> _authenticate() async {
+    try {
+      bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
+
+      if (!canCheckBiometrics) {
+        return false;
+      }
+
+      bool authenticated = await _localAuth.authenticate(
+        authMessages: const <AuthMessages>[
+          AndroidAuthMessages(
+            biometricSuccess: 'Autenticação realizada com sucesso!',
+            signInTitle: 'Autenticação',
+            biometricHint: '',
+          ),
+          IOSAuthMessages(),
+        ],
+        localizedReason: 'Realize a autenticação para liberar este recurso',
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+      );
+
+      return authenticated;
+    } catch (e) {
+      print('Erro na autenticação: $e');
+      return false;
+    }
+  }
+
+  void _closeAlert(context) {
+    if (!context.mounted) return;
+
+    Navigator.pop(context);
   }
 
   @override
@@ -77,27 +133,104 @@ class _HomePeopleState extends State<HomePeople> {
                       end: Alignment.topRight,
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ListTile(
-                            dense: true,
-                            textColor: Colors.white,
-                            title: Text(
-                              user.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 18),
-                            ),
-                            subtitle: Text(
-                              DateFormat('dd/MM/yyyy').format(user.birthDate),
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      highlightColor: Colors.blue.withAlpha(100),
+                      onTap: () async {
+
+                      },
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          highlightColor: Colors.blue.withAlpha(100),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPeople(people: user)
+                            )
+                          ),
+                          onLongPress: () async {
+                            final navigator = Navigator.of(context);
+                            var authenticate = await _authenticate();
+
+                            if(!context.mounted) return;
+
+                            if(users.length < 2){
+                              showDialog(
+                                context: context, 
+                                builder: (context) => Alert(
+                                  title: 'Último Usuário', 
+                                  message: 'Deve haver pelo menos um usuário criado', 
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        navigator.pop();
+                                      }, 
+                                      child: const Text('OK'),
+                                    )
+                                  ]
+                                )
+                              );
+                              return;
+                            }
+
+                            if(authenticate){
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => Alert(
+                                  title: 'O Usuario ${user.name} será removido!',
+                                  message: 'Tem certeza que deseja realizar esta ação?', 
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        navigator.pop();
+                                      }, 
+                                      child: const Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        if(await _deleteUser(user)){
+                                          navigator.pushNamed('/people');
+                                        }
+                                      }, 
+                                      child: const Text('Confirmar'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Falha na Autenticação'))
+                              );
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: ListTile(
+                                    dense: true,
+                                    textColor: Colors.white,
+                                    title: Text(
+                                      user.name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600, fontSize: 18),
+                                    ),
+                                    subtitle: Text(
+                                      DateFormat('dd/MM/yyyy').format(DateTime.parse(user.birthDate)),
+                                      style: const TextStyle(
+                                          fontSize: 15, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),

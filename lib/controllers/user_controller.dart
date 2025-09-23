@@ -4,17 +4,25 @@ import 'package:app/models/user.dart';
 
 class UserController {
   String? name;
-  DateTime? dataNasc;
+  String? dataNasc;
 
-  UserController({
-    required this.name,
-    required this.dataNasc,
-  });
-
-  Future<int> save() async {
-    final user = User(id: null, name: name!, birthDate: dataNasc!);
+  Future<int> save(User user) async {
     final userDao =
         UserDao(database: await DatabaseHelper.instance.database);
     return await userDao.insert(user);
+  }
+
+  Future<int> update(User user) async {
+    final userDao =
+        UserDao(database: await DatabaseHelper.instance.database);
+
+    return userDao.update(user);
+  }
+
+  Future<int> delete(User user) async {
+    final userDao =
+        UserDao(database: await DatabaseHelper.instance.database);
+
+    return userDao.delete(user);
   }
 }

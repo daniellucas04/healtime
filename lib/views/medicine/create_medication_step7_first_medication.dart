@@ -144,7 +144,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                           if (medicationFirstDate != null)
                             {
                               medicationDate.text =
-                                  dateFormat(medicationFirstDate!),
+                                  dateHourFormat(medicationFirstDate!),
                             }
                         },
                       ),

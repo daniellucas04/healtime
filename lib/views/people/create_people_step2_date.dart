@@ -1,4 +1,5 @@
 import 'package:app/controllers/user_controller.dart';
+import 'package:app/models/user.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/theme/theme.dart';
@@ -21,7 +22,9 @@ class CreatePeopleStep2Date extends StatelessWidget {
     if (!context.mounted) return;
 
     var insertedUser =
-        UserController(name: peopleName.text, dataNasc: peopleDate).save();
+        UserController().save(
+          User(name: peopleName.text, birthDate: peopleDate.toString())
+        );
 
     if (await insertedUser != 0) {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
