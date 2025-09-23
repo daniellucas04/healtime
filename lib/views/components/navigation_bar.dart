@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+  const NavBar({super.key, required this.pageIndex});
+
+  final int pageIndex;
 
   @override
   State<NavBar> createState() => _NavBar();
@@ -10,18 +12,28 @@ class NavBar extends StatefulWidget {
 class _NavBar extends State<NavBar> {
   int _selectedIndex = 0;
 
+  @override
+  void initState(){
+    super.initState();
+    _selectedIndex = widget.pageIndex;
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       switch (index) {
         case 0:
-          if (index != _selectedIndex)
+          if (index != _selectedIndex) {
             Navigator.pushReplacementNamed(context, '/');
+          }
           break;
         case 1:
           // Navigator.pushNamed(context, '/calendar');
           break;
         case 2:
           // Navigator.pushNamed(context, '/people');
+          if (index != _selectedIndex) {
+            Navigator.pushReplacementNamed(context, '/people');
+          }
           break;
         case 3:
           // Navigator.pushNamed(context, '/menu');

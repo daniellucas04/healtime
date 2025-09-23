@@ -1,15 +1,15 @@
 class User {
   final int? id;
   final String name;
-  final DateTime nascimento;
+  final DateTime birthDate;
 
-  User({this.id, required this.name, required this.nascimento});
+  User({this.id, required this.name, required this.birthDate});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
-      'nascimento': nascimento.toIso8601String(),
+      'birth_date': birthDate.toIso8601String(),
     };
   }
 
@@ -17,7 +17,7 @@ class User {
     return User(
       id: map['id'],
       name: map['name'],
-      nascimento: DateTime.parse(map['nascimento']),
+      birthDate: DateTime.parse(map['birth_date']),
     );
   }
 }
