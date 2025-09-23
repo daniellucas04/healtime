@@ -1,11 +1,15 @@
 import 'package:app/controllers/medication_controller.dart';
+import 'package:app/dao/medicationschedule_dao.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:app/helpers/medication_validations.dart';
 import 'package:app/models/medication.dart';
+import 'package:app/models/medicationschedule.dart';
 import 'package:app/types/medication_info.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/form_input.dart';
 import 'package:app/views/components/header.dart';
+import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -52,6 +56,42 @@ class _EditMedicationState extends State<EditMedication> {
 
     if (validations.validate()) {
       var updatedMedication = MedicationController().update(medication);
+
+      var interval = 0;
+      var duration = medicationDuration;
+      DateTime incrementDate = firstMedication!;
+      DateTime finalDate =
+          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
+      finalDate = finalDate.add(Duration(days: duration));
+      if (await updatedMedication != 0) {
+        if (selectedFrequencyType == MedicationFrequencyType.dias) {
+          interval = medicationFrequencyValue * 24;
+        } else if (selectedFrequencyType == MedicationFrequencyType.semanas) {
+          interval = medicationFrequencyValue * 168;
+        } else if (selectedFrequencyType ==
+            MedicationFrequencyType.vezesAoDia) {
+          interval = (24 ~/ medicationFrequencyValue);
+        } else {
+          interval = medicationFrequencyValue;
+        }
+
+        var medicationSchedule = await MedicationScheduleDao(database: await  DatabaseHelper.instance.database).getById(medicationId!);
+
+        int? index = medicationSchedule[0]!.id;
+        var length = medicationSchedule.length;
+
+        for(int i = 0;i < length; i++) {
+          await MedicationScheduleDao(
+                  database: await DatabaseHelper.instance.database)
+              .update(MedicationSchedule(
+                  id: index,
+                  date: incrementDate.toString(),
+                  status: "N",
+                  medicationId: medicationId!));
+          incrementDate = incrementDate.add(Duration(hours: interval));
+          index = index! + 1;
+        }
+      }
 
       if (await updatedMedication != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
