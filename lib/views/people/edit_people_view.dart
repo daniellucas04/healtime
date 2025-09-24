@@ -26,6 +26,8 @@ class _EditPeopleState extends State<EditPeople>{
   Future<void> updatePeople(context) async {
     if (!context.mounted) return;
 
+    final navigator = Navigator.of(context);
+
     User user = User(
       id: peopleId,
       name: nameInputController.text, 
@@ -50,7 +52,9 @@ class _EditPeopleState extends State<EditPeople>{
           message: 'Ocorreu um erro ao atualizar o usuário', 
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                navigator.pop();
+              },
               child: const Text('OK'),
             ),
           ],
@@ -67,7 +71,9 @@ class _EditPeopleState extends State<EditPeople>{
           title: 'Preencha os dados corretamente',
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                navigator.pop();
+              },
               child: const Text('OK'),
             )
           ]),
@@ -114,7 +120,7 @@ class _EditPeopleState extends State<EditPeople>{
                   border: OutlineInputBorder(),
                 ),
                 onTap: () async => {
-                  peopleBirthDate = await datePicker(context: context),
+                  peopleBirthDate = await datePicker(context: context,firstDate: DateTime(1900),lastDate: DateTime.now()),
                   if (peopleBirthDate != null){
                     birthDateController.text = dateFormat(peopleBirthDate!),
                   }

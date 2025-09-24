@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FormInput extends StatelessWidget {
   final Icon? icon;
@@ -17,6 +18,9 @@ class FormInput extends StatelessWidget {
     return TextFormField(
       controller: controller,
       key: key,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(25)
+      ],
       decoration: InputDecoration(
         label: Text(label),
         suffixIcon: icon,

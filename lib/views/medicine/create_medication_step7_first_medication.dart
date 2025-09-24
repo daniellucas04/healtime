@@ -34,14 +34,15 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
 
-    var interval = 0;
-    var duration = int.parse(medicationDuration.text);
-    DateTime incrementDate = medicationFirstDate!;
-    DateTime finalDate =
-        DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
-    finalDate = finalDate.add(Duration(days: duration));
+    final navigator = Navigator.of(context);
 
     if (medicationFirstDate != null) {
+      var interval = 0;
+      var duration = int.parse(medicationDuration.text);
+      DateTime incrementDate = medicationFirstDate!;
+      DateTime finalDate =
+          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
+      finalDate = finalDate.add(Duration(days: duration));
       Medication medication = Medication(
         name: medicationName.text,
         type: medicationType.name,
@@ -71,7 +72,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                   database: await DatabaseHelper.instance.database)
               .insert(MedicationSchedule(
                   date: incrementDate.toString(),
-                  status: "N",
+                  status: "Pendente",
                   medicationId: await insertedMedication));
           incrementDate = incrementDate.add(Duration(hours: interval));
         }
@@ -81,7 +82,7 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return;
       }
-
+      
       showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -90,7 +91,9 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
           title: 'Erro ao Cadastrar',
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                navigator.pop();
+              },
               child: Text('OK'),
             )
           ],
@@ -101,10 +104,17 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Alert(
+      builder: (context) => Alert(
         message: 'Adicione a data',
         title: 'Campo Inválido',
-        actions: [],
+        actions: [
+          TextButton(
+              onPressed: () {
+                navigator.pop();
+              },
+              child: Text('OK'),
+            )
+        ],
       ),
     );
   }

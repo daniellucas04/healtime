@@ -3,6 +3,7 @@ import 'package:app/dao/medication_dao.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
+import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
@@ -33,53 +34,15 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
-  final LocalAuthentication _localAuth = LocalAuthentication();
 
-  Future<bool> _deleteMedication(Medication medication) async {
-    var deletedMedication = MedicationController().delete(medication);
+  Future<bool> _updateMedicationScheduleStatus(String date, String status, int medicationId,int id) async {
+    var updatedMedicationSchedule = await MedicationScheduleDao(database: await DatabaseHelper.instance.database).update(MedicationSchedule(date: date, status: status, medicationId: medicationId,id: id));
 
-    if (await deletedMedication != 0) {
+    if (updatedMedicationSchedule != 0) {
       return true;
     }
 
     return false;
-  }
-
-  Future<bool> _authenticate() async {
-    try {
-      bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
-
-      if (!canCheckBiometrics) {
-        return false;
-      }
-
-      bool authenticated = await _localAuth.authenticate(
-        authMessages: const <AuthMessages>[
-          AndroidAuthMessages(
-            biometricSuccess: 'Autenticação realizada com sucesso!',
-            signInTitle: 'Autenticação',
-            biometricHint: '',
-          ),
-          IOSAuthMessages(),
-        ],
-        localizedReason: 'Realize a autenticação para liberar este recurso',
-        options: const AuthenticationOptions(
-          useErrorDialogs: true,
-          stickyAuth: true,
-        ),
-      );
-
-      return authenticated;
-    } catch (e) {
-      print('Erro na autenticação: $e');
-      return false;
-    }
-  }
-
-  void _closeAlert(context) {
-    if (!context.mounted) return;
-
-    Navigator.pop(context);
   }
 
   DateTime searchDate = DateTime.now();
@@ -249,6 +212,50 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           child: InkWell(
                             highlightColor: Colors.blue.withAlpha(100),
                             onTap: () async {
+                              final navigator = Navigator.of(context);
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (context) => Alert(
+                                    title:
+                                        'Ajuste o estado da medicação',
+                                    message:
+                                        'Escolha uma opção',
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () async {
+                                          if(await _updateMedicationScheduleStatus(medication['date'], 'Tomado', medication['medication_id'],medication['id'])){
+                                            navigator.pushNamed('/');
+                                          }
+                                        },
+                                        child: const Text('Tomado'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if(await _updateMedicationScheduleStatus(medication['date'], 'Atrasado', medication['medication_id'],medication['id'])){
+                                            navigator.pushNamed('/');
+                                          }
+                                        },
+                                        child: const Text('Atrasado'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if(await _updateMedicationScheduleStatus(medication['date'], 'Esquecido', medication['medication_id'],medication['id'])){
+                                            navigator.pushNamed('/');
+                                          }
+                                        },
+                                        child: const Text('Esquecido'),
+                                      ),
+                                      TextButton(
+                                          onPressed: () {
+                                            navigator.pop();
+                                          },
+                                          child: const Text('Cancelar'))
+                                    ],
+                                  ),
+                                );
+                            },
+                            onLongPress: () async {
                               int medicationId = medication['medication_id'];
                               Medication? editMedication =
                                   await getById(medicationId);
@@ -261,51 +268,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                     builder: (context) => EditMedication(
                                         medication: editMedication),
                                   ),
-                                );
-                              }
-                            },
-                            onLongPress: () async {
-                              final navigator = Navigator.of(context);
-                              var authenticated = await _authenticate();
-
-                              if (!context.mounted) return;
-                              if (authenticated) {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (context) => Alert(
-                                    title:
-                                        'O medicamento ${medication['name']} será removido!',
-                                    message:
-                                        'Tem certeza que deseja realizar esta ação?',
-                                    actions: <Widget>[
-                                      TextButton(
-                                          onPressed: () {
-                                            navigator.pop();
-                                          },
-                                          child: const Text('Cancelar')),
-                                      TextButton(
-                                        onPressed: () async {
-                                          int medicationId =
-                                              medication['medication_id'];
-                                          Medication? editMedication =
-                                              await getById(medicationId);
-                                          if (editMedication != null) {
-                                            if (await _deleteMedication(
-                                                editMedication)) {
-                                              navigator.pushNamed('/');
-                                            }
-                                          }
-                                        },
-                                        child: const Text('Confirmar'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Falha na autenticação')),
                                 );
                               }
                             },
@@ -324,7 +286,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        '${medication['type']}: ${medication['quantity']}',
+                                        '${medication['type']}: ${medication['quantity']}\n${medication['status']}',
                                         style: const TextStyle(
                                           color: Colors.white70,
                                           fontWeight: FontWeight.w700,

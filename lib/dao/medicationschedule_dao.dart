@@ -24,10 +24,10 @@ class MedicationScheduleDao {
   Future<List<Map<String, dynamic>>> getAll(DateTime searchDate) async {
     var date = searchDate.toIso8601String().substring(0, 10);
     final List<Map<String, dynamic>> result = await database.rawQuery('''
-    SELECT medication_schedule.id AS id, medication_schedule.date AS date, medication_schedule.medication_id as medication_id ,medications.name AS name, medications.type AS type, medications.quantity AS quantity
+    SELECT medication_schedule.id AS id, medication_schedule.date AS date, medication_schedule.medication_id as medication_id, medication_schedule.status as status ,medications.name AS name, medications.type AS type, medications.quantity AS quantity
     FROM medication_schedule
     INNER JOIN medications ON medications.id = medication_schedule.medication_id
-    WHERE date(medication_schedule.date) = date('$date')
+    WHERE date(medication_schedule.date) = date('$date') AND status IN ('Pendente', 'Esquecido');
   ''');
 
     return result;

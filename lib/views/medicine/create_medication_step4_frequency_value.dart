@@ -114,6 +114,7 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                             ),
                           );
                         } else {
+                          final navigator = Navigator.of(context);
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
@@ -122,7 +123,9 @@ class CreateMedicationStep4FrequencyValue extends StatelessWidget {
                               title: 'Campo Inválido',
                               actions: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    navigator.pop();
+                                  },
                                   child: Text('OK'),
                                 )
                               ],

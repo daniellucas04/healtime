@@ -39,6 +39,8 @@ class _EditMedicationState extends State<EditMedication> {
   Future<void> updateMedication(context) async {
     if (!context.mounted) return;
 
+    final navigator = Navigator.of(context);
+
     Medication medication = Medication(
       //TODO: Adicionar o valor da frequência na tela
       id: medicationId,
@@ -57,42 +59,6 @@ class _EditMedicationState extends State<EditMedication> {
     if (validations.validate()) {
       var updatedMedication = MedicationController().update(medication);
 
-      var interval = 0;
-      var duration = medicationDuration;
-      DateTime incrementDate = firstMedication!;
-      DateTime finalDate =
-          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
-      finalDate = finalDate.add(Duration(days: duration));
-      if (await updatedMedication != 0) {
-        if (selectedFrequencyType == MedicationFrequencyType.dias) {
-          interval = medicationFrequencyValue * 24;
-        } else if (selectedFrequencyType == MedicationFrequencyType.semanas) {
-          interval = medicationFrequencyValue * 168;
-        } else if (selectedFrequencyType ==
-            MedicationFrequencyType.vezesAoDia) {
-          interval = (24 ~/ medicationFrequencyValue);
-        } else {
-          interval = medicationFrequencyValue;
-        }
-
-        var medicationSchedule = await MedicationScheduleDao(database: await  DatabaseHelper.instance.database).getById(medicationId!);
-
-        int? index = medicationSchedule[0]!.id;
-        var length = medicationSchedule.length;
-
-        for(int i = 0;i < length; i++) {
-          await MedicationScheduleDao(
-                  database: await DatabaseHelper.instance.database)
-              .update(MedicationSchedule(
-                  id: index,
-                  date: incrementDate.toString(),
-                  status: "N",
-                  medicationId: medicationId!));
-          incrementDate = incrementDate.add(Duration(hours: interval));
-          index = index! + 1;
-        }
-      }
-
       if (await updatedMedication != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return;
@@ -106,7 +72,9 @@ class _EditMedicationState extends State<EditMedication> {
           title: 'Erro ao Atualizar',
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                navigator.pop();
+              },
               child: Text('OK'),
             )
           ],
@@ -123,11 +91,54 @@ class _EditMedicationState extends State<EditMedication> {
           title: 'Preencha os dados corretamente',
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                navigator.pop();
+              },
               child: Text('OK'),
             )
           ]),
     );
+  }
+
+  Future<void> _deleteMedication(context) async {
+
+    Medication medication = Medication(
+      id: medicationId,
+      name: nameInputController.text,
+      type: selectedType.toString(),
+      frequencyType: selectedFrequencyType.toString(),
+      frequencyValue: int.parse(frequencyValueInputController.text),
+      duration: int.parse(durationInputController.text),
+      quantity: int.parse(quantityInputController.text),
+      firstMedication: firstMedication.toString(),
+    );
+
+    var deletedMedication = MedicationController().delete(medication);
+
+    if (await deletedMedication != 0) {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        return;
+    }
+
+    final navigator = Navigator.of(context);
+
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Alert(
+          message: 'Ocorreu um erro ao Excluir o medicamento',
+          title: 'Erro ao Excluir',
+          actions: [
+            TextButton(
+              onPressed: () {
+                navigator.pop();
+              },
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
+      return;
   }
 
   @override
@@ -198,58 +209,10 @@ class _EditMedicationState extends State<EditMedication> {
                     ),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Tipo de frequência'),
-                    DropdownButton(
-                      value: selectedFrequencyType,
-                      onChanged: (Object? value) {
-                        setState(
-                          () {
-                            selectedFrequencyType = value;
-                          },
-                        );
-                      },
-                      isExpanded: true,
-                      icon: const Icon(Icons.calendar_month),
-                      items: medicationFrequencyTypes.map((item) {
-                        return DropdownMenuItem(
-                            value: item.key, child: Text(item.value));
-                      }).toList(),
-                    )
-                  ],
-                ),
-                FormInput(
-                  label: 'Valor da Frequência',
-                  key: const Key('medication_frequency_value'),
-                  controller: frequencyValueInputController,
-                ),
-                FormInput(
-                  label: 'Duração',
-                  key: const Key('medication_duration'),
-                  controller: durationInputController,
-                ),
                 FormInput(
                   label: 'Quantidade',
                   key: const Key('medication_quantity'),
                   controller: quantityInputController,
-                ),
-                TextField(
-                  controller: firstMedicationController,
-                  readOnly: true, // Impede digitação manual
-                  decoration: const InputDecoration(
-                    labelText: "Data e Hora",
-                    border: OutlineInputBorder(),
-                  ),
-                  onTap: () async => {
-                    firstMedication = await dateTimePicker(context: context),
-                    if (firstMedication != null)
-                      {
-                        firstMedicationController.text =
-                            dateHourFormat(firstMedication!),
-                      }
-                  },
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -257,7 +220,19 @@ class _EditMedicationState extends State<EditMedication> {
                     onPressed: () {
                       updateMedication(context);
                     },
-                    child: const Text('Finalizar'),
+                    child: const Text('Editar'),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _deleteMedication(context);
+                    },
+                    style: const ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(Colors.redAccent)
+                    ),
+                    child: const Text('Excluir'),
                   ),
                 ),
               ],
