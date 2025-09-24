@@ -33,6 +33,7 @@ class Tables {
           "id" INTEGER NOT NULL,
           "name" TEXT NOT NULL,
           "birth_date" TEXT NOT NULL,
+          "active" INTEGER NOT NULL,
           PRIMARY KEY("id" AUTOINCREMENT)
         )
       ''';

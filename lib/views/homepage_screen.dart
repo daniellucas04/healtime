@@ -34,9 +34,13 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
-
-  Future<bool> _updateMedicationScheduleStatus(String date, String status, int medicationId,int id) async {
-    var updatedMedicationSchedule = await MedicationScheduleDao(database: await DatabaseHelper.instance.database).update(MedicationSchedule(date: date, status: status, medicationId: medicationId,id: id));
+  DateTime searchDate = DateTime.now();
+  Future<bool> _updateMedicationScheduleStatus(
+      String date, String status, int medicationId, int id) async {
+    var updatedMedicationSchedule = await MedicationScheduleDao(
+            database: await DatabaseHelper.instance.database)
+        .update(MedicationSchedule(
+            date: date, status: status, medicationId: medicationId, id: id));
 
     if (updatedMedicationSchedule != 0) {
       return true;
@@ -45,7 +49,22 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return false;
   }
 
-  DateTime searchDate = DateTime.now();
+  Color _setMedicationColor(status) {
+    if (status == 'Tomado') {
+      return const Color.fromARGB(255, 10, 218, 131);
+    }
+
+    if (status == 'Atrasado') {
+      return const Color.fromARGB(255, 189, 192, 13);
+    }
+
+    if (status == 'Esquecido') {
+      return const Color.fromARGB(255, 211, 35, 12);
+    }
+
+    return const Color.fromARGB(255, 8, 50, 150);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,10 +217,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             colors: [
                               accentLightTheme,
-                              Color.fromARGB(255, 8, 50, 150),
+                              _setMedicationColor(medication['status']),
                             ],
                             begin: AlignmentGeometry.bottomLeft,
                             end: AlignmentGeometry.topRight,
@@ -214,46 +233,56 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             onTap: () async {
                               final navigator = Navigator.of(context);
                               showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (context) => Alert(
-                                    title:
-                                        'Ajuste o estado da medicação',
-                                    message:
-                                        'Escolha uma opção',
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () async {
-                                          if(await _updateMedicationScheduleStatus(medication['date'], 'Tomado', medication['medication_id'],medication['id'])){
-                                            navigator.pushNamed('/');
-                                          }
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => Alert(
+                                  title: 'Ajuste o estado da medicação',
+                                  message: 'Escolha uma opção',
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () async {
+                                        if (await _updateMedicationScheduleStatus(
+                                            medication['date'],
+                                            'Tomado',
+                                            medication['medication_id'],
+                                            medication['id'])) {
+                                          navigator.pushNamed('/');
+                                        }
+                                      },
+                                      child: const Text('Tomado'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        if (await _updateMedicationScheduleStatus(
+                                            medication['date'],
+                                            'Atrasado',
+                                            medication['medication_id'],
+                                            medication['id'])) {
+                                          navigator.pushNamed('/');
+                                        }
+                                      },
+                                      child: const Text('Atrasado'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        if (await _updateMedicationScheduleStatus(
+                                            medication['date'],
+                                            'Esquecido',
+                                            medication['medication_id'],
+                                            medication['id'])) {
+                                          navigator.pushNamed('/');
+                                        }
+                                      },
+                                      child: const Text('Esquecido'),
+                                    ),
+                                    TextButton(
+                                        onPressed: () {
+                                          navigator.pop();
                                         },
-                                        child: const Text('Tomado'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          if(await _updateMedicationScheduleStatus(medication['date'], 'Atrasado', medication['medication_id'],medication['id'])){
-                                            navigator.pushNamed('/');
-                                          }
-                                        },
-                                        child: const Text('Atrasado'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          if(await _updateMedicationScheduleStatus(medication['date'], 'Esquecido', medication['medication_id'],medication['id'])){
-                                            navigator.pushNamed('/');
-                                          }
-                                        },
-                                        child: const Text('Esquecido'),
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            navigator.pop();
-                                          },
-                                          child: const Text('Cancelar'))
-                                    ],
-                                  ),
-                                );
+                                        child: const Text('Cancelar'))
+                                  ],
+                                ),
+                              );
                             },
                             onLongPress: () async {
                               int medicationId = medication['medication_id'];
@@ -315,7 +344,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
           );
         },
       ),
-      bottomNavigationBar: const NavBar(pageIndex: 0,),
+      bottomNavigationBar: const NavBar(
+        pageIndex: 0,
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
           Icons.add,
