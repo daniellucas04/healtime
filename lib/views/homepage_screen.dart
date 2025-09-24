@@ -353,7 +353,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           );
         },
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: const NavBar(pageIndex: 0,),
       floatingActionButton: FloatingActionButton(
         child: const Icon(
           Icons.add,

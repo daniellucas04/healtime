@@ -31,6 +31,8 @@
 	<string>Usamos o Face ID para autenticar você com segurança.</string>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Este app usa o Face ID para autenticação.</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

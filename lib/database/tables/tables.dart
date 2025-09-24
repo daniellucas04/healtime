@@ -32,8 +32,7 @@ class Tables {
         CREATE TABLE users (
           "id" INTEGER NOT NULL,
           "name" TEXT NOT NULL,
-          "nascimento" INTEGER NOT NULL,
-          "status" TEXT NOT NULL,
+          "birth_date" TEXT NOT NULL,
           PRIMARY KEY("id" AUTOINCREMENT)
         )
       ''';
