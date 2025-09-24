@@ -20,16 +20,22 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
     );
   }
 
   Future _createDB(Database db, int version) async {
     await db.execute(Tables.medications());
-    await db.execute(Tables.medicationSchedule());
     await db.execute(Tables.users());
-    await db.execute(Tables.usersMedication());
+  }
+
+  Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(Tables.medicationSchedule());
+      await db.execute(Tables.usersMedication());
+    }
   }
 
   Future close() async {

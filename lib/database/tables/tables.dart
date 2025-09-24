@@ -24,7 +24,7 @@ class Tables {
             "medication_id" INTEGER NOT NULL,
             PRIMARY KEY ("id" AUTOINCREMENT)
           )
-''';
+    ''';
   }
 
   static String users() {
