@@ -227,7 +227,29 @@ class _EditMedicationState extends State<EditMedication> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      _deleteMedication(context);
+                      final navigator = Navigator.of(context);
+                      showDialog<void>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => Alert(
+                        message: 'Tem certeza que deseja realizar esta ação?',
+                        title: 'O medicamento será excluido!',
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              navigator.pop();
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _deleteMedication(context);
+                            },
+                            child: const Text('Confirmar'),
+                          )
+                        ],
+                      ),
+                    );
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.redAccent)

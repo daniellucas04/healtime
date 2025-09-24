@@ -27,7 +27,7 @@ class CreatePeopleStep2Date extends StatelessWidget {
         );
 
     if (await insertedUser != 0) {
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/people', (route) => false);
       return;
     }
 

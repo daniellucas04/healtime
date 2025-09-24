@@ -45,56 +45,6 @@ class _HomePeopleState extends State<HomePeople> {
     return users;
   }
 
-  final LocalAuthentication _localAuth = LocalAuthentication();
-
-  Future<bool> _deleteUser(User user) async {
-
-    var deletedUser = UserController().delete(user);
-
-    if (await deletedUser != 0) {
-      return true;
-    }
-
-    return false;
-  }
-
-  Future<bool> _authenticate() async {
-    try {
-      bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
-
-      if (!canCheckBiometrics) {
-        return false;
-      }
-
-      bool authenticated = await _localAuth.authenticate(
-        authMessages: const <AuthMessages>[
-          AndroidAuthMessages(
-            biometricSuccess: 'Autenticação realizada com sucesso!',
-            signInTitle: 'Autenticação',
-            biometricHint: '',
-          ),
-          IOSAuthMessages(),
-        ],
-        localizedReason: 'Realize a autenticação para liberar este recurso',
-        options: const AuthenticationOptions(
-          useErrorDialogs: true,
-          stickyAuth: true,
-        ),
-      );
-
-      return authenticated;
-    } catch (e) {
-      print('Erro na autenticação: $e');
-      return false;
-    }
-  }
-
-  void _closeAlert(context) {
-    if (!context.mounted) return;
-
-    Navigator.pop(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,65 +97,9 @@ class _HomePeopleState extends State<HomePeople> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EditPeople(people: user)
+                              builder: (context) => EditPeople(people: user,userLenght: users.length)
                             )
                           ),
-                          onLongPress: () async {
-                            final navigator = Navigator.of(context);
-                            var authenticate = await _authenticate();
-
-                            if(!context.mounted) return;
-
-                            if(users.length < 2){
-                              showDialog(
-                                context: context, 
-                                builder: (context) => Alert(
-                                  title: 'Último Usuário', 
-                                  message: 'Deve haver pelo menos um usuário criado', 
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        navigator.pop();
-                                      }, 
-                                      child: const Text('OK'),
-                                    )
-                                  ]
-                                )
-                              );
-                              return;
-                            }
-
-                            if(authenticate){
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => Alert(
-                                  title: 'O Usuario ${user.name} será removido!',
-                                  message: 'Tem certeza que deseja realizar esta ação?', 
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        navigator.pop();
-                                      }, 
-                                      child: const Text('Cancelar'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        if(await _deleteUser(user)){
-                                          navigator.pushNamed('/people');
-                                        }
-                                      }, 
-                                      child: const Text('Confirmar'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else{
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Falha na Autenticação'))
-                              );
-                            }
-                          },
                           child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: Row(
