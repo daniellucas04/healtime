@@ -1,4 +1,3 @@
-import 'package:app/controllers/medication_controller.dart';
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
@@ -8,13 +7,11 @@ import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/navigation_bar.dart';
+import 'package:app/views/components/sidebar.dart';
 import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:local_auth_android/local_auth_android.dart';
-import 'package:local_auth_darwin/local_auth_darwin.dart';
 
 Future<List<Map<String, dynamic>>> getAll(DateTime searchDate) async {
   return MedicationScheduleDao(database: await DatabaseHelper.instance.database)
@@ -35,6 +32,7 @@ class HomePageScreen extends StatefulWidget {
 
 class _HomePageScreenState extends State<HomePageScreen> {
   DateTime searchDate = DateTime.now();
+
   Future<bool> _updateMedicationScheduleStatus(
       String date, String status, int medicationId, int id) async {
     var updatedMedicationSchedule = await MedicationScheduleDao(
@@ -68,8 +66,11 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Sidebar(),
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Seja bem-vindo!'),
+      appBar: Header(
+        title: 'Seja bem-vindo!',
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: getAll(searchDate),
         builder: (context, snapshot) {
