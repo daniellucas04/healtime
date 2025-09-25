@@ -58,6 +58,9 @@ class _SidebarState extends State<Sidebar> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   Switch(
+                    activeThumbColor: currentTheme.brightness == Brightness.dark
+                        ? secondaryDarkTheme
+                        : accentLightTheme,
                     onChanged: (value) {
                       setState(() {
                         isSwitched = value;
