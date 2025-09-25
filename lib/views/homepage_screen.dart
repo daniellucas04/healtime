@@ -118,14 +118,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            searchDate =
-                                searchDate.add(const Duration(days: 1));
-                          });
-                        },
-                        icon: const Icon(
-                            Icons.keyboard_double_arrow_right_outlined))
+                      onPressed: () async {
+                        setState(() {
+                          searchDate = searchDate.add(const Duration(days: 1));
+                        });
+                      },
+                      icon: const Icon(
+                          Icons.keyboard_double_arrow_right_outlined),
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -216,128 +216,132 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     elevation: 8,
                     margin: const EdgeInsets.all(12),
                     child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          gradient: LinearGradient(
-                            colors: [
-                              accentLightTheme,
-                              _setMedicationColor(medication['status']),
-                            ],
-                            begin: AlignmentGeometry.bottomLeft,
-                            end: AlignmentGeometry.topRight,
-                          ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        gradient: LinearGradient(
+                          colors: [
+                            accentLightTheme,
+                            _setMedicationColor(medication['status']),
+                          ],
+                          begin: AlignmentGeometry.bottomLeft,
+                          end: AlignmentGeometry.topRight,
                         ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            highlightColor: Colors.blue.withAlpha(100),
-                            onTap: () async {
-                              final navigator = Navigator.of(context);
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (context) => Alert(
-                                  title: 'Ajuste o estado da medicação',
-                                  message: 'Escolha uma opção',
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () async {
-                                        if (await _updateMedicationScheduleStatus(
-                                            medication['date'],
-                                            'Tomado',
-                                            medication['medication_id'],
-                                            medication['id'])) {
-                                          navigator.pushNamed('/');
-                                        }
-                                      },
-                                      child: const Text('Tomado'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        if (await _updateMedicationScheduleStatus(
-                                            medication['date'],
-                                            'Atrasado',
-                                            medication['medication_id'],
-                                            medication['id'])) {
-                                          navigator.pushNamed('/');
-                                        }
-                                      },
-                                      child: const Text('Atrasado'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        if (await _updateMedicationScheduleStatus(
-                                            medication['date'],
-                                            'Esquecido',
-                                            medication['medication_id'],
-                                            medication['id'])) {
-                                          navigator.pushNamed('/');
-                                        }
-                                      },
-                                      child: const Text('Esquecido'),
-                                    ),
-                                    TextButton(
-                                        onPressed: () {
-                                          navigator.pop();
-                                        },
-                                        child: const Text('Cancelar'))
-                                  ],
-                                ),
-                              );
-                            },
-                            onLongPress: () async {
-                              int medicationId = medication['medication_id'];
-                              Medication? editMedication =
-                                  await getById(medicationId);
-                              if (!context.mounted) return;
-
-                              if (editMedication != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditMedication(
-                                        medication: editMedication),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          highlightColor: Colors.blue.withAlpha(100),
+                          onTap: () async {
+                            final navigator = Navigator.of(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (context) => Alert(
+                                title: 'Ajuste o estado da medicação',
+                                message: 'Escolha uma opção',
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () async {
+                                      if (await _updateMedicationScheduleStatus(
+                                          medication['date'],
+                                          'Tomado',
+                                          medication['medication_id'],
+                                          medication['id'])) {
+                                        navigator.pushNamed('/');
+                                      }
+                                    },
+                                    child: const Text('Tomado'),
                                   ),
-                                );
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: ListTile(
-                                      dense: true,
-                                      textColor: Colors.white,
-                                      title: Text(
-                                        medication['name'].toUpperCase(),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        '${medication['type']}: ${medication['quantity']}\n${medication['status']}',
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      if (await _updateMedicationScheduleStatus(
+                                          medication['date'],
+                                          'Atrasado',
+                                          medication['medication_id'],
+                                          medication['id'])) {
+                                        navigator.pushNamed('/');
+                                      }
+                                    },
+                                    child: const Text('Atrasado'),
                                   ),
-                                  Text(
-                                    timeFormat(
-                                      DateTime.parse(medication['date']),
-                                    ),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                    ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      if (await _updateMedicationScheduleStatus(
+                                          medication['date'],
+                                          'Esquecido',
+                                          medication['medication_id'],
+                                          medication['id'])) {
+                                        navigator.pushNamed('/');
+                                      }
+                                    },
+                                    child: const Text('Esquecido'),
                                   ),
+                                  TextButton(
+                                      onPressed: () {
+                                        navigator.pop();
+                                      },
+                                      child: const Text('Cancelar'))
                                 ],
                               ),
+                            );
+                          },
+                          onLongPress: () async {
+                            int medicationId = medication['medication_id'];
+                            Medication? editMedication =
+                                await getById(medicationId);
+                            if (!context.mounted) return;
+
+                            if (editMedication != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditMedication(
+                                      medication: editMedication),
+                                ),
+                              );
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: ListTile(
+                                    dense: true,
+                                    textColor: Colors.white,
+                                    title: Text(
+                                      medication['name'].toUpperCase(),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      '${medication['type']}: ${medication['quantity']}\n${medication['status']}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  timeFormat(
+                                    DateTime.parse(medication['date']),
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               );

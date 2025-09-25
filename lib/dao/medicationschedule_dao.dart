@@ -27,7 +27,7 @@ class MedicationScheduleDao {
       SELECT medication_schedule.id AS id, medication_schedule.date AS date, medication_schedule.medication_id as medication_id, medication_schedule.status as status ,medications.name AS name, medications.type AS type, medications.quantity AS quantity
       FROM medication_schedule
       INNER JOIN medications ON medications.id = medication_schedule.medication_id
-      WHERE date(medication_schedule.date) = date('$date');
+      WHERE date(medication_schedule.date) = date('$date') ORDER BY medication_schedule.date ASC;
     ''');
 
     return result;
