@@ -21,10 +21,8 @@ class CreatePeopleStep2Date extends StatelessWidget {
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
 
-    var insertedUser =
-        UserController().save(
-          User(name: peopleName.text, birthDate: peopleDate.toString())
-        );
+    var insertedUser = UserController().save(User(
+        name: peopleName.text, birthDate: peopleDate.toString(), active: 0));
 
     if (await insertedUser != 0) {
       Navigator.pushNamedAndRemoveUntil(context, '/people', (route) => false);
@@ -35,18 +33,16 @@ class CreatePeopleStep2Date extends StatelessWidget {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>  Alert(
+      builder: (context) => Alert(
         message: 'Ocorreu um erro ao cadastrar o usuário',
-        title: 'Erro ao Cadastrar', 
+        title: 'Erro ao Cadastrar',
         actions: [
           TextButton(
-            onPressed: () {
-              navigator.pop();
-            },
-            child: const Text('ok')
-          )
+              onPressed: () {
+                navigator.pop();
+              },
+              child: const Text('ok'))
         ],
-        
       ),
     );
 
@@ -58,11 +54,10 @@ class CreatePeopleStep2Date extends StatelessWidget {
         title: 'Campo Inválido',
         actions: [
           TextButton(
-            onPressed: () {
-              navigator.pop();
-            },
-            child: const Text('ok')
-          )
+              onPressed: () {
+                navigator.pop();
+              },
+              child: const Text('ok'))
         ],
       ),
     );

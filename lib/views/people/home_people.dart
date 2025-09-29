@@ -34,13 +34,16 @@ class _HomePeopleState extends State<HomePeople> {
   }
 
   Future<List<User>> _getUsersWithDefault() async {
-    var users = await UserDao(database: await DatabaseHelper.instance.database).getAll();
+    var users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getAll();
 
     if (users.isEmpty) {
-      UserDao(database: await DatabaseHelper.instance.database).insert(User(name: 'Você', birthDate: DateTime(2000,1,1).toString()));
+      UserDao(database: await DatabaseHelper.instance.database).insert(User(
+          name: 'Você', birthDate: DateTime(2000, 1, 1).toString(), active: 1));
     }
 
-    users = await UserDao(database: await DatabaseHelper.instance.database).getAll();
+    users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getAll();
 
     return users;
   }
@@ -87,19 +90,16 @@ class _HomePeopleState extends State<HomePeople> {
                     color: Colors.transparent,
                     child: InkWell(
                       highlightColor: Colors.blue.withAlpha(100),
-                      onTap: () async {
-
-                      },
+                      onTap: () async {},
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
                           highlightColor: Colors.blue.withAlpha(100),
                           onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPeople(people: user,userLenght: users.length)
-                            )
-                          ),
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditPeople(
+                                      people: user, userLenght: users.length))),
                           child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: Row(
@@ -111,12 +111,15 @@ class _HomePeopleState extends State<HomePeople> {
                                     title: Text(
                                       user.name,
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.w600, fontSize: 18),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
                                     ),
                                     subtitle: Text(
-                                      DateFormat('dd/MM/yyyy').format(DateTime.parse(user.birthDate)),
+                                      DateFormat('dd/MM/yyyy').format(
+                                          DateTime.parse(user.birthDate)),
                                       style: const TextStyle(
-                                          fontSize: 15, fontWeight: FontWeight.bold),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),

@@ -1,5 +1,7 @@
+import 'package:app/providers/theme_provider.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Sidebar extends StatefulWidget {
   const Sidebar({super.key});
@@ -64,6 +66,8 @@ class _SidebarState extends State<Sidebar> {
                     onChanged: (value) {
                       setState(() {
                         isSwitched = value;
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .toggleTheme();
                       });
                     },
                     value: isSwitched,

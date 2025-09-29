@@ -11,7 +11,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_darwin/local_auth_darwin.dart';
 
-class EditPeople extends StatefulWidget{
+class EditPeople extends StatefulWidget {
   const EditPeople({super.key, required this.people, required this.userLenght});
 
   final User people;
@@ -20,18 +20,22 @@ class EditPeople extends StatefulWidget{
   State<StatefulWidget> createState() => _EditPeopleState();
 }
 
-class _EditPeopleState extends State<EditPeople>{
+class _EditPeopleState extends State<EditPeople> {
   late int? peopleId;
   late String peopleName;
   late DateTime? peopleBirthDate;
+  late int peopleActive;
   late TextEditingController nameInputController;
   late TextEditingController birthDateController;
 
   final LocalAuthentication _localAuth = LocalAuthentication();
 
   Future<bool> _deleteUser(context) async {
-
-    var deletedUser = UserController().delete(User(name: peopleName, birthDate: peopleBirthDate.toString(),id: peopleId));
+    var deletedUser = UserController().delete(User(
+        name: peopleName,
+        birthDate: peopleBirthDate.toString(),
+        id: peopleId,
+        active: peopleActive));
 
     if (await deletedUser != 0) {
       return true;
@@ -78,26 +82,27 @@ class _EditPeopleState extends State<EditPeople>{
 
     User user = User(
       id: peopleId,
-      name: nameInputController.text, 
+      name: nameInputController.text,
       birthDate: peopleBirthDate.toString(),
+      active: peopleActive,
     );
 
     UserValidation validations = UserValidation(user: user);
 
-    if(validations.validate()){
+    if (validations.validate()) {
       var updatePeople = UserController().update(user);
 
-      if(await updatePeople != 0){
+      if (await updatePeople != 0) {
         Navigator.pushNamedAndRemoveUntil(context, '/people', (route) => false);
         return;
       }
 
       showDialog(
         context: context,
-        barrierDismissible: false, 
+        barrierDismissible: false,
         builder: (context) => Alert(
-          title: 'Erro ao Atualizar', 
-          message: 'Ocorreu um erro ao atualizar o usuário', 
+          title: 'Erro ao Atualizar',
+          message: 'Ocorreu um erro ao atualizar o usuário',
           actions: [
             TextButton(
               onPressed: () {
@@ -129,16 +134,17 @@ class _EditPeopleState extends State<EditPeople>{
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     peopleId = widget.people.id;
     peopleName = widget.people.name;
     peopleBirthDate = DateTime.tryParse(widget.people.birthDate);
+    peopleActive = widget.people.active;
 
     nameInputController = TextEditingController(text: peopleName);
-    birthDateController = TextEditingController(text: dateFormat(peopleBirthDate!));
-
-  }  
+    birthDateController =
+        TextEditingController(text: dateFormat(peopleBirthDate!));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,9 +164,7 @@ class _EditPeopleState extends State<EditPeople>{
                   height: 2.0,
                 ),
                 FormInput(
-                  label: 'Nome do usuário', 
-                  controller: nameInputController
-                ),
+                    label: 'Nome do usuário', controller: nameInputController),
                 TextField(
                   controller: birthDateController,
                   readOnly: true,
@@ -169,10 +173,14 @@ class _EditPeopleState extends State<EditPeople>{
                     border: OutlineInputBorder(),
                   ),
                   onTap: () async => {
-                    peopleBirthDate = await datePicker(context: context,firstDate: DateTime(1900),lastDate: DateTime.now()),
-                    if (peopleBirthDate != null){
-                      birthDateController.text = dateFormat(peopleBirthDate!),
-                    }
+                    peopleBirthDate = await datePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now()),
+                    if (peopleBirthDate != null)
+                      {
+                        birthDateController.text = dateFormat(peopleBirthDate!),
+                      }
                   },
                 ),
                 SizedBox(
@@ -180,75 +188,75 @@ class _EditPeopleState extends State<EditPeople>{
                   child: ElevatedButton(
                     onPressed: () {
                       updatePeople(context);
-                    }, 
+                    },
                     child: const Text('Editar'),
                   ),
                 ),
                 SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final navigator = Navigator.of(context);
-                              var authenticate = await _authenticate();
-        
-                              if(!context.mounted) return;
-        
-                              if(widget.userLenght < 2){
-                                showDialog(
-                                  context: context, 
-                                  builder: (context) => Alert(
-                                    title: 'Último Usuário', 
-                                    message: 'Deve haver pelo menos um usuário criado', 
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final navigator = Navigator.of(context);
+                      var authenticate = await _authenticate();
+
+                      if (!context.mounted) return;
+
+                      if (widget.userLenght < 2) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => Alert(
+                                    title: 'Último Usuário',
+                                    message:
+                                        'Deve haver pelo menos um usuário criado',
                                     actions: [
                                       TextButton(
                                         onPressed: () {
                                           navigator.pop();
-                                        }, 
+                                        },
                                         child: const Text('OK'),
                                       )
-                                    ]
-                                  )
-                                );
-                                return;
-                              }
-        
-                              if(authenticate){
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => Alert(
-                                    title: 'O Usuario $peopleName será removido!',
-                                    message: 'Tem certeza que deseja realizar esta ação?', 
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          navigator.pop();
-                                        }, 
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          if(await _deleteUser(context)){
-                                            navigator.pushNamed('/people');
-                                          }
-                                        }, 
-                                        child: const Text('Confirmar'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else{
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Falha na Autenticação'))
-                                );
-                              }
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.redAccent)
-                      ),
-                      child: const Text('Excluir'),
-                    ),
+                                    ]));
+                        return;
+                      }
+
+                      if (authenticate) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => Alert(
+                            title: 'O Usuario $peopleName será removido!',
+                            message:
+                                'Tem certeza que deseja realizar esta ação?',
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  navigator.pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  if (await _deleteUser(context)) {
+                                    navigator.pushNamed('/people');
+                                  }
+                                },
+                                child: const Text('Confirmar'),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Falha na Autenticação')));
+                      }
+                    },
+                    style: const ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll(Colors.redAccent)),
+                    child: const Text('Excluir'),
                   ),
+                ),
               ],
             ),
           ),
