@@ -8,6 +8,7 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
+import 'package:app/views/medicine/create_medication_step8_users.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -31,93 +32,93 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   final TextEditingController medicationDate = TextEditingController();
   DateTime? medicationFirstDate;
 
-  Future<void> saveMedication(context) async {
-    if (!context.mounted) return;
+  // Future<void> saveMedication(context) async {
+  //   if (!context.mounted) return;
 
-    final navigator = Navigator.of(context);
+  //   final navigator = Navigator.of(context);
 
-    if (medicationFirstDate != null) {
-      var interval = 0;
-      var duration = int.parse(medicationDuration.text);
-      DateTime incrementDate = medicationFirstDate!;
-      DateTime finalDate =
-          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
-      finalDate = finalDate.add(Duration(days: duration));
-      Medication medication = Medication(
-        name: medicationName.text,
-        type: medicationType.name,
-        frequencyType: medicationFrequencyType.name,
-        frequencyValue: int.parse(medicationFrequencyValue.text),
-        duration: int.parse(medicationFrequencyValue.text),
-        quantity: int.parse(medicationQuantity.text),
-        firstMedication: medicationFirstDate.toString(),
-      );
+  //   if (medicationFirstDate != null) {
+  //     var interval = 0;
+  //     var duration = int.parse(medicationDuration.text);
+  //     DateTime incrementDate = medicationFirstDate!;
+  //     DateTime finalDate =
+  //         DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
+  //     finalDate = finalDate.add(Duration(days: duration));
+  //     Medication medication = Medication(
+  //       name: medicationName.text,
+  //       type: medicationType.name,
+  //       frequencyType: medicationFrequencyType.name,
+  //       frequencyValue: int.parse(medicationFrequencyValue.text),
+  //       duration: int.parse(medicationFrequencyValue.text),
+  //       quantity: int.parse(medicationQuantity.text),
+  //       firstMedication: medicationFirstDate.toString(),
+  //     );
 
-      var insertedMedication = MedicationController().save(medication);
+  //     var insertedMedication = MedicationController().save(medication);
 
-      if (await insertedMedication != 0) {
-        if (medicationFrequencyType == MedicationFrequencyType.dias) {
-          interval = int.parse(medicationFrequencyValue.text) * 24;
-        } else if (medicationFrequencyType == MedicationFrequencyType.semanas) {
-          interval = int.parse(medicationFrequencyValue.text) * 168;
-        } else if (medicationFrequencyType ==
-            MedicationFrequencyType.vezesAoDia) {
-          interval = (24 ~/ int.parse(medicationFrequencyValue.text));
-        } else {
-          interval = int.parse(medicationFrequencyValue.text);
-        }
+  //     if (await insertedMedication != 0) {
+  //       if (medicationFrequencyType == MedicationFrequencyType.dias) {
+  //         interval = int.parse(medicationFrequencyValue.text) * 24;
+  //       } else if (medicationFrequencyType == MedicationFrequencyType.semanas) {
+  //         interval = int.parse(medicationFrequencyValue.text) * 168;
+  //       } else if (medicationFrequencyType ==
+  //           MedicationFrequencyType.vezesAoDia) {
+  //         interval = (24 ~/ int.parse(medicationFrequencyValue.text));
+  //       } else {
+  //         interval = int.parse(medicationFrequencyValue.text);
+  //       }
 
-        while (incrementDate.isBefore(finalDate)) {
-          await MedicationScheduleDao(
-                  database: await DatabaseHelper.instance.database)
-              .insert(MedicationSchedule(
-                  date: incrementDate.toString(),
-                  status: "Pendente",
-                  medicationId: await insertedMedication));
-          incrementDate = incrementDate.add(Duration(hours: interval));
-        }
-      }
+  //       while (incrementDate.isBefore(finalDate)) {
+  //         await MedicationScheduleDao(
+  //                 database: await DatabaseHelper.instance.database)
+  //             .insert(MedicationSchedule(
+  //                 date: incrementDate.toString(),
+  //                 status: "Pendente",
+  //                 medicationId: await insertedMedication));
+  //         incrementDate = incrementDate.add(Duration(hours: interval));
+  //       }
+  //     }
 
-      if (await insertedMedication != 0) {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-        return;
-      }
-      
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Alert(
-          message: 'Ocorreu um erro ao cadastrar o medicamento',
-          title: 'Erro ao Cadastrar',
-          actions: [
-            TextButton(
-              onPressed: () {
-                navigator.pop();
-              },
-              child: Text('OK'),
-            )
-          ],
-        ),
-      );
-    }
+  //     if (await insertedMedication != 0) {
+  //       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  //       return;
+  //     }
 
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Alert(
-        message: 'Adicione a data',
-        title: 'Campo Inválido',
-        actions: [
-          TextButton(
-              onPressed: () {
-                navigator.pop();
-              },
-              child: Text('OK'),
-            )
-        ],
-      ),
-    );
-  }
+  //     showDialog<void>(
+  //       context: context,
+  //       barrierDismissible: false,
+  //       builder: (context) => Alert(
+  //         message: 'Ocorreu um erro ao cadastrar o medicamento',
+  //         title: 'Erro ao Cadastrar',
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               navigator.pop();
+  //             },
+  //             child: Text('OK'),
+  //           )
+  //         ],
+  //       ),
+  //     );
+  //   }
+
+  //   showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (context) => Alert(
+  //       message: 'Adicione a data',
+  //       title: 'Campo Inválido',
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () {
+  //             navigator.pop();
+  //           },
+  //           child: Text('OK'),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -165,9 +166,24 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        saveMedication(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                CreateMedicationStep8UserMedication(
+                                    medicationName: medicationName,
+                                    medicationType: medicationType,
+                                    medicationFrequencyType:
+                                        medicationFrequencyType,
+                                    medicationFrequencyValue:
+                                        medicationFrequencyValue,
+                                    medicationDuration: medicationDuration,
+                                    medicationQuantity: medicationQuantity),
+                          ),
+                        );
+                        // saveMedication(context);
                       },
-                      child: const Text('Finalizar'),
+                      child: const Text('Próximo'),
                     ),
                   ),
                 ],

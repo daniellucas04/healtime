@@ -1,6 +1,7 @@
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
+import 'package:app/models/usermedication.dart';
 
 class MedicationController {
   String? name;
@@ -30,5 +31,13 @@ class MedicationController {
         MedicationDao(database: await DatabaseHelper.instance.database);
 
     return medicationDao.delete(medication);
+  }
+
+  Future<void> linkMedicationToUser(UsuarioMedicamento userMedication) async {
+    final db = await DatabaseHelper.instance.database;
+    await db.insert(
+      'user_medication',
+      userMedication.toMap(),
+    );
   }
 }

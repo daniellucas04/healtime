@@ -19,8 +19,10 @@ void main() {
   });
 
   test('User DAO should return a list of users', () async {
-    await userDao.insert(User(name: 'Alice', nascimento: DateTime(1990, 1, 1)));
-    await userDao.insert(User(name: 'Bob', nascimento: DateTime(1985, 6, 15)));
+    await userDao.insert(
+        User(name: 'Alice', birthDate: DateTime(1990, 1, 1), active: 1));
+    await userDao
+        .insert(User(name: 'Bob', birthDate: DateTime(1985, 6, 15), active: 1));
 
     final results = await userDao.getAll();
 
@@ -28,13 +30,13 @@ void main() {
     expect(results.length, 2);
     expect(results[0].name, 'Alice');
     expect(results[1].name, 'Bob');
-    expect(results[0].nascimento, DateTime(1990, 1, 1));
-    expect(results[1].nascimento, DateTime(1985, 6, 15));
+    expect(results[0].birthDate, DateTime(1990, 1, 1));
+    expect(results[1].birthDate, DateTime(1985, 6, 15));
   });
 
   test('User DAO should insert a new user', () async {
     final result = await userDao
-        .insert(User(name: 'Charlie', nascimento: DateTime(1995, 3, 20)));
+        .insert(User(name: 'Charlie', birthDate: DateTime(1995, 3, 20)));
 
     expect(result, isA<int>());
     expect(result, greaterThan(0));
@@ -42,22 +44,22 @@ void main() {
 
   test('User DAO should update a user', () async {
     final insertedId = await userDao
-        .insert(User(name: 'David', nascimento: DateTime(1980, 7, 10)));
+        .insert(User(name: 'David', birthDate: DateTime(1980, 7, 10)));
 
     var user =
-        User(id: insertedId, name: 'Eve', nascimento: DateTime(1982, 9, 12));
+        User(id: insertedId, name: 'Eve', birthDate: DateTime(1982, 9, 12));
     final result = await userDao.update(user);
 
     expect(result, 1);
 
     final updatedUser = await userDao.getById(insertedId);
     expect(updatedUser!.name, 'Eve');
-    expect(updatedUser.nascimento, DateTime(1982, 9, 12));
+    expect(updatedUser.birthDate, DateTime(1982, 9, 12));
   });
 
   test('User DAO should delete a user', () async {
     final insertedId = await userDao
-        .insert(User(name: 'Frank', nascimento: DateTime(1975, 11, 5)));
+        .insert(User(name: 'Frank', birthDate: DateTime(1975, 11, 5)));
 
     var userBeforeDelete = await userDao.getById(insertedId);
     expect(userBeforeDelete, isNotNull);
