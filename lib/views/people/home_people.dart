@@ -1,17 +1,12 @@
-import 'package:app/controllers/user_controller.dart';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/user.dart';
-import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/navigation_bar.dart';
 import 'package:app/views/people/edit_people_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:local_auth_android/local_auth_android.dart';
-import 'package:local_auth_darwin/local_auth_darwin.dart';
 
 class HomePeople extends StatefulWidget {
   const HomePeople({super.key});
@@ -96,10 +91,12 @@ class _HomePeopleState extends State<HomePeople> {
                         child: InkWell(
                           highlightColor: Colors.blue.withAlpha(100),
                           onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditPeople(
-                                      people: user, userLenght: users.length))),
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPeople(
+                                  people: user, userLenght: users.length),
+                            ),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: Row(
