@@ -3,7 +3,7 @@ import '../models/usermedication.dart';
 
 class UsuarioMedicamentoDao {
   final Database database;
-  String table = 'usuario_medicamento';
+  String table = 'user_medication';
 
   UsuarioMedicamentoDao({required this.database});
 

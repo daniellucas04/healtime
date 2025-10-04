@@ -11,6 +11,20 @@ class UserDao {
     return await database.insert(table, user.toMap());
   }
 
+  Future<User?> findById(int id) async {
+  final result = await database.query(
+    'users',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (result.isNotEmpty) {
+    return User.fromMap(result.first);
+  }
+
+  return null;
+}
+
   Future<int> update(User user) async {
     return await database
         .update(table, user.toMap(), where: 'id = ?', whereArgs: [user.id]);

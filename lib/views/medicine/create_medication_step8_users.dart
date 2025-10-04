@@ -13,16 +13,18 @@ import 'package:flutter/material.dart';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/models/usermedication.dart';
 import 'package:app/models/user.dart';
+import 'package:app/controllers/user_medication_controller.dart';
 
-class CreateMedicationStep8UserMedication extends StatelessWidget {
+class CreateMedicationStep8UserMedication extends StatefulWidget {
   CreateMedicationStep8UserMedication({
     super.key,
     required this.medicationName,
     required this.medicationType,
     required this.medicationFrequencyType,
     required this.medicationFrequencyValue,
-    required this.medicationQuantity,
     required this.medicationDuration,
+    required this.medicationQuantity,
+    required this.medicationFirstDate,
   });
 
   final TextEditingController medicationName;
@@ -31,20 +33,120 @@ class CreateMedicationStep8UserMedication extends StatelessWidget {
   final TextEditingController medicationFrequencyValue;
   final TextEditingController medicationDuration;
   final TextEditingController medicationQuantity;
+  final DateTime medicationFirstDate;
+
+  @override
+  State<CreateMedicationStep8UserMedication> createState() =>
+      _CreateMedicationStep8UserMedicationState();
+}
+
+class _CreateMedicationStep8UserMedicationState extends State<CreateMedicationStep8UserMedication> {
+  User? selectedUser;
+  late Future<List<User>> usersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    usersFuture = _getUsersWithDefault();
+  }
 
   Future<List<User>> _getUsersWithDefault() async {
-    var users = await UserDao(database: await DatabaseHelper.instance.database)
-        .getAll();
+    final dao = UserDao(database: await DatabaseHelper.instance.database);
+    var users = await dao.getAll();
 
     if (users.isEmpty) {
-      UserDao(database: await DatabaseHelper.instance.database).insert(User(
-          name: 'Você', birthDate: DateTime(2000, 1, 1).toString(), active: 1));
+      await dao.insert(User(
+        name: 'Você',
+        birthDate: DateTime(2000, 1, 1).toString(),
+        active: 1,
+      ));
+      users = await dao.getAll();
     }
 
-    users = await UserDao(database: await DatabaseHelper.instance.database)
-        .getAll();
-
     return users;
+  }
+
+  Future<void> _handleFinish() async {
+    if (selectedUser == null) {
+      _showAlert('Selecione um usuário', 'Usuário obrigatório');
+      return;
+    }
+
+    // Criação do medicamento
+    final medication = Medication(
+      name: widget.medicationName.text,
+      type: widget.medicationType.name,
+      frequencyType: widget.medicationFrequencyType.name,
+      frequencyValue: int.parse(widget.medicationFrequencyValue.text),
+      duration: int.parse(widget.medicationDuration.text),
+      quantity: int.parse(widget.medicationQuantity.text),
+      firstMedication: widget.medicationFirstDate.toIso8601String(),
+    );
+
+    final medicationId = await MedicationController().save(medication);
+
+    if (medicationId == 0) {
+      _showAlert('Erro ao cadastrar', 'Não foi possível salvar o medicamento.');
+      return;
+    }
+
+    // Inserir vínculo user-medication
+    await UserMedicationController().linkUserToMedication(UsuarioMedicamento(
+      usuarioId: selectedUser!.id!,
+      medicamentoId: medicationId,
+    ));
+
+    // Criar agenda (calculate interval)
+    int interval = 0;
+    if (widget.medicationFrequencyType == MedicationFrequencyType.dias) {
+      interval = int.parse(widget.medicationFrequencyValue.text) * 24;
+    } else if (widget.medicationFrequencyType == MedicationFrequencyType.semanas) {
+      interval = int.parse(widget.medicationFrequencyValue.text) * 168;
+    } else if (widget.medicationFrequencyType == MedicationFrequencyType.vezesAoDia) {
+      interval = (24 ~/ int.parse(widget.medicationFrequencyValue.text));
+    } else {
+      interval = int.parse(widget.medicationFrequencyValue.text);
+    }
+
+    DateTime incrementDate = widget.medicationFirstDate;
+    DateTime finalDate = incrementDate.add(Duration(
+      days: int.parse(widget.medicationDuration.text),
+    ));
+
+    final scheduleDao = MedicationScheduleDao(
+      database: await DatabaseHelper.instance.database,
+    );
+
+    // Inserindo todas as doses
+    while (incrementDate.isBefore(finalDate)) {
+      await scheduleDao.insert(MedicationSchedule(
+        date: incrementDate.toIso8601String(),
+        status: "Pendente",
+        medicationId: medicationId,
+      ));
+      incrementDate = incrementDate.add(Duration(hours: interval));
+    }
+
+    if (!mounted) return;
+
+    Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+  }
+
+  void _showAlert(String title, String message) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Alert(
+        title: title,
+        message: message,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -54,50 +156,55 @@ class CreateMedicationStep8UserMedication extends StatelessWidget {
         title: 'Usuário',
         subtitle: 'O remédio vai ser para qual usuário?',
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: context.heightPercentage(0.05)),
-            Container(
-              height: context.heightPercentage(0.90) - 200,
-              margin: const EdgeInsets.only(left: 30, right: 30),
-              child: Column(
-                children: [
-                  // Selecione o usuário
-                  DropdownButton<User>(
-                    onChanged: (User? user) {
-                      if (user != null) {
-                        // Salve o vínculo entre o usuário e o medicamento
-                        final userMedication = UsuarioMedicamento(
-                          usuarioId: user.id!,
-                          medicamentoId:
-                              medicationId, // ID do medicamento cadastrado
-                        );
+      body: FutureBuilder<List<User>>(
+        future: usersFuture,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-                        // Agora, insira esse vínculo no banco de dados
-                        MedicationController()
-                            .linkMedicationToUser(userMedication);
-                      }
-                    },
-                    items: users.map((user) {
-                      return DropdownMenuItem<User>(
-                        value: user,
-                        child: Text(user.name),
-                      );
-                    }).toList(),
+          final users = snapshot.data!;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: context.heightPercentage(0.05)),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    children: [
+                      DropdownButtonFormField<User>(
+                        isExpanded: true,
+                        value: selectedUser,
+                        hint: const Text("Selecione um usuário"),
+                        items: users.map((user) {
+                          return DropdownMenuItem<User>(
+                            value: user,
+                            child: Text(user.name),
+                          );
+                        }).toList(),
+                        onChanged: (user) {
+                          setState(() {
+                            selectedUser = user;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 45,
+                        child: ElevatedButton(
+                          onPressed: _handleFinish,
+                          child: const Text('Finalizar'),
+                        ),
+                      )
+                    ],
                   ),
-                  SizedBox(height: 45),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Finalize o processo de cadastro
-                    },
-                    child: const Text('Finalizar'),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

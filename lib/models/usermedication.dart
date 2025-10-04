@@ -6,15 +6,15 @@ class UsuarioMedicamento {
 
   Map<String, dynamic> toMap() {
     return {
-      'usuario_id': usuarioId,
-      'medicamento_id': medicamentoId,
+      'user_id': usuarioId,
+      'medication_id': medicamentoId,
     };
   }
 
   factory UsuarioMedicamento.fromMap(Map<String, dynamic> map) {
     return UsuarioMedicamento(
-      usuarioId: map['usuario_id'],
-      medicamentoId: map['medicamento_id'],
+      usuarioId: map['user_id'],
+      medicamentoId: map['medication_id'],
     );
   }
 }
