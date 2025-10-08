@@ -8,6 +8,7 @@ import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<Medication?> getById(int id) async {
   return MedicationDao(database: await DatabaseHelper.instance.database)
@@ -198,6 +199,7 @@ class MedicationsCard extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Row(
+                                  spacing: 10,
                                   children: [
                                     Expanded(
                                       child: ListTile(
@@ -228,6 +230,41 @@ class MedicationsCard extends StatelessWidget {
                                         fontSize: 18,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      style: const ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStatePropertyAll<Color>(
+                                          Colors.black12,
+                                        ),
+                                        alignment: Alignment.center,
+                                        animationDuration:
+                                            Duration(milliseconds: 300),
+                                      ),
+                                      onPressed: () {
+                                        String username = 'Usuário';
+                                        String medicationName =
+                                            medication['name'];
+                                        String medicationDate = dateFormat(
+                                          DateTime.parse(medication['date']),
+                                        );
+                                        String medicationHour = timeFormat(
+                                            DateTime.parse(medication['date']));
+
+                                        SharePlus.instance.share(
+                                          ShareParams(
+                                            title:
+                                                'Compartilhar medicamento agendado',
+                                            text:
+                                                '''Olá $username! Você possui um medicamento agendado.\n\n- ${medicationName.toUpperCase()} ($medicationDate) às $medicationHour''',
+                                          ),
+                                        );
+                                      },
+                                      child: const Icon(
+                                        Icons.send_rounded,
+                                        color: Colors.white,
+                                        size: 22,
                                       ),
                                     ),
                                   ],

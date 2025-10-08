@@ -17,6 +17,7 @@ dependencies:
   provider: ^6.1.5+1
   sqflite: ^2.3.2
   wheel_slider: ^1.2.2
+  share_plus: ^11.1.0
 
 dev_dependencies:
   flutter_test:
