@@ -66,7 +66,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: Sidebar(),
+      endDrawer: Sidebar(
+        onUserSelected: (userId) {
+          setState(() {
+            // selectedUserId = userId; // Atualiza o ID do usuário selecionado
+          });
+        },
+      ),
       resizeToAvoidBottomInset: false,
       appBar: Header(
         title: 'Seja bem-vindo!',

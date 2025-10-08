@@ -1,13 +1,35 @@
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/views/theme/theme.dart';
+import 'package:app/database/database_helper.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app/models/user.dart';
+import 'package:app/dao/user_dao.dart';
 
 class Sidebar extends StatefulWidget {
-  const Sidebar({super.key});
+  final Function(int? userId) onUserSelected; // Callback para passar o userId
+
+  const Sidebar({super.key, required this.onUserSelected});
 
   @override
   State<Sidebar> createState() => _SidebarState();
+}
+
+Future<List<User>> _getUsersWithDefault() async {
+  final dao = UserDao(database: await DatabaseHelper.instance.database);
+  var users = await dao.getAll();
+
+  if (users.isEmpty) {
+    await dao.insert(User(
+      name: 'Você',
+      birthDate: DateTime(2000, 1, 1).toString(),
+      active: 1,
+    ));
+    users = await dao.getAll();
+  }
+
+  return users;
 }
 
 class _SidebarState extends State<Sidebar> {
@@ -49,11 +71,10 @@ class _SidebarState extends State<Sidebar> {
             ),
           ),
           Padding(
-            padding: const EdgeInsetsGeometry.all(16),
+            padding: const EdgeInsets.all(16),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                spacing: 10,
                 children: [
                   const Text(
                     'Tema escuro',
@@ -71,20 +92,46 @@ class _SidebarState extends State<Sidebar> {
                       });
                     },
                     value: isSwitched,
-                  )
+                  ),
                 ],
               ),
             ),
           ),
           const Divider(),
-          ListTile(
-            onTap: () {},
-            title: const Text('Usuário 1'),
+
+          // FutureBuilder para carregar os usuários do banco de dados
+          FutureBuilder<List<User>>(
+            future: _getUsersWithDefault(), // método para obter usuários
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return const Center(child: Text('Erro ao carregar usuários'));
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('Nenhum usuário encontrado'));
+              }
+
+              // ListView para exibir os usuários
+              var users = snapshot.data!;
+              return Column(
+                children: users.map((user) {
+                  return ListTile(
+                    title: Text(user.name),
+                    onTap: () {
+                      widget.onUserSelected(user.id);
+                      Navigator.pop(context);
+                      print(user.id);
+                    },
+                  );
+                }).toList(),
+              );
+            },
           ),
-          ListTile(
-            onTap: () {},
-            title: const Text('Usuário 2'),
-          ),
+
           Padding(
             padding: const EdgeInsets.all(16),
             child: Center(
