@@ -1,9 +1,11 @@
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
+import 'package:app/main.dart';
 import 'package:app/models/user.dart';
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class Sidebar extends StatefulWidget {
@@ -102,6 +104,15 @@ class _SidebarState extends State<Sidebar> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsetsGeometry.all(16),
+              child: ElevatedButton(
+                onPressed: () {
+                  _showNotification();
+                },
+                child: Text('Test notification'),
+              ),
+            ),
             const Divider(),
             FutureBuilder<List<User>>(
               future: _getUsers(),
@@ -165,6 +176,28 @@ class _SidebarState extends State<Sidebar> {
           ],
         ),
       ),
+    );
+  }
+
+  // Teste Notification
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      'medication',
+      'Medicação próxima',
+      channelDescription: 'Uma medicação está próxima do seu horário agendado',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+      id++,
+      'Atenção usuário!',
+      'o medicamento DIPIRONA está próximo de ser ministrado',
+      notificationDetails,
+      payload: 'item x',
     );
   }
 
