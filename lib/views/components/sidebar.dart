@@ -9,7 +9,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class Sidebar extends StatefulWidget {
-  const Sidebar({super.key});
+  final Function(int? userId) onUserSelected; // Callback para passar o userId
+
+  const Sidebar({super.key, required this.onUserSelected});
 
   @override
   State<Sidebar> createState() => _SidebarState();
@@ -136,7 +138,10 @@ class _SidebarState extends State<Sidebar> {
                         return Padding(
                           padding: const EdgeInsetsGeometry.all(2),
                           child: ListTile(
-                            onTap: () {},
+                            onTap: () {
+                              widget.onUserSelected(user.id);
+                              Navigator.pop(context);
+                            },
                             title: Text(user.name),
                           ),
                         );

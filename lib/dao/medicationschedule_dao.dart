@@ -21,13 +21,16 @@ class MedicationScheduleDao {
         .delete(table, where: 'id = ?', whereArgs: [medicationSchedule.id]);
   }
 
-  Future<List<Map<String, dynamic>>> getAll(DateTime searchDate) async {
+  Future<List<Map<String, dynamic>>> getAll(
+      DateTime searchDate, int userId) async {
     var date = searchDate.toIso8601String().substring(0, 10);
     final List<Map<String, dynamic>> result = await database.rawQuery('''
       SELECT medication_schedule.id AS id, medication_schedule.date AS date, medication_schedule.medication_id as medication_id, medication_schedule.status as status ,medications.name AS name, medications.type AS type, medications.quantity AS quantity
       FROM medication_schedule
       INNER JOIN medications ON medications.id = medication_schedule.medication_id
-      WHERE date(medication_schedule.date) = date('$date') ORDER BY medication_schedule.date ASC;
+      JOIN user_medication ON medications.id = user_medication.id
+      JOIN users ON user_medication.id = users.id
+      WHERE date(medication_schedule.date) = date('$date') AND users.id = $userId ORDER BY medication_schedule.date ASC;
     ''');
 
     return result;

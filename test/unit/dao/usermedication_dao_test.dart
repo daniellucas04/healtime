@@ -18,7 +18,7 @@ void main() {
   });
 
   test('insert and getAll', () async {
-    final vinculo = UsuarioMedicamento(usuarioId: 1, medicamentoId: 2);
+    final vinculo = UserMedication(usuarioId: 1, medicamentoId: 2);
     await dao.insert(vinculo);
 
     final result = await dao.getAll();
@@ -28,7 +28,7 @@ void main() {
   });
 
   test('delete vinculo', () async {
-    final vinculo = UsuarioMedicamento(usuarioId: 1, medicamentoId: 2);
+    final vinculo = UserMedication(usuarioId: 1, medicamentoId: 2);
     await dao.insert(vinculo);
 
     await dao.delete(vinculo);

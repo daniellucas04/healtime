@@ -30,6 +30,7 @@ class DatabaseHelper {
     await db.execute(Tables.medications());
     await db.execute(Tables.users());
     await db.execute(Tables.medicationSchedule());
+    await db.execute(Tables.usersMedication());
   }
 
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {

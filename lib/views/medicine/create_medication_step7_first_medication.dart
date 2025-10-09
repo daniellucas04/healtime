@@ -1,17 +1,13 @@
-import 'package:app/controllers/medication_controller.dart';
-import 'package:app/dao/medicationschedule_dao.dart';
-import 'package:app/database/database_helper.dart';
-import 'package:app/models/medication.dart';
-import 'package:app/models/medicationschedule.dart';
+import 'package:flutter/material.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
-import 'package:app/views/theme/theme.dart';
-import 'package:flutter/material.dart';
+import 'package:app/views/medicine/create_medication_step8_users.dart';
+import 'package:app/views/theme/theme.dart'; // para context.heightPercentage
 
-class CreateMedicationStep7FirstMedication extends StatelessWidget {
+class CreateMedicationStep7FirstMedication extends StatefulWidget {
   CreateMedicationStep7FirstMedication({
     super.key,
     required this.medicationName,
@@ -28,93 +24,51 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
   final TextEditingController medicationFrequencyValue;
   final TextEditingController medicationDuration;
   final TextEditingController medicationQuantity;
+
+  @override
+  State<CreateMedicationStep7FirstMedication> createState() =>
+      _CreateMedicationStep7FirstMedicationState();
+}
+
+class _CreateMedicationStep7FirstMedicationState
+    extends State<CreateMedicationStep7FirstMedication> {
   final TextEditingController medicationDate = TextEditingController();
   DateTime? medicationFirstDate;
 
-  Future<void> saveMedication(context) async {
-    if (!context.mounted) return;
-
-    final navigator = Navigator.of(context);
-
-    if (medicationFirstDate != null) {
-      var interval = 0;
-      var duration = int.parse(medicationDuration.text);
-      DateTime incrementDate = medicationFirstDate!;
-      DateTime finalDate =
-          DateTime(incrementDate.year, incrementDate.month, incrementDate.day);
-      finalDate = finalDate.add(Duration(days: duration));
-      Medication medication = Medication(
-        name: medicationName.text,
-        type: medicationType.name,
-        frequencyType: medicationFrequencyType.name,
-        frequencyValue: int.parse(medicationFrequencyValue.text),
-        duration: int.parse(medicationFrequencyValue.text),
-        quantity: int.parse(medicationQuantity.text),
-        firstMedication: medicationFirstDate.toString(),
-      );
-
-      var insertedMedication = MedicationController().save(medication);
-
-      if (await insertedMedication != 0) {
-        if (medicationFrequencyType == MedicationFrequencyType.dias) {
-          interval = int.parse(medicationFrequencyValue.text) * 24;
-        } else if (medicationFrequencyType == MedicationFrequencyType.semanas) {
-          interval = int.parse(medicationFrequencyValue.text) * 168;
-        } else if (medicationFrequencyType ==
-            MedicationFrequencyType.vezesAoDia) {
-          interval = (24 ~/ int.parse(medicationFrequencyValue.text));
-        } else {
-          interval = int.parse(medicationFrequencyValue.text);
-        }
-
-        while (incrementDate.isBefore(finalDate)) {
-          await MedicationScheduleDao(
-                  database: await DatabaseHelper.instance.database)
-              .insert(MedicationSchedule(
-                  date: incrementDate.toString(),
-                  status: "Pendente",
-                  medicationId: await insertedMedication));
-          incrementDate = incrementDate.add(Duration(hours: interval));
-        }
-      }
-
-      if (await insertedMedication != 0) {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-        return;
-      }
-      
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Alert(
-          message: 'Ocorreu um erro ao cadastrar o medicamento',
-          title: 'Erro ao Cadastrar',
-          actions: [
-            TextButton(
-              onPressed: () {
-                navigator.pop();
-              },
-              child: Text('OK'),
-            )
-          ],
-        ),
-      );
-    }
-
+  void _showAlertDialog(String title, String message) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false,
       builder: (context) => Alert(
-        message: 'Adicione a data',
-        title: 'Campo Inválido',
+        title: title,
+        message: message,
         actions: [
           TextButton(
-              onPressed: () {
-                navigator.pop();
-              },
-              child: Text('OK'),
-            )
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          )
         ],
+      ),
+    );
+  }
+
+  void _onNextPressed() {
+    if (medicationFirstDate == null) {
+      _showAlertDialog('Campo Inválido', 'Adicione a data da primeira dose.');
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateMedicationStep8UserMedication(
+          medicationName: widget.medicationName,
+          medicationType: widget.medicationType,
+          medicationFrequencyType: widget.medicationFrequencyType,
+          medicationFrequencyValue: widget.medicationFrequencyValue,
+          medicationDuration: widget.medicationDuration,
+          medicationQuantity: widget.medicationQuantity,
+          medicationFirstDate: medicationFirstDate!,
+        ),
       ),
     );
   }
@@ -130,12 +84,10 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: (context.heightPercentage(0.05)),
-            ),
+            SizedBox(height: (context.heightPercentage(0.05))),
             Container(
-              height: (context.heightPercentage(0.90) - 200),
-              margin: const EdgeInsets.only(left: 30, right: 30),
+              margin: const EdgeInsets.symmetric(horizontal: 30),
+              height: context.heightPercentage(0.90) - 200,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -143,36 +95,35 @@ class CreateMedicationStep7FirstMedication extends StatelessWidget {
                     children: [
                       TextField(
                         controller: medicationDate,
-                        readOnly: true, // Impede digitação manual
+                        readOnly: true,
                         decoration: const InputDecoration(
-                          labelText: "Data e Hora",
+                          labelText: "Data e Hora da Primeira Dose",
                           border: OutlineInputBorder(),
                         ),
-                        onTap: () async => {
-                          medicationFirstDate =
-                              await dateTimePicker(context: context),
-                          if (medicationFirstDate != null)
-                            {
-                              medicationDate.text =
-                                  dateHourFormat(medicationFirstDate!),
-                            }
+                        onTap: () async {
+                          final picked = await dateTimePicker(context: context);
+                          if (picked != null) {
+                            setState(() {
+                              medicationFirstDate = picked;
+                              medicationDate.text = dateHourFormat(
+                                  picked); // Função utilitária para formatar
+                            });
+                          }
                         },
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 45,
                     width: double.infinity,
+                    height: 45,
                     child: ElevatedButton(
-                      onPressed: () {
-                        saveMedication(context);
-                      },
-                      child: const Text('Finalizar'),
+                      onPressed: _onNextPressed,
+                      child: const Text('Próximo'),
                     ),
-                  ),
+                  )
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
