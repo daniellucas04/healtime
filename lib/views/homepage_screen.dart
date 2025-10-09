@@ -1,6 +1,5 @@
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
-import 'package:app/main.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/medication_card.dart';
@@ -8,7 +7,6 @@ import 'package:app/views/components/navigation_bar.dart';
 import 'package:app/views/components/sidebar.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
 Future<List<Map<String, dynamic>>> getAll(DateTime searchDate) async {
