@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:app/dao/medicationschedule_dao.dart';
+import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
@@ -15,6 +18,11 @@ Future<List<Map<String, dynamic>>> getAll(
       .getAll(searchDate, userId);
 }
 
+Future<int> getActiveUser() async {
+  return await UserDao(database: await DatabaseHelper.instance.database)
+      .getActiveUser();
+}
+
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
 
@@ -25,6 +33,19 @@ class HomePageScreen extends StatefulWidget {
 class _HomePageScreenState extends State<HomePageScreen> {
   DateTime searchDate = DateTime.now();
   int userId = 1;
+
+  Future<void> loadUser() async {
+    final id = await getActiveUser();
+    setState(() {
+      userId = id;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +62,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         title: 'Seja bem-vindo!',
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: getAll(searchDate, userId),
+        future: getAll(searchDate, userId!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -110,7 +131,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                 ),
               ),
-              MedicationsCard(items: items),
+              MedicationsCard(
+                items: items,
+                searchDate: searchDate,
+                onChange: (DateTime? newSearchDate) {
+                  setState(() {
+                    searchDate = newSearchDate!;
+                    Navigator.pop(context);
+                  });
+                },
+              ),
             ],
           );
         },

@@ -17,8 +17,14 @@ Future<Medication?> getById(int id) async {
 
 class MedicationsCard extends StatelessWidget {
   final List<Map<String, dynamic>> items;
+  final DateTime searchDate;
+  final Function(DateTime? searchDate) onChange;
 
-  const MedicationsCard({super.key, required this.items});
+  const MedicationsCard(
+      {super.key,
+      required this.items,
+      required this.onChange,
+      required this.searchDate});
 
   Color _setMedicationColor(status) {
     if (status == 'Tomado') {
@@ -126,12 +132,7 @@ class MedicationsCard extends StatelessWidget {
                                               'Tomado',
                                               medication['medication_id'],
                                               medication['id'])) {
-                                            if (context.mounted) {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  '/',
-                                                  (route) => false);
-                                            }
+                                            onChange(searchDate);
                                           }
                                         },
                                         child: const Text('Tomado'),
@@ -143,12 +144,7 @@ class MedicationsCard extends StatelessWidget {
                                               'Atrasado',
                                               medication['medication_id'],
                                               medication['id'])) {
-                                            if (context.mounted) {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  '/',
-                                                  (route) => false);
-                                            }
+                                            onChange(searchDate);
                                           }
                                         },
                                         child: const Text('Atrasado'),
@@ -160,12 +156,7 @@ class MedicationsCard extends StatelessWidget {
                                               'Esquecido',
                                               medication['medication_id'],
                                               medication['id'])) {
-                                            if (context.mounted) {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  '/',
-                                                  (route) => false);
-                                            }
+                                            onChange(searchDate);
                                           }
                                         },
                                         child: const Text('Esquecido'),

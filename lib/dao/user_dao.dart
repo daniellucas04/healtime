@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:app/models/user.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -23,6 +25,16 @@ class UserDao {
   Future<List<User>> getAll() async {
     final users = await database.query(table);
     return users.map((json) => User.fromMap(json)).toList();
+  }
+
+  Future<int> getActiveUser() async {
+    var user = await database.query(table, where: 'active = ?', whereArgs: [1]);
+    if (user.isNotEmpty) {
+      var u = User.fromMap((user.first));
+      return u.id!;
+    }
+
+    return 1;
   }
 
   Future<User?> getById(int id) async {
