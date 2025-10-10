@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/views/homepage_screen.dart';
-import 'package:app/views/people/home_people.dart';
 import 'package:app/views/router/router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -129,11 +128,9 @@ Future<void> main() async {
           Platform.isLinux
       ? null
       : await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-  String initialRoute = '/';
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
     selectedNotificationPayload =
         notificationAppLaunchDetails!.notificationResponse?.payload;
-    initialRoute = '/people';
   }
 
   runApp(ChangeNotifierProvider(
