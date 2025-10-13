@@ -1,4 +1,6 @@
 import 'package:app/controllers/user_controller.dart';
+import 'package:app/dao/user_dao.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:app/helpers/user_validation.dart';
 import 'package:app/models/user.dart';
 import 'package:app/views/components/alert.dart';
@@ -29,6 +31,8 @@ class _EditPeopleState extends State<EditPeople> {
   late TextEditingController birthDateController;
 
   final LocalAuthentication _localAuth = LocalAuthentication();
+
+  late bool peopleDefault;
 
   Future<bool> _deleteUser(context) async {
     var deletedUser = UserController().delete(User(
@@ -84,12 +88,26 @@ class _EditPeopleState extends State<EditPeople> {
       id: peopleId,
       name: nameInputController.text,
       birthDate: peopleBirthDate.toString(),
-      active: peopleActive,
+      active: peopleDefault ? 1 : 0,
     );
 
     UserValidation validations = UserValidation(user: user);
 
     if (validations.validate()) {
+      if (peopleDefault) {
+        var users =
+            await UserDao(database: await DatabaseHelper.instance.database)
+                .getAll();
+        for (var user in users) {
+          if (user.active == 1) {
+            UserController().update(User(
+                id: user.id,
+                name: user.name,
+                birthDate: user.birthDate,
+                active: 0));
+          }
+        }
+      }
       var updatePeople = UserController().update(user);
 
       if (await updatePeople != 0) {
@@ -144,10 +162,13 @@ class _EditPeopleState extends State<EditPeople> {
     nameInputController = TextEditingController(text: peopleName);
     birthDateController =
         TextEditingController(text: dateFormat(peopleBirthDate!));
+
+    peopleDefault = peopleActive == 1;
   }
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData currentTheme = Theme.of(context);
     return Scaffold(
       appBar: Header(
         title: peopleName.toUpperCase(),
@@ -182,6 +203,30 @@ class _EditPeopleState extends State<EditPeople> {
                         birthDateController.text = dateFormat(peopleBirthDate!),
                       }
                   },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Usuário Padrão',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    Switch(
+                      activeThumbColor:
+                          currentTheme.brightness == Brightness.dark
+                              ? secondaryDarkTheme
+                              : accentLightTheme,
+                      onChanged: peopleActive == 1
+                          ? null
+                          : (value) {
+                              setState(() {
+                                peopleDefault = value;
+                              });
+                            },
+                      value: peopleDefault,
+                    )
+                  ],
                 ),
                 SizedBox(
                   width: double.infinity,

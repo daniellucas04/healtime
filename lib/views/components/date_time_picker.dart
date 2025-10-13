@@ -66,12 +66,12 @@ Future<DateTime?> datePicker({
 }
 
 String dateHourFormat(DateTime date) {
-  return '${date.day}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().padLeft(2, '0')} '
+  return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().padLeft(2, '0')} '
       '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 }
 
-String dateFormat(DateTime date){
-  return '${date.day}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().padLeft(2, '0')}';
+String dateFormat(DateTime date) {
+  return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().padLeft(2, '0')}';
 }
 
 String timeFormat(DateTime date) {

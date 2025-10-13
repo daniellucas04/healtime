@@ -1,8 +1,9 @@
-class UsuarioMedicamento {
-  final int usuarioId;
-  final int medicamentoId;
+class UserMedication {
+  final int? id;
+  final int userId;
+  final int medicationId;
 
-  UsuarioMedicamento({required this.usuarioId, required this.medicamentoId});
+  UserMedication({this.id, required this.userId, required this.medicationId});
 
   Map<String, dynamic> toMap() {
     return {
