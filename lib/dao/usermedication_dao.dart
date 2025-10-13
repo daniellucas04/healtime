@@ -7,11 +7,11 @@ class UsuarioMedicamentoDao {
 
   UsuarioMedicamentoDao({required this.database});
 
-  Future<int> insert(UserMedication vinculo) async {
+  Future<int> insert(UsuarioMedicamento vinculo) async {
     return await database.insert(table, vinculo.toMap());
   }
 
-  Future<int> delete(UserMedication vinculo) async {
+  Future<int> delete(UsuarioMedicamento vinculo) async {
     return await database.delete(
       table,
       where: 'user_id = ? AND medication_id = ?',
@@ -19,8 +19,8 @@ class UsuarioMedicamentoDao {
     );
   }
 
-  Future<List<UserMedication>> getAll() async {
+  Future<List<UsuarioMedicamento>> getAll() async {
     final result = await database.query(table);
-    return result.map((json) => UserMedication.fromMap(json)).toList();
+    return result.map((json) => UsuarioMedicamento.fromMap(json)).toList();
   }
 }

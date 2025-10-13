@@ -40,7 +40,8 @@ class CreateMedicationStep8UserMedication extends StatefulWidget {
       _CreateMedicationStep8UserMedicationState();
 }
 
-class _CreateMedicationStep8UserMedicationState extends State<CreateMedicationStep8UserMedication> {
+class _CreateMedicationStep8UserMedicationState
+    extends State<CreateMedicationStep8UserMedication> {
   User? selectedUser;
   late Future<List<User>> usersFuture;
 
@@ -92,17 +93,19 @@ class _CreateMedicationStep8UserMedicationState extends State<CreateMedicationSt
 
     // Inserir vínculo user-medication
     await UserMedicationController().linkUserToMedication(UsuarioMedicamento(
-      usuarioId: selectedUser!.id!,
-      medicamentoId: medicationId,
+      userId: selectedUser!.id!,
+      medicationId: medicationId,
     ));
 
     // Criar agenda (calculate interval)
     int interval = 0;
     if (widget.medicationFrequencyType == MedicationFrequencyType.dias) {
       interval = int.parse(widget.medicationFrequencyValue.text) * 24;
-    } else if (widget.medicationFrequencyType == MedicationFrequencyType.semanas) {
+    } else if (widget.medicationFrequencyType ==
+        MedicationFrequencyType.semanas) {
       interval = int.parse(widget.medicationFrequencyValue.text) * 168;
-    } else if (widget.medicationFrequencyType == MedicationFrequencyType.vezesAoDia) {
+    } else if (widget.medicationFrequencyType ==
+        MedicationFrequencyType.vezesAoDia) {
       interval = (24 ~/ int.parse(widget.medicationFrequencyValue.text));
     } else {
       interval = int.parse(widget.medicationFrequencyValue.text);

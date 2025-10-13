@@ -82,12 +82,12 @@ class _EditMedicationState extends State<EditMedication> {
     final vinculos = await userMedicationDao.getAll();
 
     final vinculo = vinculos.firstWhere(
-      (v) => v.medicamentoId == medicationId,
-      orElse: () => UsuarioMedicamento(usuarioId: -1, medicamentoId: -1),
+      (v) => v.medicationId == medicationId,
+      orElse: () => UsuarioMedicamento(userId: -1, medicationId: -1),
     );
 
-    if (vinculo.usuarioId != -1) {
-      final user = await userDao.findById(vinculo.usuarioId);
+    if (vinculo.userId != -1) {
+      final user = await userDao.findById(vinculo.userId);
       if (user != null) {
         setState(() {
           usuarioVinculado = user;
@@ -285,8 +285,7 @@ class _EditMedicationState extends State<EditMedication> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: const ButtonStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.redAccent),
+                      backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
                     ),
                     onPressed: () {
                       final navigator = Navigator.of(context);
@@ -294,8 +293,7 @@ class _EditMedicationState extends State<EditMedication> {
                         context: context,
                         barrierDismissible: false,
                         builder: (context) => Alert(
-                          message:
-                              'Tem certeza que deseja realizar esta ação?',
+                          message: 'Tem certeza que deseja realizar esta ação?',
                           title: 'O medicamento será excluído!',
                           actions: [
                             TextButton(
