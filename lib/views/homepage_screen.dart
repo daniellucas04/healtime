@@ -12,10 +12,10 @@ import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Future<List<Map<String, dynamic>>> getAll(
-    DateTime searchDate, int userId) async {
+Future<List<Map<String, dynamic>>> getAll(DateTime searchDate,
+    {int? userId}) async {
   return MedicationScheduleDao(database: await DatabaseHelper.instance.database)
-      .getAll(searchDate, userId);
+      .getAll(searchDate, userId: userId);
 }
 
 Future<int> getActiveUser() async {
@@ -32,7 +32,7 @@ class HomePageScreen extends StatefulWidget {
 
 class _HomePageScreenState extends State<HomePageScreen> {
   DateTime searchDate = DateTime.now();
-  int userId = 1;
+  int? selectedUserId;
 
   Future<void> loadUser() async {
     final id = await getActiveUser();
@@ -51,9 +51,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Sidebar(
-        onUserSelected: (newUserId) {
+        onUserSelected: (userId) {
           setState(() {
-            userId = newUserId!;
+            selectedUserId = userId; // Atualiza o ID do usuário selecionado
           });
         },
       ),
@@ -62,7 +62,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         title: 'Seja bem-vindo!',
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: getAll(searchDate, userId!),
+        future: getAll(searchDate, userId: selectedUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

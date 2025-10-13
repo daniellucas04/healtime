@@ -1,11 +1,11 @@
 import 'package:app/controllers/medication_controller.dart';
-import 'package:app/controllers/user_medication_controller.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
+import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/theme/theme.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/models/usermedication.dart';
 import 'package:app/models/user.dart';
+import 'package:app/controllers/user_medication_controller.dart';
 
 class CreateMedicationStep8UserMedication extends StatefulWidget {
   CreateMedicationStep8UserMedication({
@@ -39,8 +40,7 @@ class CreateMedicationStep8UserMedication extends StatefulWidget {
       _CreateMedicationStep8UserMedicationState();
 }
 
-class _CreateMedicationStep8UserMedicationState
-    extends State<CreateMedicationStep8UserMedication> {
+class _CreateMedicationStep8UserMedicationState extends State<CreateMedicationStep8UserMedication> {
   User? selectedUser;
   late Future<List<User>> usersFuture;
 
@@ -91,20 +91,18 @@ class _CreateMedicationStep8UserMedicationState
     }
 
     // Inserir vínculo user-medication
-    await UserMedicationController().linkUserToMedication(UserMedication(
-      userId: selectedUser!.id!,
-      medicationId: medicationId,
+    await UserMedicationController().linkUserToMedication(UsuarioMedicamento(
+      usuarioId: selectedUser!.id!,
+      medicamentoId: medicationId,
     ));
 
     // Criar agenda (calculate interval)
     int interval = 0;
     if (widget.medicationFrequencyType == MedicationFrequencyType.dias) {
       interval = int.parse(widget.medicationFrequencyValue.text) * 24;
-    } else if (widget.medicationFrequencyType ==
-        MedicationFrequencyType.semanas) {
+    } else if (widget.medicationFrequencyType == MedicationFrequencyType.semanas) {
       interval = int.parse(widget.medicationFrequencyValue.text) * 168;
-    } else if (widget.medicationFrequencyType ==
-        MedicationFrequencyType.vezesAoDia) {
+    } else if (widget.medicationFrequencyType == MedicationFrequencyType.vezesAoDia) {
       interval = (24 ~/ int.parse(widget.medicationFrequencyValue.text));
     } else {
       interval = int.parse(widget.medicationFrequencyValue.text);
@@ -177,7 +175,7 @@ class _CreateMedicationStep8UserMedicationState
                     children: [
                       DropdownButtonFormField<User>(
                         isExpanded: true,
-                        initialValue: selectedUser,
+                        value: selectedUser,
                         hint: const Text("Selecione um usuário"),
                         items: users.map((user) {
                           return DropdownMenuItem<User>(

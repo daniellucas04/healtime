@@ -105,8 +105,7 @@ class _CreateMedicationStep7FirstMedicationState
                           if (picked != null) {
                             setState(() {
                               medicationFirstDate = picked;
-                              medicationDate.text = dateHourFormat(
-                                  picked); // Função utilitária para formatar
+                              medicationDate.text = dateHourFormat(picked); // Função utilitária para formatar
                             });
                           }
                         },

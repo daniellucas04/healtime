@@ -4,9 +4,12 @@ import 'package:app/main.dart';
 import 'package:app/models/user.dart';
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/views/theme/theme.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:app/models/user.dart';
+import 'package:app/dao/user_dao.dart';
 
 class Sidebar extends StatefulWidget {
   final Function(int? userId) onUserSelected; // Callback para passar o userId
@@ -15,6 +18,22 @@ class Sidebar extends StatefulWidget {
 
   @override
   State<Sidebar> createState() => _SidebarState();
+}
+
+Future<List<User>> _getUsersWithDefault() async {
+  final dao = UserDao(database: await DatabaseHelper.instance.database);
+  var users = await dao.getAll();
+
+  if (users.isEmpty) {
+    await dao.insert(User(
+      name: 'Você',
+      birthDate: DateTime(2000, 1, 1).toString(),
+      active: 1,
+    ));
+    users = await dao.getAll();
+  }
+
+  return users;
 }
 
 class _SidebarState extends State<Sidebar> {
@@ -49,8 +68,14 @@ class _SidebarState extends State<Sidebar> {
                   begin: Alignment.centerRight,
                   end: Alignment.centerLeft,
                 ),
-              ),
-              child: Column(
+                const Text('Nome do usuário'),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
@@ -58,101 +83,58 @@ class _SidebarState extends State<Sidebar> {
                     maxRadius: 50,
                     backgroundColor: currentTheme.brightness == Brightness.dark
                         ? secondaryDarkTheme
-                        : secondaryLightTheme,
-                    child: const Icon(
-                      Icons.people,
-                      size: 50,
-                      color: Colors.white,
-                    ),
+                        : accentLightTheme,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = value;
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .toggleTheme();
+                      });
+                    },
+                    value: isSwitched,
                   ),
-                  const Center(
-                    child: Text(
-                      'Nome do usuário',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        wordSpacing: 1,
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsetsGeometry.all(16),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Tema escuro',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                    Switch(
-                      activeThumbColor:
-                          currentTheme.brightness == Brightness.dark
-                              ? secondaryDarkTheme
-                              : accentLightTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          isSwitched = value;
-                          Provider.of<ThemeProvider>(context, listen: false)
-                              .toggleTheme();
-                        });
-                      },
-                      value: isSwitched,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsetsGeometry.all(16),
-              child: ElevatedButton(
-                onPressed: () {
-                  _showNotification();
-                },
-                child: Text('Test notification'),
-              ),
-            ),
-            const Divider(),
-            FutureBuilder<List<User>>(
-              future: _getUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+          ),
+          const Divider(),
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Erro: ${snapshot.error}'));
-                }
+          // FutureBuilder para carregar os usuários do banco de dados
+          FutureBuilder<List<User>>(
+            future: _getUsersWithDefault(), // método para obter usuários
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                final users = snapshot.data ?? [];
+              if (snapshot.hasError) {
+                return const Center(child: Text('Erro ao carregar usuários'));
+              }
 
-                return SizedBox(
-                  height: context.heightPercentage(0.52),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: users.map((user) {
-                        return Padding(
-                          padding: const EdgeInsetsGeometry.all(2),
-                          child: ListTile(
-                            onTap: () {
-                              widget.onUserSelected(user.id);
-                              Navigator.pop(context);
-                            },
-                            title: Text(user.name),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('Nenhum usuário encontrado'));
+              }
+
+              // ListView para exibir os usuários
+              var users = snapshot.data!;
+              return Column(
+                children: users.map((user) {
+                  return ListTile(
+                    title: Text(user.name),
+                    onTap: () {
+                      widget.onUserSelected(user.id);
+                      Navigator.pop(context);
+                      print(user.id);
+                    },
+                  );
+                }).toList(),
+              );
+            },
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(
