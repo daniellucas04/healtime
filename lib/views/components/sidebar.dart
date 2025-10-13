@@ -1,7 +1,6 @@
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:app/database/database_helper.dart';
-import 'package:app/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app/models/user.dart';

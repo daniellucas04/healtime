@@ -21,14 +21,36 @@ class MedicationScheduleDao {
         .delete(table, where: 'id = ?', whereArgs: [medicationSchedule.id]);
   }
 
-  Future<List<Map<String, dynamic>>> getAll(DateTime searchDate) async {
+  Future<List<Map<String, dynamic>>> getAll(DateTime searchDate,
+      {int? userId}) async {
     var date = searchDate.toIso8601String().substring(0, 10);
-    final List<Map<String, dynamic>> result = await database.rawQuery('''
-      SELECT medication_schedule.id AS id, medication_schedule.date AS date, medication_schedule.medication_id as medication_id, medication_schedule.status as status ,medications.name AS name, medications.type AS type, medications.quantity AS quantity
-      FROM medication_schedule
-      INNER JOIN medications ON medications.id = medication_schedule.medication_id
-      WHERE date(medication_schedule.date) = date('$date') ORDER BY medication_schedule.date ASC;
-    ''');
+
+    String query = '''
+    SELECT 
+      medication_schedule.id AS id, 
+      medication_schedule.date AS date, 
+      medication_schedule.medication_id AS medication_id, 
+      medication_schedule.status AS status,
+      medications.name AS name, 
+      medications.type AS type, 
+      medications.quantity AS quantity
+    FROM medication_schedule
+    INNER JOIN medications ON medications.id = medication_schedule.medication_id
+    INNER JOIN user_medication ON user_medication.medication_id = medications.id
+    WHERE date(medication_schedule.date) = date(?)
+  ''';
+
+    List<dynamic> args = [date];
+
+    if (userId != null) {
+      query += ' AND user_medication.user_id = ?';
+      args.add(userId);
+    }
+
+    query += ' ORDER BY medication_schedule.date ASC;';
+
+    final List<Map<String, dynamic>> result =
+        await database.rawQuery(query, args);
 
     return result;
   }
