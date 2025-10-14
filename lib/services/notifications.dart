@@ -1,8 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app/database/database_helper.dart';
+import 'package:app/models/medicationschedule.dart';
+import 'package:app/views/medicine/create_medication_step9_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -108,7 +114,6 @@ class NotificationService {
     _isInitialized = true;
   }
 
-  /// Callback quando uma notificação é recebida
   void _onNotificationResponse(NotificationResponse response) {
     _notificationResponseController.add(response);
   }
@@ -125,6 +130,30 @@ class NotificationService {
     }
   }
 
+  Future<void> _openAppSettingsWithPrompt() async {
+    final status = await Permission.notification.status;
+
+    if (status.isPermanentlyDenied || status.isDenied) {
+      await openAppSettings();
+    }
+  }
+
+  Future<bool> hasPermission() async {
+    if (Platform.isAndroid) {
+      final androidPlugin =
+          _notifications.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      return await androidPlugin?.areNotificationsEnabled() ?? false;
+    }
+
+    if (Platform.isIOS || Platform.isMacOS) {
+      return _notificationsEnabled;
+    }
+
+    return false;
+  }
+
   /// Solicita permissões de notificação
   Future<bool> requestPermissions() async {
     if (Platform.isIOS || Platform.isMacOS) {
@@ -137,16 +166,12 @@ class NotificationService {
             sound: true,
           );
 
-      await _notifications
-          .resolvePlatformSpecificImplementation<
-              MacOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-
       _notificationsEnabled = result ?? false;
+
+      if (!_notificationsEnabled) {
+        await _openAppSettingsWithPrompt();
+      }
+
       return _notificationsEnabled;
     } else if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
@@ -157,6 +182,11 @@ class NotificationService {
           await androidImplementation?.requestNotificationsPermission();
 
       _notificationsEnabled = grantedNotificationPermission ?? false;
+
+      if (!_notificationsEnabled) {
+        await _openAppSettingsWithPrompt();
+      }
+
       return _notificationsEnabled;
     }
 
@@ -193,6 +223,67 @@ class NotificationService {
       platformDetails,
       payload: payload,
     );
+  }
+
+  Future<void> scheduleMedicationNotifications(
+      MedicationSchedule medicationSchedule, NotificationsType type) async {
+    final db = await DatabaseHelper.instance.database;
+
+    final DateTime scheduledDate = DateTime.parse(medicationSchedule!.date);
+    final int notificationId = medicationSchedule.id ?? UniqueKey().hashCode;
+
+    late final DateTime notificationTime;
+    late final String body;
+
+    switch (type) {
+      case NotificationsType.inHour:
+        notificationTime = scheduledDate;
+        body = 'Hora de tomar o medicamento: teste';
+        break;
+
+      case NotificationsType.advance:
+        notificationTime = scheduledDate.subtract(const Duration(minutes: 15));
+        body =
+            'Você tem um medicamento (teste) às ${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')}';
+        break;
+
+      case NotificationsType.delayed:
+        notificationTime = scheduledDate.add(const Duration(minutes: 10));
+        body = 'Você esqueceu de tomar o medicamento: teste?';
+        break;
+
+      default:
+    }
+
+    print('[DEBUG] Agendando notificação para: $notificationTime');
+    if (notificationTime.isBefore(DateTime.now())) {
+      print('[WARNING] Tentativa de agendar no passado: $notificationTime');
+    }
+    if (notificationTime.isAfter(DateTime.now())) {
+      print('[DEBUG] Agendando medicamento para depois de agora');
+      await _notifications.zonedSchedule(
+        notificationId + type.index,
+        'Lembrete de Medicamento',
+        body,
+        tz.TZDateTime.from(notificationTime, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'med_channel',
+            'Medicamentos',
+            channelDescription: 'Notificações de medicamentos agendados',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        matchDateTimeComponents: DateTimeComponents.dateAndTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    }
   }
 
   /// Cancela uma notificação específica

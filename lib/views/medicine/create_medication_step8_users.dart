@@ -8,6 +8,7 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
+import 'package:app/views/medicine/create_medication_step9_notifications.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/dao/user_dao.dart';
@@ -121,18 +122,28 @@ class _CreateMedicationStep8UserMedicationState
     );
 
     // Inserindo todas as doses
+    List<Future<int>> medicationsSchedule = [];
     while (incrementDate.isBefore(finalDate)) {
-      await scheduleDao.insert(MedicationSchedule(
+      var insert = scheduleDao.insert(MedicationSchedule(
         date: incrementDate.toIso8601String(),
         status: "Pendente",
         medicationId: medicationId,
       ));
       incrementDate = incrementDate.add(Duration(hours: interval));
+
+      medicationsSchedule.add(insert);
     }
 
     if (!mounted) return;
 
-    Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateMedicationStep9Notifications(
+          medicationList: medicationsSchedule,
+        ),
+      ),
+    );
   }
 
   void _showAlert(String title, String message) {
@@ -150,6 +161,15 @@ class _CreateMedicationStep8UserMedicationState
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    widget.medicationName.dispose();
+    widget.medicationFrequencyValue.dispose();
+    widget.medicationDuration.dispose();
+    widget.medicationQuantity.dispose();
+    super.dispose();
   }
 
   @override
@@ -173,8 +193,10 @@ class _CreateMedicationStep8UserMedicationState
               children: <Widget>[
                 SizedBox(height: context.heightPercentage(0.05)),
                 Container(
+                  height: context.heightPercentage(0.90) - 200,
                   margin: const EdgeInsets.symmetric(horizontal: 30),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DropdownButtonFormField<User>(
                         isExpanded: true,
@@ -198,7 +220,7 @@ class _CreateMedicationStep8UserMedicationState
                         height: 45,
                         child: ElevatedButton(
                           onPressed: _handleFinish,
-                          child: const Text('Finalizar'),
+                          child: const Text('Próximo'),
                         ),
                       )
                     ],

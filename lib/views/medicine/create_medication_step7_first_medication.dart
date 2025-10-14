@@ -86,8 +86,8 @@ class _CreateMedicationStep7FirstMedicationState
           children: <Widget>[
             SizedBox(height: (context.heightPercentage(0.05))),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 30),
               height: context.heightPercentage(0.90) - 200,
+              margin: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -55,11 +55,14 @@ class MedicationScheduleDao {
     return result;
   }
 
-  Future<List<MedicationSchedule?>> getById(int id) async {
-    final medicationSchedule = await database
-        .query(table, where: 'medication_id = ?', whereArgs: [id]);
-    return medicationSchedule
-        .map((json) => MedicationSchedule.fromMap(json))
-        .toList();
+  Future<MedicationSchedule?> getById(int id) async {
+    final medicationSchedule =
+        await database.query(table, where: 'id = ?', whereArgs: [id]);
+
+    if (medicationSchedule.isNotEmpty) {
+      return MedicationSchedule.fromMap(medicationSchedule.first);
+    }
+
+    return null;
   }
 }

@@ -33,6 +33,13 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Este app usa o Face ID para autenticação.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>Precisamos enviar notificações para lembrar você de tomar seus medicamentos.</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

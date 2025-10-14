@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/homepage_screen.dart';
@@ -6,9 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
 
   final notificationService = NotificationService();
   await notificationService.initialize();
@@ -42,10 +47,9 @@ class _MyAppState extends State<MyApp> {
   void _configureNotificationListener() {
     _notificationSubscription = _notificationService.notificationStream.listen(
       (response) {
-        // Navega para a tela inicial quando uma notificação é tocada
         Navigator.of(context).push(
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => HomePageScreen(),
+            builder: (BuildContext context) => const HomePageScreen(),
           ),
         );
       },
