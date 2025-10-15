@@ -55,14 +55,31 @@ class MedicationScheduleDao {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> updateAll(int userId) async {
+    String query = '''
+    SELECT 
+      medication_schedule.id AS id, 
+      medication_schedule.date AS date, 
+      medication_schedule.medication_id AS medication_id, 
+      medication_schedule.status AS status,
+      medications.name AS name, 
+      medications.type AS type, 
+      medications.quantity AS quantity
+    FROM medication_schedule
+    INNER JOIN medications ON medications.id = medication_schedule.medication_id
+  ''';
+
+    final List<Map<String, dynamic>> result = await database.rawQuery(query);
+
+    return result;
+  }
+
   Future<MedicationSchedule?> getById(int id) async {
-    final medicationSchedule =
-        await database.query(table, where: 'id = ?', whereArgs: [id]);
-
+    final medicationSchedule = await database
+        .query(table, where: 'medication_id = ?', whereArgs: [id]);
     if (medicationSchedule.isNotEmpty) {
-      return MedicationSchedule.fromMap(medicationSchedule.first);
+      return MedicationSchedule.fromMap((medicationSchedule.first));
     }
-
     return null;
   }
 }

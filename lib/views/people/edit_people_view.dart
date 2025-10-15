@@ -196,6 +196,7 @@ class _EditPeopleState extends State<EditPeople> {
                   onTap: () async => {
                     peopleBirthDate = await datePicker(
                         context: context,
+                        initialDate: peopleBirthDate,
                         firstDate: DateTime(1900),
                         lastDate: DateTime.now()),
                     if (peopleBirthDate != null)
@@ -253,6 +254,24 @@ class _EditPeopleState extends State<EditPeople> {
                                     title: 'Último Usuário',
                                     message:
                                         'Deve haver pelo menos um usuário criado',
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          navigator.pop();
+                                        },
+                                        child: const Text('OK'),
+                                      )
+                                    ]));
+                        return;
+                      }
+
+                      if (peopleActive == 1) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => Alert(
+                                    title: 'Usuário Padrão',
+                                    message:
+                                        'O usuário padrão não pode ser excluído',
                                     actions: [
                                       TextButton(
                                         onPressed: () {
