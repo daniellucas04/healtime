@@ -65,4 +65,22 @@ class MedicationScheduleDao {
 
     return null;
   }
+
+  Future<MedicationSchedule?> getByIdForScheduling(int id) async {
+    final List<Map<String, dynamic>> results = await database.rawQuery('''
+      SELECT ms.id as schedule_id, ms.date, ms.status, ms.medication_id,
+            m.name, m.type, m.frequency_type, m.frequency_value, m.duration, m.quantity, m.first_medication
+      FROM medication_schedule ms
+      JOIN medications m ON ms.medication_id = m.id
+      WHERE ms.id = ?
+    ''', [id]);
+
+    if (results.isNotEmpty) {
+      final row = results.first;
+
+      return MedicationSchedule.fromMapWithMedication(row);
+    }
+
+    return null;
+  }
 }

@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:app/dao/medication_dao.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
-import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/components/alert.dart';
@@ -75,15 +73,13 @@ class _CreateMedicationStep9NotificationsState
     List<MedicationSchedule?> medications = [];
     for (var id in widget.medicationsIds) {
       final MedicationSchedule? med =
-          await MedicationScheduleDao(database: database).getById(id);
+          await MedicationScheduleDao(database: database)
+              .getByIdForScheduling(id);
       medications.add(med);
     }
-    print(medications);
 
     medications.removeWhere((med) => med == null);
-    print(medications);
     for (final med in medications) {
-      print(med);
       await notifications.scheduleMedicationNotifications(med!, type);
     }
   }

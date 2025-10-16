@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app/database/database_helper.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/medicine/create_medication_step9_notifications.dart';
 import 'package:flutter/foundation.dart';
@@ -44,6 +43,21 @@ class NotificationService {
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notification_icon');
+
+    const AndroidNotificationChannel medicationChannel =
+        AndroidNotificationChannel(
+      'med_channel',
+      'Medicamentos',
+      description: 'Notificações de medicamentos agendados',
+      importance: Importance.high,
+      playSound: true,
+      enableVibration: true,
+    );
+
+    await FlutterLocalNotificationsPlugin()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(medicationChannel);
 
     final List<DarwinNotificationCategory> darwinNotificationCategories =
         <DarwinNotificationCategory>[
@@ -115,6 +129,7 @@ class NotificationService {
   }
 
   void _onNotificationResponse(NotificationResponse response) {
+    print('Notificação recebida com ID: ${response.id}');
     _notificationResponseController.add(response);
   }
 
@@ -202,9 +217,9 @@ class NotificationService {
   }) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-      'default_channel',
-      'Default Channel',
-      channelDescription: 'Default notification channel',
+      'med_channel',
+      'Medicamentos',
+      channelDescription: 'Notificações de medicamentos agendados',
       importance: Importance.max,
       priority: Priority.high,
     );
@@ -227,61 +242,53 @@ class NotificationService {
 
   Future<void> scheduleMedicationNotifications(
       MedicationSchedule medicationSchedule, NotificationsType type) async {
-    final db = await DatabaseHelper.instance.database;
-
-    final DateTime scheduledDate = DateTime.parse(medicationSchedule!.date);
+    final DateTime scheduledDate = DateTime.parse(medicationSchedule.date);
     final int notificationId = medicationSchedule.id ?? UniqueKey().hashCode;
 
-    late final DateTime notificationTime;
+    late DateTime notificationTime;
     late final String body;
+    print(medicationSchedule.medication?.name);
+    String? medicationName = medicationSchedule.medication?.name.toUpperCase();
 
     switch (type) {
       case NotificationsType.inHour:
         notificationTime = scheduledDate;
-        body = 'Hora de tomar o medicamento: teste';
+        body = 'Hora de tomar o medicamento: $medicationName!';
         break;
 
       case NotificationsType.advance:
         notificationTime = scheduledDate.subtract(const Duration(minutes: 15));
         body =
-            'Você tem um medicamento (teste) às ${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')}';
+            'Você tem um medicamento $medicationName às ${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')}';
         break;
 
       case NotificationsType.delayed:
         notificationTime = scheduledDate.add(const Duration(minutes: 10));
-        body = 'Você esqueceu de tomar o medicamento: teste?';
+        body = 'Você esqueceu de tomar o medicamento: $medicationName?';
         break;
 
       default:
     }
 
-    print('[DEBUG] Agendando notificação para: $notificationTime');
-    if (notificationTime.isBefore(DateTime.now())) {
-      print('[WARNING] Tentativa de agendar no passado: $notificationTime');
-    }
+    tz.TZDateTime scheduledTime = tz.TZDateTime.from(
+        notificationTime, tz.getLocation('America/Sao_Paulo'));
+
+    print(scheduledTime);
+    _checkPendingNotificationRequests();
     if (notificationTime.isAfter(DateTime.now())) {
-      print('[DEBUG] Agendando medicamento para depois de agora');
       await _notifications.zonedSchedule(
         notificationId + type.index,
         'Lembrete de Medicamento',
         body,
-        tz.TZDateTime.from(notificationTime, tz.local),
+        scheduledTime,
         const NotificationDetails(
           android: AndroidNotificationDetails(
             'med_channel',
             'Medicamentos',
             channelDescription: 'Notificações de medicamentos agendados',
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
           ),
         ),
-        matchDateTimeComponents: DateTimeComponents.dateAndTime,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.alarmClock,
       );
     }
   }
@@ -303,6 +310,20 @@ class NotificationService {
       return await _notifications.getNotificationAppLaunchDetails();
     }
     return null;
+  }
+
+  Future<void> _checkPendingNotificationRequests() async {
+    final List<PendingNotificationRequest> pendingNotificationRequests =
+        await _notifications.pendingNotificationRequests();
+    print('${pendingNotificationRequests.length} pending notification ');
+
+    for (PendingNotificationRequest pendingNotificationRequest
+        in pendingNotificationRequests) {
+      print(pendingNotificationRequest.id.toString() +
+          " " +
+          (pendingNotificationRequest.payload ?? ""));
+    }
+    print('NOW ' + tz.TZDateTime.now(tz.local).toString());
   }
 
   /// Dispose do serviço

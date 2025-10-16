@@ -1,4 +1,8 @@
+import 'package:app/dao/medicationschedule_dao.dart';
+import 'package:app/models/medicationschedule.dart';
 import 'package:app/providers/theme_provider.dart';
+import 'package:app/services/notifications.dart';
+import 'package:app/views/medicine/create_medication_step9_notifications.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:flutter/material.dart';
@@ -133,31 +137,36 @@ class _SidebarState extends State<Sidebar> {
 
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Center(
-              child: TextButton(
-                style: ButtonStyle(
-                  iconColor: const WidgetStatePropertyAll(Colors.greenAccent),
-                  iconSize: const WidgetStatePropertyAll(20),
-                  backgroundColor: WidgetStatePropertyAll(
-                      currentTheme.brightness == Brightness.dark
-                          ? secondaryDarkTheme
-                          : accentLightTheme),
-                  textStyle: const WidgetStatePropertyAll(
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            child: Column(
+              children: [
+                Center(
+                  child: TextButton(
+                    style: ButtonStyle(
+                      iconColor:
+                          const WidgetStatePropertyAll(Colors.greenAccent),
+                      iconSize: const WidgetStatePropertyAll(20),
+                      backgroundColor: WidgetStatePropertyAll(
+                          currentTheme.brightness == Brightness.dark
+                              ? secondaryDarkTheme
+                              : accentLightTheme),
+                      textStyle: const WidgetStatePropertyAll(
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 10,
+                      children: [
+                        Text('Definir usuário padrão'),
+                        Icon(
+                          Icons.check_circle,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                onPressed: () {},
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 10,
-                  children: [
-                    Text('Definir usuário padrão'),
-                    Icon(
-                      Icons.check_circle,
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
           ),
         ],
