@@ -118,7 +118,7 @@ class _CreateMedicationStep9NotificationsState
                         await _finishNotifications(NotificationsType.off);
                         if (!context.mounted) return;
                         Navigator.pushNamedAndRemoveUntil(
-                            context, '/', (_) => false);
+                            context, '/homepage', (_) => false);
                       },
                       child: const Text('Não notificar'),
                     ),
@@ -131,7 +131,7 @@ class _CreateMedicationStep9NotificationsState
                         await _finishNotifications(NotificationsType.inHour);
                         if (!context.mounted) return;
                         Navigator.pushNamedAndRemoveUntil(
-                            context, '/', (_) => false);
+                            context, '/homepage', (_) => false);
                       },
                       child: const Text('Notificar no horário'),
                     ),
@@ -144,7 +144,7 @@ class _CreateMedicationStep9NotificationsState
                         await _finishNotifications(NotificationsType.advance);
                         if (!context.mounted) return;
                         Navigator.pushNamedAndRemoveUntil(
-                            context, '/', (_) => false);
+                            context, '/homepage', (_) => false);
                       },
                       child: const Text('Notificar com adiantamento'),
                     ),

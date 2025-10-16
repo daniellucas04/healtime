@@ -13,7 +13,7 @@ class _NavBar extends State<NavBar> {
   int _selectedIndex = 0;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _selectedIndex = widget.pageIndex;
   }
@@ -23,7 +23,7 @@ class _NavBar extends State<NavBar> {
       switch (index) {
         case 0:
           if (index != _selectedIndex) {
-            Navigator.pushReplacementNamed(context, '/');
+            Navigator.pushReplacementNamed(context, '/homepage');
           }
           break;
         case 1:
