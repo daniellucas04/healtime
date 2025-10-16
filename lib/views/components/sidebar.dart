@@ -23,20 +23,18 @@ Future<List<User>> _getUsersWithDefault() async {
   final dao = UserDao(database: await DatabaseHelper.instance.database);
   var users = await dao.getAll();
 
-  if (users.isEmpty) {
-    await dao.insert(User(
-      name: 'Você',
-      birthDate: DateTime(2000, 1, 1).toString(),
-      active: 1,
-    ));
-    users = await dao.getAll();
-  }
-
   return users;
 }
 
 class _SidebarState extends State<Sidebar> {
   bool isSwitched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<ThemeProvider>(context, listen: false);
+    isSwitched = provider.themeMode == ThemeMode.dark;
+  }
 
   @override
   Drawer build(BuildContext context) {
@@ -126,8 +124,7 @@ class _SidebarState extends State<Sidebar> {
                     title: Text(user.name),
                     onTap: () {
                       widget.onUserSelected(user.id);
-                      Navigator.pop(context);
-                      print(user.id);
+                      //Navigator.pop(context);
                     },
                   );
                 }).toList(),

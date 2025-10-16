@@ -1,4 +1,6 @@
 import 'package:app/controllers/user_controller.dart';
+import 'package:app/dao/user_dao.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:app/models/user.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
@@ -21,12 +23,23 @@ class CreatePeopleStep2Date extends StatelessWidget {
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
 
+    var users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getAll();
+
     var insertedUser = UserController().save(User(
-        name: peopleName.text, birthDate: peopleDate.toString(), active: 0));
+        name: peopleName.text,
+        birthDate: peopleDate.toString(),
+        active: users.isEmpty ? 1 : 0));
 
     if (await insertedUser != 0) {
-      Navigator.pushNamedAndRemoveUntil(context, '/people', (route) => false);
-      return;
+      if (users.isEmpty) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/homepage', (route) => false);
+        return;
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, '/people', (route) => false);
+        return;
+      }
     }
 
     final navigator = Navigator.of(context);
