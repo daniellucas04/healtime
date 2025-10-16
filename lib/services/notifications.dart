@@ -245,9 +245,9 @@ class NotificationService {
     final DateTime scheduledDate = DateTime.parse(medicationSchedule.date);
     final int notificationId = medicationSchedule.id ?? UniqueKey().hashCode;
 
-    late DateTime notificationTime;
+    late final DateTime notificationTime;
     late final String body;
-    print(medicationSchedule.medication?.name);
+
     String? medicationName = medicationSchedule.medication?.name.toUpperCase();
 
     switch (type) {
@@ -273,7 +273,6 @@ class NotificationService {
     tz.TZDateTime scheduledTime = tz.TZDateTime.from(
         notificationTime, tz.getLocation('America/Sao_Paulo'));
 
-    print(scheduledTime);
     _checkPendingNotificationRequests();
     if (notificationTime.isAfter(DateTime.now())) {
       await _notifications.zonedSchedule(
