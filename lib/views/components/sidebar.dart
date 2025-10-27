@@ -20,10 +20,18 @@ class Sidebar extends StatefulWidget {
 }
 
 Future<List<User>> _getUsersWithDefault() async {
-  final dao = UserDao(database: await DatabaseHelper.instance.database);
-  var users = await dao.getAll();
+  var users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getAll();
 
-  return users;
+    if (users.isEmpty) {
+      UserDao(database: await DatabaseHelper.instance.database).insert(User(
+          name: 'Você', birthDate: DateTime(2000, 1, 1).toString(), active: 1));
+    }
+
+    users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getAll();
+
+    return users;
 }
 
 class _SidebarState extends State<Sidebar> {

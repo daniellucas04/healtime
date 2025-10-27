@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeProvider.themeMode,
                 initialRoute:
-                    '/initial_screen_step1', // Aqui você pode direcionar para sua tela de onboarding
+                    '/tutorial_screen', // Aqui você pode direcionar para sua tela de onboarding
                 routes: routes,
               );
             } else {
