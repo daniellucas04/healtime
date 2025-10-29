@@ -51,10 +51,11 @@ class CreatePeopleStep2Date extends StatelessWidget {
         title: 'Erro ao Cadastrar',
         actions: [
           TextButton(
-              onPressed: () {
-                navigator.pop();
-              },
-              child: const Text('ok'))
+            onPressed: () {
+              navigator.pop();
+            },
+            child: const Text('ok'),
+          )
         ],
       ),
     );
@@ -67,10 +68,11 @@ class CreatePeopleStep2Date extends StatelessWidget {
         title: 'Campo Inválido',
         actions: [
           TextButton(
-              onPressed: () {
-                navigator.pop();
-              },
-              child: const Text('ok'))
+            onPressed: () {
+              navigator.pop();
+            },
+            child: const Text('ok'),
+          )
         ],
       ),
     );
@@ -91,7 +93,7 @@ class CreatePeopleStep2Date extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

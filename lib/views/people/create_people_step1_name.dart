@@ -28,7 +28,7 @@ class CreatePeopleStep1Name extends StatelessWidget {
               height: (context.heightPercentage(0.05)),
             ),
             Container(
-              height: (context.heightPercentage(0.95) - 200),
+              height: (context.heightPercentage(0.90) - 200),
               margin: const EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,13 +63,17 @@ class CreatePeopleStep1Name extends StatelessWidget {
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) =>  Alert(
+                            builder: (context) => Alert(
                               message: 'Digite o seu nome',
-                              title: 'Campo Inválido', actions: [TextButton(
-                                          onPressed: () {
-                                            navigator.pop();
-                                          },
-                                          child: const Text('Cancelar')),],
+                              title: 'Campo Inválido',
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    navigator.pop();
+                                  },
+                                  child: const Text('Cancelar'),
+                                ),
+                              ],
                             ),
                           );
                         }

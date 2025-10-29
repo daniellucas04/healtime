@@ -165,10 +165,10 @@ class _CreateMedicationStep8UserMedicationState
 
   @override
   void dispose() {
-    widget.medicationName.dispose();
-    widget.medicationFrequencyValue.dispose();
-    widget.medicationDuration.dispose();
-    widget.medicationQuantity.dispose();
+    // widget.medicationName.dispose();
+    // widget.medicationFrequencyValue.dispose();
+    // widget.medicationDuration.dispose();
+    // widget.medicationQuantity.dispose();
     super.dispose();
   }
 

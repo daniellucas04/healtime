@@ -242,6 +242,10 @@ class NotificationService {
 
   Future<void> scheduleMedicationNotifications(
       MedicationSchedule medicationSchedule, NotificationsType type) async {
+    if (type == NotificationsType.off) {
+      return;
+    }
+
     final DateTime scheduledDate = DateTime.parse(medicationSchedule.date);
     final int notificationId = medicationSchedule.id ?? UniqueKey().hashCode;
 
@@ -253,18 +257,19 @@ class NotificationService {
     switch (type) {
       case NotificationsType.inHour:
         notificationTime = scheduledDate;
-        body = 'Hora de tomar o medicamento: $medicationName!';
+        body = 'Está na hora de tomar o seu medicamento: $medicationName 💊';
         break;
 
       case NotificationsType.advance:
-        notificationTime = scheduledDate.subtract(const Duration(minutes: 15));
-        body =
-            'Você tem um medicamento $medicationName às ${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')}';
+        notificationTime = scheduledDate.subtract(const Duration(minutes: 5));
+        body = 'Lembrete: em breve será hora de tomar $medicationName às '
+            '${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')} ⏰';
         break;
 
       case NotificationsType.delayed:
-        notificationTime = scheduledDate.add(const Duration(minutes: 10));
-        body = 'Você esqueceu de tomar o medicamento: $medicationName?';
+        notificationTime = scheduledDate.add(const Duration(minutes: 5));
+        body = 'Parece que você ainda não tomou $medicationName 😕 '
+            '(programado para ${scheduledDate.hour.toString().padLeft(2, '0')}:${scheduledDate.minute.toString().padLeft(2, '0')}).';
         break;
 
       default:
@@ -273,7 +278,6 @@ class NotificationService {
     tz.TZDateTime scheduledTime = tz.TZDateTime.from(
         notificationTime, tz.getLocation('America/Sao_Paulo'));
 
-    _checkPendingNotificationRequests();
     if (notificationTime.isAfter(DateTime.now())) {
       await _notifications.zonedSchedule(
         notificationId + type.index,
@@ -314,15 +318,9 @@ class NotificationService {
   Future<void> _checkPendingNotificationRequests() async {
     final List<PendingNotificationRequest> pendingNotificationRequests =
         await _notifications.pendingNotificationRequests();
-    print('${pendingNotificationRequests.length} pending notification ');
 
     for (PendingNotificationRequest pendingNotificationRequest
-        in pendingNotificationRequests) {
-      print(pendingNotificationRequest.id.toString() +
-          " " +
-          (pendingNotificationRequest.payload ?? ""));
-    }
-    print('NOW ' + tz.TZDateTime.now(tz.local).toString());
+        in pendingNotificationRequests) {}
   }
 
   /// Dispose do serviço

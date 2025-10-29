@@ -29,6 +29,7 @@ class CreateMedicationStep9Notifications extends StatefulWidget {
 
 class _CreateMedicationStep9NotificationsState
     extends State<CreateMedicationStep9Notifications> {
+  bool _isLoading = false;
   Future<List<int>> _getMedicationIds(List<Future<int>> medicationList) async {
     for (var medication in medicationList) {
       widget.medicationsIds.add(await medication);
@@ -84,6 +85,39 @@ class _CreateMedicationStep9NotificationsState
     }
   }
 
+  void _showLoading() {
+    setState(() => _isLoading = true);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  void _hideLoading() {
+    if (Navigator.canPop(context)) Navigator.pop(context);
+    setState(() => _isLoading = false);
+  }
+
+  Future<void> _handleNotificationSelection(NotificationsType type) async {
+    _showLoading();
+    try {
+      await _finishNotifications(type);
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, '/homepage', (_) => false);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao agendar notificações: $e')),
+        );
+      }
+    } finally {
+      if (context.mounted) _hideLoading();
+    }
+  }
+
   @override
   void initState() {
     _getMedicationIds(widget.medicationList);
@@ -111,7 +145,8 @@ class _CreateMedicationStep9NotificationsState
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () async {
-                        await _finishNotifications(NotificationsType.off);
+                        await _handleNotificationSelection(
+                            NotificationsType.off);
                         if (!context.mounted) return;
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/homepage', (_) => false);
@@ -124,7 +159,8 @@ class _CreateMedicationStep9NotificationsState
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () async {
-                        await _finishNotifications(NotificationsType.inHour);
+                        await _handleNotificationSelection(
+                            NotificationsType.inHour);
                         if (!context.mounted) return;
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/homepage', (_) => false);
@@ -137,12 +173,27 @@ class _CreateMedicationStep9NotificationsState
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () async {
-                        await _finishNotifications(NotificationsType.advance);
+                        await _handleNotificationSelection(
+                            NotificationsType.advance);
                         if (!context.mounted) return;
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/homepage', (_) => false);
                       },
                       child: const Text('Notificar com adiantamento'),
+                    ),
+                  ),
+                  const Divider(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () async {
+                        await _handleNotificationSelection(
+                            NotificationsType.delayed);
+                        if (!context.mounted) return;
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/homepage', (_) => false);
+                      },
+                      child: const Text('Notificar com atraso'),
                     ),
                   ),
                   const Divider(),

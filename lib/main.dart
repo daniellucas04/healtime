@@ -81,12 +81,10 @@ class _MyAppState extends State<MyApp> {
           future: _firstTimeFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              // Mostrar um indicador de carregamento enquanto esperamos pela resposta
               return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasData && snapshot.data == true) {
-              // Se for a primeira vez, inicializar a tela de onboarding
               return MaterialApp(
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
@@ -100,12 +98,10 @@ class _MyAppState extends State<MyApp> {
                 theme: AppThemes.lightTheme,
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeProvider.themeMode,
-                initialRoute:
-                    '/tutorial_screen', // Aqui você pode direcionar para sua tela de onboarding
+                initialRoute: '/tutorial_screen',
                 routes: routes,
               );
             } else {
-              // Caso contrário, ir para a tela principal
               return MaterialApp(
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
@@ -119,7 +115,7 @@ class _MyAppState extends State<MyApp> {
                 theme: AppThemes.lightTheme,
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeProvider.themeMode,
-                initialRoute: '/homepage', // Tela principal
+                initialRoute: '/homepage',
                 routes: routes,
               );
             }
