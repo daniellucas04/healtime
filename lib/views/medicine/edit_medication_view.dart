@@ -76,14 +76,14 @@ class _EditMedicationState extends State<EditMedication> {
 
   Future<void> buscarUsuarioVinculado() async {
     final db = await DatabaseHelper.instance.database;
-    final userMedicationDao = UsuarioMedicamentoDao(database: db);
+    final userMedicationDao = UserMedicationDao(database: db);
     final userDao = UserDao(database: db);
 
     final vinculos = await userMedicationDao.getAll();
 
     final vinculo = vinculos.firstWhere(
       (v) => v.medicationId == medicationId,
-      orElse: () => UsuarioMedicamento(userId: -1, medicationId: -1),
+      orElse: () => UserMedication(userId: -1, medicationId: -1),
     );
 
     if (vinculo.userId != -1) {

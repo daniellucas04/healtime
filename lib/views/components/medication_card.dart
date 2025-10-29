@@ -1,3 +1,4 @@
+import 'package:app/controllers/user_medication_controller.dart';
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
@@ -56,8 +57,11 @@ class MedicationsCard extends StatelessWidget {
     return false;
   }
 
-  void _shareMedication(medication) {
-    String username = 'Usuário';
+  void _shareMedication(medication) async {
+    var userMedication = await UserMedicationController()
+        .getUserFromMedication(medication['id']);
+
+    String username = userMedication[0]['name'];
     String medicationName = medication['name'];
     String medicationDate = dateFormat(
       DateTime.parse(medication['date']),

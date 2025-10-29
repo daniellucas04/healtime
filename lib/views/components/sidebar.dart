@@ -1,8 +1,4 @@
-import 'package:app/dao/medicationschedule_dao.dart';
-import 'package:app/models/medicationschedule.dart';
 import 'package:app/providers/theme_provider.dart';
-import 'package:app/services/notifications.dart';
-import 'package:app/views/medicine/create_medication_step9_notifications.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:flutter/material.dart';
@@ -14,40 +10,42 @@ class Sidebar extends StatefulWidget {
   final Function(int? userId) onUserSelected;
   final int userId; // Callback para passar o userId
 
-  const Sidebar({super.key, required this.onUserSelected, required this.userId});
+  const Sidebar(
+      {super.key, required this.onUserSelected, required this.userId});
 
   @override
   State<Sidebar> createState() => _SidebarState();
 }
 
 Future<List<User>> _getUsersWithDefault() async {
-  var users = await UserDao(database: await DatabaseHelper.instance.database)
-        .getAll();
+  var users =
+      await UserDao(database: await DatabaseHelper.instance.database).getAll();
 
-    if (users.isEmpty) {
-      UserDao(database: await DatabaseHelper.instance.database).insert(User(
-          name: 'Você', birthDate: DateTime(2000, 1, 1).toString(), active: 1));
-    }
+  if (users.isEmpty) {
+    UserDao(database: await DatabaseHelper.instance.database).insert(User(
+        name: 'Você', birthDate: DateTime(2000, 1, 1).toString(), active: 1));
+  }
 
-    users = await UserDao(database: await DatabaseHelper.instance.database)
-        .getAll();
+  users =
+      await UserDao(database: await DatabaseHelper.instance.database).getAll();
 
-    return users;
+  return users;
 }
 
 class _SidebarState extends State<Sidebar> {
   bool isSwitched = false;
-  late String userName;
+  late String userName = '';
 
-  Future<void> _getUserName() async{
-  var users = await UserDao(database: await DatabaseHelper.instance.database).getById(widget.userId);
-   setState(() {
-        userName = users!.name;
-      });
-}
+  Future<void> _getUserName() async {
+    var users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getById(widget.userId);
+    setState(() {
+      userName = users!.name;
+    });
+  }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     _getUserName();
     final provider = Provider.of<ThemeProvider>(context, listen: false);

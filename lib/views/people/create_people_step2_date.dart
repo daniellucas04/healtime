@@ -7,7 +7,6 @@ import 'package:app/views/components/header.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class CreatePeopleStep2Date extends StatelessWidget {
   CreatePeopleStep2Date({
     super.key,
@@ -23,13 +22,35 @@ class CreatePeopleStep2Date extends StatelessWidget {
   Future<void> saveMedication(context) async {
     if (!context.mounted) return;
 
+    if (peopleDate == null) {
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Alert(
+          message: 'Adicione a data',
+          title: 'Campo Inválido',
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
     var users = await UserDao(database: await DatabaseHelper.instance.database)
         .getAll();
 
-    var insertedUser = UserController().save(User(
-        name: peopleName.text,
-        birthDate: peopleDate.toString(),
-        active: users.isEmpty ? 1 : 0));
+    var insertedUser = UserController().save(
+      User(
+          name: peopleName.text,
+          birthDate: peopleDate.toString(),
+          active: users.isEmpty ? 1 : 0),
+    );
 
     if (await insertedUser != 0) {
       if (users.isEmpty) {
@@ -49,23 +70,6 @@ class CreatePeopleStep2Date extends StatelessWidget {
       builder: (context) => Alert(
         message: 'Ocorreu um erro ao cadastrar o usuário',
         title: 'Erro ao Cadastrar',
-        actions: [
-          TextButton(
-            onPressed: () {
-              navigator.pop();
-            },
-            child: const Text('ok'),
-          )
-        ],
-      ),
-    );
-
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Alert(
-        message: 'Adicione a data',
-        title: 'Campo Inválido',
         actions: [
           TextButton(
             onPressed: () {

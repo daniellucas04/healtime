@@ -6,11 +6,11 @@ import '../../helpers/memory_database.dart';
 
 void main() {
   late Database db;
-  late UsuarioMedicamentoDao dao;
+  late UserMedicationDao dao;
 
   setUp(() async {
     db = await createTestDb();
-    dao = UsuarioMedicamentoDao(database: db);
+    dao = UserMedicationDao(database: db);
   });
 
   tearDown(() async {

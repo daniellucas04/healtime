@@ -33,7 +33,7 @@ class MedicationController {
     return medicationDao.delete(medication);
   }
 
-  Future<void> linkMedicationToUser(UsuarioMedicamento userMedication) async {
+  Future<void> linkMedicationToUser(UserMedication userMedication) async {
     final db = await DatabaseHelper.instance.database;
     await db.insert(
       'user_medication',

@@ -93,7 +93,7 @@ class _CreateMedicationStep8UserMedicationState
     }
 
     // Inserir vínculo user-medication
-    await UserMedicationController().linkUserToMedication(UsuarioMedicamento(
+    await UserMedicationController().linkUserToMedication(UserMedication(
       userId: selectedUser!.id!,
       medicationId: medicationId,
     ));
