@@ -34,9 +34,8 @@ class DatabaseHelper {
   }
 
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      await db.execute(Tables.medicationSchedule());
-      await db.execute(Tables.usersMedication());
+    if (oldVersion < newVersion) {
+      await db.execute('''ALTER TABLE users ADD COLUMN active INTEGER NOT NULL DEFAULT 0;''');
     }
   }
 
