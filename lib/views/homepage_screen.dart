@@ -100,7 +100,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
       endDrawer: Sidebar(
         onUserSelected: (userId) {
           setState(() {
-            selectedUserId = userId; // Atualiza o ID do usuário selecionado
+            selectedUserId = userId;
           });
         },
       ),

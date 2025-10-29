@@ -30,6 +30,7 @@ class CreateMedicationStep9Notifications extends StatefulWidget {
 class _CreateMedicationStep9NotificationsState
     extends State<CreateMedicationStep9Notifications> {
   bool _isLoading = false;
+
   Future<List<int>> _getMedicationIds(List<Future<int>> medicationList) async {
     for (var medication in medicationList) {
       widget.medicationsIds.add(await medication);

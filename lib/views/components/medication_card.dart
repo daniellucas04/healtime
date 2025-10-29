@@ -56,6 +56,23 @@ class MedicationsCard extends StatelessWidget {
     return false;
   }
 
+  void _shareMedication(medication) {
+    String username = 'Usuário';
+    String medicationName = medication['name'];
+    String medicationDate = dateFormat(
+      DateTime.parse(medication['date']),
+    );
+    String medicationHour = timeFormat(DateTime.parse(medication['date']));
+
+    SharePlus.instance.share(
+      ShareParams(
+        title: 'Compartilhar medicamento agendado',
+        text:
+            '''Olá $username! Você possui um medicamento agendado.\n\n- ${medicationName.toUpperCase()} ($medicationDate) às $medicationHour''',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return items.isEmpty
@@ -233,25 +250,8 @@ class MedicationsCard extends StatelessWidget {
                                         animationDuration:
                                             Duration(milliseconds: 300),
                                       ),
-                                      onPressed: () {
-                                        String username = 'Usuário';
-                                        String medicationName =
-                                            medication['name'];
-                                        String medicationDate = dateFormat(
-                                          DateTime.parse(medication['date']),
-                                        );
-                                        String medicationHour = timeFormat(
-                                            DateTime.parse(medication['date']));
-
-                                        SharePlus.instance.share(
-                                          ShareParams(
-                                            title:
-                                                'Compartilhar medicamento agendado',
-                                            text:
-                                                '''Olá $username! Você possui um medicamento agendado.\n\n- ${medicationName.toUpperCase()} ($medicationDate) às $medicationHour''',
-                                          ),
-                                        );
-                                      },
+                                      onPressed: () =>
+                                          _shareMedication(medication),
                                       child: const Icon(
                                         Icons.send_rounded,
                                         color: Colors.white,
