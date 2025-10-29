@@ -102,7 +102,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           setState(() {
             selectedUserId = userId;
           });
-        },
+        }, userId: selectedUserId!,
       ),
       resizeToAvoidBottomInset: false,
       appBar: Header(

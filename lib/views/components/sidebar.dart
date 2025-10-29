@@ -11,9 +11,10 @@ import 'package:app/models/user.dart';
 import 'package:app/dao/user_dao.dart';
 
 class Sidebar extends StatefulWidget {
-  final Function(int? userId) onUserSelected; // Callback para passar o userId
+  final Function(int? userId) onUserSelected;
+  final int userId; // Callback para passar o userId
 
-  const Sidebar({super.key, required this.onUserSelected});
+  const Sidebar({super.key, required this.onUserSelected, required this.userId});
 
   @override
   State<Sidebar> createState() => _SidebarState();
@@ -36,10 +37,19 @@ Future<List<User>> _getUsersWithDefault() async {
 
 class _SidebarState extends State<Sidebar> {
   bool isSwitched = false;
+  late String userName;
+
+  Future<void> _getUserName() async{
+  var users = await UserDao(database: await DatabaseHelper.instance.database).getById(widget.userId);
+   setState(() {
+        userName = users!.name;
+      });
+}
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
+    _getUserName();
     final provider = Provider.of<ThemeProvider>(context, listen: false);
     isSwitched = provider.themeMode == ThemeMode.dark;
   }
@@ -75,7 +85,7 @@ class _SidebarState extends State<Sidebar> {
                     color: Colors.white,
                   ),
                 ),
-                const Text('Nome do usuário'),
+                Text(userName),
               ],
             ),
           ),
