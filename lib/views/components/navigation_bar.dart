@@ -30,13 +30,14 @@ class _NavBar extends State<NavBar> {
           // Navigator.pushNamed(context, '/calendar');
           break;
         case 2:
-          // Navigator.pushNamed(context, '/people');
           if (index != _selectedIndex) {
             Navigator.pushReplacementNamed(context, '/people');
           }
           break;
         case 3:
-          // Navigator.pushNamed(context, '/menu');
+          if (index != _selectedIndex) {
+            Navigator.pushReplacementNamed(context, '/menu');
+          }
           break;
       }
       _selectedIndex = index;

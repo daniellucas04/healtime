@@ -34,6 +34,7 @@ Future<List<User>> _getUsersWithDefault() async {
 
 class _SidebarState extends State<Sidebar> {
   bool isSwitched = false;
+  late bool hasSystemTheme;
   late String userName = '';
 
   Future<void> _getUserName() async {
@@ -49,7 +50,10 @@ class _SidebarState extends State<Sidebar> {
     super.initState();
     _getUserName();
     final provider = Provider.of<ThemeProvider>(context, listen: false);
-    isSwitched = provider.themeMode == ThemeMode.dark;
+    isSwitched = (provider.isSystemThemeActive)
+        ? true
+        : provider.themeMode == ThemeMode.dark;
+    hasSystemTheme = provider.isSystemThemeActive;
   }
 
   @override
@@ -101,14 +105,16 @@ class _SidebarState extends State<Sidebar> {
                     activeThumbColor: currentTheme.brightness == Brightness.dark
                         ? secondaryDarkTheme
                         : accentLightTheme,
-                    onChanged: (value) {
-                      setState(() {
-                        isSwitched = value;
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .toggleTheme();
-                      });
-                    },
-                    value: isSwitched,
+                    onChanged: (!hasSystemTheme)
+                        ? (value) {
+                            setState(() {
+                              isSwitched = value;
+                              Provider.of<ThemeProvider>(context, listen: false)
+                                  .toggleTheme();
+                            });
+                          }
+                        : null,
+                    value: !isSwitched,
                   ),
                 ],
               ),

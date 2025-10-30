@@ -3,6 +3,7 @@ import 'package:app/dao/medication_dao.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
+import 'package:app/helpers/session.dart';
 import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/header.dart';
@@ -25,11 +26,6 @@ Future<Medication?> getById(int id) async {
       .getById(id);
 }
 
-Future<int> getActiveUser() async {
-  return await UserDao(database: await DatabaseHelper.instance.database)
-      .getActiveUser();
-}
-
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
 
@@ -43,7 +39,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   late Timer _timer;
 
   Future<void> loadUser() async {
-    final id = await getActiveUser();
+    final id = await Session.getActiveUser();
     setState(() {
       selectedUserId = id;
     });

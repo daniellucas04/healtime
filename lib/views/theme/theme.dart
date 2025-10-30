@@ -176,6 +176,13 @@ class AppThemes {
       backgroundColor: primaryDarkTheme,
       foregroundColor: secondaryLightTheme,
     ),
+    filledButtonTheme: const FilledButtonThemeData(
+      style: ButtonStyle(
+        elevation: WidgetStatePropertyAll(1),
+        backgroundColor: WidgetStatePropertyAll(secondaryDarkTheme),
+        foregroundColor: WidgetStatePropertyAll(textDarkTheme),
+      ),
+    ),
     inputDecorationTheme: InputDecorationThemeData(
       floatingLabelAlignment: FloatingLabelAlignment.start,
       floatingLabelStyle: const TextStyle(

@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
                 theme: AppThemes.lightTheme,
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeProvider.themeMode,
-                initialRoute: '/homepage',
+                initialRoute: '/menu',
                 routes: routes,
               );
             }
