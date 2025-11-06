@@ -18,6 +18,12 @@ class UserMedicationController {
   Future<List<Map<String, dynamic>>> getUserFromMedication(id) async {
     final db = await DatabaseHelper.instance.database;
     final dao = UserMedicationDao(database: db);
+    return await dao.getByUserId(id);
+  }
+
+  Future<List<Map<String, dynamic>>> getMedicationFromUser(id) async {
+    final db = await DatabaseHelper.instance.database;
+    final dao = UserMedicationDao(database: db);
     return await dao.getByMedicationId(id);
   }
 }
