@@ -8,7 +8,7 @@ import 'package:app/dao/user_dao.dart';
 
 class Sidebar extends StatefulWidget {
   final Function(int? userId) onUserSelected;
-  final int userId; // Callback para passar o userId
+  final int userId;
 
   const Sidebar(
       {super.key, required this.onUserSelected, required this.userId});
@@ -50,10 +50,9 @@ class _SidebarState extends State<Sidebar> {
     super.initState();
     _getUserName();
     final provider = Provider.of<ThemeProvider>(context, listen: false);
-    isSwitched = (provider.isSystemThemeActive)
-        ? true
-        : provider.themeMode == ThemeMode.dark;
     hasSystemTheme = provider.isSystemThemeActive;
+    isSwitched = hasSystemTheme ? true : provider.themeMode == ThemeMode.dark;
+    print(isSwitched);
   }
 
   @override
@@ -105,16 +104,16 @@ class _SidebarState extends State<Sidebar> {
                     activeThumbColor: currentTheme.brightness == Brightness.dark
                         ? secondaryDarkTheme
                         : accentLightTheme,
-                    onChanged: (!hasSystemTheme)
-                        ? (value) {
+                    onChanged: (hasSystemTheme)
+                        ? null
+                        : (value) {
                             setState(() {
                               isSwitched = value;
                               Provider.of<ThemeProvider>(context, listen: false)
                                   .toggleTheme();
                             });
-                          }
-                        : null,
-                    value: !isSwitched,
+                          },
+                    value: isSwitched,
                   ),
                 ],
               ),
