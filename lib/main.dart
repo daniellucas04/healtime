@@ -52,7 +52,8 @@ class _MyAppState extends State<MyApp> {
       (response) {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
-              builder: (BuildContext context) => const HomePageScreen()),
+            builder: (BuildContext context) => const HomePageScreen(),
+          ),
         );
       },
     );
@@ -99,7 +100,77 @@ class _MyAppState extends State<MyApp> {
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeProvider.themeMode,
                 initialRoute: '/tutorial_screen',
-                routes: routes,
+                onGenerateRoute: (settings) {
+                  final WidgetBuilder builder = routes[settings.name] ??
+                      (context) => const HomePageScreen();
+
+                  return PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      final page = builder(context);
+                      return page;
+                    },
+                    transitionDuration: const Duration(milliseconds: 400),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      if (settings.name == '/tutorial_screen') {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      } else if (settings.name == '/medicine_registration' ||
+                          settings.name == '/create_people') {
+                        const begin = Offset(0.0, 1.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      } else if (settings.name == '/people') {
+                        const begin = Offset(1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.ease;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      }
+                      if (settings.name == '/menu') {
+                        const begin = Offset(-1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.ease;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      } else {
+                        const begin = Offset(0.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+                        return SlideTransition(
+                            position: offsetAnimation, child: child);
+                      }
+                    },
+                  );
+                },
               );
             } else {
               return MaterialApp(
@@ -115,8 +186,78 @@ class _MyAppState extends State<MyApp> {
                 theme: AppThemes.lightTheme,
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeProvider.themeMode,
-                initialRoute: '/report',
-                routes: routes,
+                initialRoute: '/homepage',
+                onGenerateRoute: (settings) {
+                  final WidgetBuilder builder = routes[settings.name] ??
+                      (context) => const HomePageScreen();
+
+                  return PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      final page = builder(context);
+                      return page;
+                    },
+                    transitionDuration: const Duration(milliseconds: 400),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      if (settings.name == '/tutorial_screen') {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      } else if (settings.name == '/medicine_registration' ||
+                          settings.name == '/create_people') {
+                        const begin = Offset(0.0, 1.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      } else if (settings.name == '/people') {
+                        const begin = Offset(1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.ease;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      }
+                      if (settings.name == '/menu') {
+                        const begin = Offset(-1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.ease;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      } else {
+                        const begin = Offset(0.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+                        return SlideTransition(
+                            position: offsetAnimation, child: child);
+                      }
+                    },
+                  );
+                },
               );
             }
           },

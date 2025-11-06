@@ -17,7 +17,7 @@ class CreatePeopleStep1Name extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: Header(
-        title: "Nome da pessoa",
+        title: "Nome",
         subtitle: 'Qual o nome da pessoa?',
       ),
       body: SingleChildScrollView(

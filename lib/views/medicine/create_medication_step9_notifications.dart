@@ -6,6 +6,7 @@ import 'package:app/models/medicationschedule.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
+import 'package:app/views/components/snackbar.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -110,8 +111,11 @@ class _CreateMedicationStep9NotificationsState
       Navigator.pushNamedAndRemoveUntil(context, '/homepage', (_) => false);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao agendar notificações: $e')),
+        Snackbar.showSnackBar(
+          context,
+          message: 'Não foi possível agendar as notificações',
+          backgroundColor: Colors.redAccent,
+          icon: Icons.error,
         );
       }
     } finally {

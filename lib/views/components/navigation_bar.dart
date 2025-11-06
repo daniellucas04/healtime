@@ -55,7 +55,7 @@ class _NavBar extends State<NavBar> {
         destinations: const <Widget>[
           NavigationDestination(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Início',
           ),
           NavigationDestination(
             icon: Icon(Icons.paste),

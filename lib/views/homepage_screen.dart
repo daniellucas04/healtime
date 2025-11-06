@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:app/dao/medication_dao.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
-import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/helpers/session.dart';
 import 'package:app/models/medication.dart';
@@ -11,7 +10,6 @@ import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/medication_card.dart';
 import 'package:app/views/components/navigation_bar.dart';
 import 'package:app/views/components/sidebar.dart';
-import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -49,6 +47,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     var meds = await MedicationScheduleDao(
             database: await DatabaseHelper.instance.database)
         .updateAll(selectedUserId!);
+
     for (var med in meds) {
       if (DateTime.parse(med['date']).isBefore(DateTime.now())) {
         Duration difference =
@@ -56,21 +55,25 @@ class _HomePageScreenState extends State<HomePageScreen> {
         if (difference < const Duration(hours: -10)) {
           await MedicationScheduleDao(
                   database: await DatabaseHelper.instance.database)
-              .update(MedicationSchedule(
-                  id: med['id'],
-                  date: med['date'],
-                  status:
-                      med['status'] == 'Atrasado' ? 'Esquecido' : med['status'],
-                  medicationId: med['medication_id']));
+              .update(
+            MedicationSchedule(
+                id: med['id'],
+                date: med['date'],
+                status:
+                    med['status'] == 'Atrasado' ? 'Esquecido' : med['status'],
+                medicationId: med['medication_id']),
+          );
         } else {
           await MedicationScheduleDao(
                   database: await DatabaseHelper.instance.database)
-              .update(MedicationSchedule(
-                  id: med['id'],
-                  date: med['date'],
-                  status:
-                      med['status'] == 'Pendente' ? 'Atrasado' : med['status'],
-                  medicationId: med['medication_id']));
+              .update(
+            MedicationSchedule(
+                id: med['id'],
+                date: med['date'],
+                status:
+                    med['status'] == 'Pendente' ? 'Atrasado' : med['status'],
+                medicationId: med['medication_id']),
+          );
         }
       }
     }
@@ -196,7 +199,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
         child: const Icon(
           Icons.add,
           size: 35,
-          color: backgroundDarkTheme50,
         ),
         onPressed: () => {
           Navigator.pushNamed(context, '/medicine_registration'),

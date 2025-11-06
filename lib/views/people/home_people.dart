@@ -47,7 +47,9 @@ class _HomePeopleState extends State<HomePeople> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Seja bem-vindo!'),
+      appBar: Header(
+        title: 'Pessoas',
+      ),
       body: FutureBuilder<List<User>>(
         future: _userList,
         builder: (context, snapshot) {
@@ -138,13 +140,11 @@ class _HomePeopleState extends State<HomePeople> {
         child: const Icon(
           Icons.add,
           size: 35,
-          color: backgroundDarkTheme50,
         ),
         onPressed: () async {
-          // Aguarda o cadastro e recarrega a lista
           await Navigator.pushNamed(context, '/create_people');
           setState(() {
-            _loadUsers(); // Recarrega a lista ao voltar
+            _loadUsers();
           });
         },
       ),
