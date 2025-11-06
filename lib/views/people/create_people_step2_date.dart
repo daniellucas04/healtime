@@ -86,10 +86,7 @@ class CreatePeopleStep2Date extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(
-        title: 'Data de nascimento',
-        subtitle: 'Qual é a data de nascimento?',
-      ),
+      appBar: Header(title: 'Data de nascimento'),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

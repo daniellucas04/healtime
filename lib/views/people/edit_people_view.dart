@@ -7,6 +7,7 @@ import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/form_input.dart';
 import 'package:app/views/components/header.dart';
+import 'package:app/views/components/snackbar.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
@@ -249,37 +250,39 @@ class _EditPeopleState extends State<EditPeople> {
 
                       if (widget.userLenght < 2) {
                         showDialog(
-                            context: context,
-                            builder: (context) => Alert(
-                                    title: 'Último Usuário',
-                                    message:
-                                        'Deve haver pelo menos um usuário criado',
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          navigator.pop();
-                                        },
-                                        child: const Text('OK'),
-                                      )
-                                    ]));
+                          context: context,
+                          builder: (context) => Alert(
+                            title: 'Último Usuário',
+                            message: 'Deve haver pelo menos um usuário criado',
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  navigator.pop();
+                                },
+                                child: const Text('OK'),
+                              )
+                            ],
+                          ),
+                        );
                         return;
                       }
 
                       if (peopleActive == 1) {
                         showDialog(
-                            context: context,
-                            builder: (context) => Alert(
-                                    title: 'Usuário Padrão',
-                                    message:
-                                        'O usuário padrão não pode ser excluído',
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          navigator.pop();
-                                        },
-                                        child: const Text('OK'),
-                                      )
-                                    ]));
+                          context: context,
+                          builder: (context) => Alert(
+                            title: 'Usuário Padrão',
+                            message: 'O usuário padrão não pode ser excluído',
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  navigator.pop();
+                                },
+                                child: const Text('OK'),
+                              )
+                            ],
+                          ),
+                        );
                         return;
                       }
 
@@ -310,14 +313,17 @@ class _EditPeopleState extends State<EditPeople> {
                           ),
                         );
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Falha na Autenticação')));
+                        Snackbar.showSnackBar(
+                          context,
+                          message: 'Falha na autenticação',
+                          backgroundColor: Colors.redAccent,
+                          icon: Icons.error,
+                        );
                       }
                     },
                     style: const ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(Colors.redAccent)),
+                      backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
+                    ),
                     child: const Text('Excluir'),
                   ),
                 ),

@@ -35,12 +35,22 @@ class DatabaseHelper {
 
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < newVersion) {
-      await db.execute('''ALTER TABLE users ADD COLUMN active INTEGER NOT NULL DEFAULT 0;''');
+      await db.execute(
+          '''ALTER TABLE users ADD COLUMN active INTEGER NOT NULL DEFAULT 0;''');
     }
   }
 
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future resetDatabase() async {
+    final db = await database;
+
+    await db.delete('medications');
+    await db.delete('medication_schedule');
+    await db.delete('users');
+    await db.delete('user_medication');
   }
 }

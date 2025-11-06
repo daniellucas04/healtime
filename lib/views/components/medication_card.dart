@@ -4,8 +4,8 @@ import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
-import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/date_time_picker.dart';
+import 'package:app/views/medicine/create_medication_step1_name.dart';
 import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +47,10 @@ class MedicationsCard extends StatelessWidget {
       String date, String status, int medicationId, int id) async {
     var updatedMedicationSchedule = await MedicationScheduleDao(
             database: await DatabaseHelper.instance.database)
-        .update(MedicationSchedule(
-            date: date, status: status, medicationId: medicationId, id: id));
+        .update(
+      MedicationSchedule(
+          date: date, status: status, medicationId: medicationId, id: id),
+    );
 
     if (updatedMedicationSchedule != 0) {
       return true;
@@ -80,31 +82,52 @@ class MedicationsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return items.isEmpty
-        ? SizedBox(
-            width: context.widthPercentage(1),
-            child: const Padding(
-              padding: EdgeInsets.only(top: 54, left: 30, right: 30),
-              child: Card(
-                elevation: 0,
+        ? Column(
+            spacing: 14,
+            children: [
+              SizedBox(
+                width: context.widthPercentage(1),
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: 50,
-                    right: 50,
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    'Nenhum registro encontrado',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                  padding: EdgeInsets.only(top: 80, left: 30, right: 30),
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration: const Duration(milliseconds: 400),
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  CreateMedicationStep1Name(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(0.0, 1.0);
+                            const end = Offset.zero;
+                            const curve = Curves.easeInOut;
+
+                            var tween = Tween(begin: begin, end: end)
+                                .chain(CurveTween(curve: curve));
+                            var offsetAnimation = animation.drive(tween);
+
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.add_circle_outline_outlined,
+                      size: 24,
+                    ),
+                    label: const Text(
+                      'Novo medicamento',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           )
         : SizedBox(
             width: context.widthPercentage(1),
@@ -138,15 +161,39 @@ class MedicationsCard extends StatelessWidget {
                             child: InkWell(
                               highlightColor: Colors.blue.withAlpha(100),
                               onTap: () async {
-                                final navigator = Navigator.of(context);
                                 showDialog(
                                   context: context,
                                   barrierDismissible: true,
-                                  builder: (context) => Alert(
-                                    title: 'Ajuste o estado da medicação',
-                                    message: 'Escolha uma opção',
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    title: const Row(
+                                      children: [
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Ajuste o estado da medicação',
+                                          style: TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    content: const Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Escolha uma opção para o estado da medicação:',
+                                          style: TextStyle(fontSize: 16),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                     actions: <Widget>[
-                                      TextButton(
+                                      TextButton.icon(
                                         onPressed: () async {
                                           if (await _updateMedicationScheduleStatus(
                                               medication['date'],
@@ -156,9 +203,20 @@ class MedicationsCard extends StatelessWidget {
                                             onChange(searchDate);
                                           }
                                         },
-                                        child: const Text('Tomado'),
+                                        icon: const Icon(
+                                          Icons.check_circle_outline_rounded,
+                                          size: 20,
+                                        ),
+                                        iconAlignment: IconAlignment.end,
+                                        label: const Text(
+                                          'Tomado',
+                                          style: TextStyle(
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
-                                      TextButton(
+                                      TextButton.icon(
                                         onPressed: () async {
                                           if (await _updateMedicationScheduleStatus(
                                               medication['date'],
@@ -168,9 +226,20 @@ class MedicationsCard extends StatelessWidget {
                                             onChange(searchDate);
                                           }
                                         },
-                                        child: const Text('Atrasado'),
+                                        icon: const Icon(
+                                          Icons.restore,
+                                          size: 20,
+                                        ),
+                                        iconAlignment: IconAlignment.end,
+                                        label: const Text(
+                                          'Atrasado',
+                                          style: TextStyle(
+                                            color: Colors.orange,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
-                                      TextButton(
+                                      TextButton.icon(
                                         onPressed: () async {
                                           if (await _updateMedicationScheduleStatus(
                                               medication['date'],
@@ -180,14 +249,31 @@ class MedicationsCard extends StatelessWidget {
                                             onChange(searchDate);
                                           }
                                         },
-                                        child: const Text('Esquecido'),
+                                        icon: const Icon(
+                                          Icons.hide_source,
+                                          size: 20,
+                                        ),
+                                        iconAlignment: IconAlignment.end,
+                                        label: const Text(
+                                          'Esquecido',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          navigator.pop();
+                                          Navigator.of(context).pop();
                                         },
-                                        child: const Text('Cancelar'),
-                                      )
+                                        child: const Text(
+                                          'Cancelar',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 );
@@ -196,6 +282,7 @@ class MedicationsCard extends StatelessWidget {
                                 int medicationId = medication['medication_id'];
                                 Medication? editMedication =
                                     await getById(medicationId);
+
                                 if (!context.mounted) return;
 
                                 if (editMedication != null) {
