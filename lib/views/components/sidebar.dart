@@ -121,10 +121,8 @@ class _SidebarState extends State<Sidebar> {
             ),
           ),
           const Divider(),
-
-          // FutureBuilder para carregar os usuários do banco de dados
           FutureBuilder<List<User>>(
-            future: _getUsersWithDefault(), // método para obter usuários
+            future: _getUsersWithDefault(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -138,7 +136,6 @@ class _SidebarState extends State<Sidebar> {
                 return const Center(child: Text('Nenhum usuário encontrado'));
               }
 
-              // ListView para exibir os usuários
               var users = snapshot.data!;
               return Column(
                 children: users.map((user) {
@@ -153,7 +150,6 @@ class _SidebarState extends State<Sidebar> {
               );
             },
           ),
-
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -180,6 +176,34 @@ class _SidebarState extends State<Sidebar> {
                         Text('Definir usuário padrão'),
                         Icon(
                           Icons.check_circle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: TextButton(
+                    style: ButtonStyle(
+                      iconColor:
+                          const WidgetStatePropertyAll(Colors.orangeAccent),
+                      iconSize: const WidgetStatePropertyAll(20),
+                      backgroundColor: WidgetStatePropertyAll(
+                          currentTheme.brightness == Brightness.dark
+                              ? secondaryDarkTheme
+                              : accentLightTheme),
+                      textStyle: const WidgetStatePropertyAll(
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 10,
+                      children: [
+                        Text('Backup'),
+                        Icon(
+                          Icons.cloud_upload,
                         ),
                       ],
                     ),
