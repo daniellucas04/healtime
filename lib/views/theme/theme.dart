@@ -43,7 +43,7 @@ class AppThemes {
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       elevation: 1,
-      backgroundColor: accentLightTheme,
+      backgroundColor: accentDarkTheme,
       foregroundColor: Colors.white,
     ),
     navigationBarTheme: NavigationBarThemeData(
@@ -221,15 +221,19 @@ class AppThemes {
       shadowColor: Colors.white30,
       elevation: 1,
     ),
-    dialogTheme: const DialogThemeData(
+    dialogTheme: DialogThemeData(
+      elevation: 1,
       backgroundColor: backgroundDarkTheme50,
       shadowColor: Colors.white30,
       iconColor: textDarkTheme,
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         color: textDarkTheme,
         fontSize: 24,
       ),
-      contentTextStyle: TextStyle(color: textDarkTheme),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      contentTextStyle: const TextStyle(color: textDarkTheme),
     ),
     listTileTheme: const ListTileThemeData(
       iconColor: primaryDarkTheme,

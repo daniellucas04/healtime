@@ -17,16 +17,12 @@ class Alert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
       title: Row(
         children: [
           const SizedBox(width: 10),
           Text(
-            this.title,
-            style: TextStyle(
+            title,
+            style: const TextStyle(
               color: Colors.blue,
               fontWeight: FontWeight.bold,
               fontSize: 18,

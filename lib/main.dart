@@ -146,7 +146,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       }
                       if (settings.name == '/menu') {
-                        const begin = Offset(-1.0, 0.0);
+                        const begin = Offset(1.0, 0.0);
                         const end = Offset.zero;
                         const curve = Curves.ease;
 
@@ -233,7 +233,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       }
                       if (settings.name == '/menu') {
-                        const begin = Offset(-1.0, 0.0);
+                        const begin = Offset(1.0, 0.0);
                         const end = Offset.zero;
                         const curve = Curves.ease;
 

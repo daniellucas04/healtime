@@ -1,31 +1,29 @@
-import 'package:app/controllers/user_medication_controller.dart';
-import 'package:app/dao/medication_dao.dart';
+import 'package:app/controllers/user_controller.dart';
 import 'package:app/dao/medicationschedule_dao.dart';
-import 'package:app/database/database_helper.dart';
-import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/date_time_picker.dart';
+import 'package:app/views/homepage_screen.dart';
 import 'package:app/views/medicine/create_medication_step1_name.dart';
 import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:app/controllers/user_medication_controller.dart';
+import 'package:app/dao/medication_dao.dart';
+import 'package:app/database/database_helper.dart';
+import 'package:app/models/medication.dart';
 import 'package:share_plus/share_plus.dart';
-
-Future<Medication?> getById(int id) async {
-  return MedicationDao(database: await DatabaseHelper.instance.database)
-      .getById(id);
-}
 
 class MedicationsCard extends StatelessWidget {
   final List<Map<String, dynamic>> items;
   final DateTime searchDate;
   final Function(DateTime? searchDate) onChange;
 
-  const MedicationsCard(
-      {super.key,
-      required this.items,
-      required this.onChange,
-      required this.searchDate});
+  const MedicationsCard({
+    super.key,
+    required this.items,
+    required this.onChange,
+    required this.searchDate,
+  });
 
   Color _setMedicationColor(status) {
     if (status == 'Tomado') {
@@ -52,18 +50,15 @@ class MedicationsCard extends StatelessWidget {
           date: date, status: status, medicationId: medicationId, id: id),
     );
 
-    if (updatedMedicationSchedule != 0) {
-      return true;
-    }
-
-    return false;
+    return updatedMedicationSchedule != 0;
   }
 
   void _shareMedication(medication) async {
     var userMedication = await UserMedicationController()
         .getUserFromMedication(medication['id']);
 
-    String username = userMedication[0]['name']!;
+    var user = await UserController().getById(userMedication[0]['user_id']);
+    String? username = user?.name.toUpperCase();
     String medicationName = medication['name'];
     String medicationDate = dateFormat(
       DateTime.parse(medication['date']),
@@ -81,286 +76,302 @@ class MedicationsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return items.isEmpty
-        ? Column(
-            spacing: 14,
-            children: [
-              SizedBox(
-                width: context.widthPercentage(1),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 80, left: 30, right: 30),
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          transitionDuration: const Duration(milliseconds: 400),
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  CreateMedicationStep1Name(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(0.0, 1.0);
-                            const end = Offset.zero;
-                            const curve = Curves.easeInOut;
+    return SizedBox(
+      width: context.widthPercentage(1),
+      child: items.isEmpty
+          ? Padding(
+              padding: const EdgeInsets.only(top: 80, left: 30, right: 30),
+              child: FilledButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      transitionDuration: const Duration(milliseconds: 400),
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          CreateMedicationStep1Name(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(0.0, 1.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
 
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            var offsetAnimation = animation.drive(tween);
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
 
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.add_circle_outline_outlined,
-                      size: 24,
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
                     ),
-                    label: const Text(
-                      'Novo medicamento',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.add_circle_outline_outlined,
+                  size: 24,
+                ),
+                label: const Text(
+                  'Novo medicamento',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          )
-        : SizedBox(
-            width: context.widthPercentage(1),
-            child: Padding(
+            )
+          : Padding(
               padding: const EdgeInsets.only(top: 54),
               child: ListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final medication = items[index];
-                  return Column(
-                    children: [
-                      Card(
-                        shadowColor: Colors.black87,
-                        elevation: 2,
-                        margin: const EdgeInsets.all(10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(
-                              colors: [
-                                accentLightTheme,
-                                accentLightTheme,
-                                _setMedicationColor(medication['status']),
-                              ],
-                              begin: AlignmentGeometry.bottomLeft,
-                              end: AlignmentGeometry.topRight,
-                            ),
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              highlightColor: Colors.blue.withAlpha(100),
-                              onTap: () async {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    title: const Row(
-                                      children: [
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Ajuste o estado da medicação',
-                                          style: TextStyle(
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    content: const Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Escolha uma opção para o estado da medicação:',
-                                          style: TextStyle(fontSize: 16),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton.icon(
-                                        onPressed: () async {
-                                          if (await _updateMedicationScheduleStatus(
-                                              medication['date'],
-                                              'Tomado',
-                                              medication['medication_id'],
-                                              medication['id'])) {
-                                            onChange(searchDate);
-                                          }
-                                        },
-                                        icon: const Icon(
-                                          Icons.check_circle_outline_rounded,
-                                          size: 20,
-                                        ),
-                                        iconAlignment: IconAlignment.end,
-                                        label: const Text(
-                                          'Tomado',
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      TextButton.icon(
-                                        onPressed: () async {
-                                          if (await _updateMedicationScheduleStatus(
-                                              medication['date'],
-                                              'Atrasado',
-                                              medication['medication_id'],
-                                              medication['id'])) {
-                                            onChange(searchDate);
-                                          }
-                                        },
-                                        icon: const Icon(
-                                          Icons.restore,
-                                          size: 20,
-                                        ),
-                                        iconAlignment: IconAlignment.end,
-                                        label: const Text(
-                                          'Atrasado',
-                                          style: TextStyle(
-                                            color: Colors.orange,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      TextButton.icon(
-                                        onPressed: () async {
-                                          if (await _updateMedicationScheduleStatus(
-                                              medication['date'],
-                                              'Esquecido',
-                                              medication['medication_id'],
-                                              medication['id'])) {
-                                            onChange(searchDate);
-                                          }
-                                        },
-                                        icon: const Icon(
-                                          Icons.hide_source,
-                                          size: 20,
-                                        ),
-                                        iconAlignment: IconAlignment.end,
-                                        label: const Text(
-                                          'Esquecido',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text(
-                                          'Cancelar',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              onLongPress: () async {
-                                int medicationId = medication['medication_id'];
-                                Medication? editMedication =
-                                    await getById(medicationId);
 
-                                if (!context.mounted) return;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        side: BorderSide(
+                          strokeAlign: BorderSide.strokeAlignOutside,
+                          width: 4,
+                          style: BorderStyle.solid,
+                          color: _setMedicationColor(medication['status']),
+                        ),
+                      ),
+                      shadowColor: Colors.black45,
+                      child: InkWell(
+                        onTap: () async {
+                          _showMedicationStatusDialog(context, medication);
+                        },
+                        onLongPress: () async {
+                          int medicationId = medication['medication_id'];
+                          Medication? editMedication =
+                              await getById(medicationId);
 
-                                if (editMedication != null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditMedication(
-                                          medication: editMedication),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  spacing: 10,
+                          if (!context.mounted) return;
+
+                          if (editMedication != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditMedication(
+                                  medication: editMedication,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: ListTile(
-                                        dense: true,
-                                        textColor: Colors.white,
-                                        title: Text(
+                                    Row(
+                                      children: [
+                                        _getQuantityBadge(medication),
+                                        const SizedBox(width: 10),
+                                        Text(
                                           medication['name'].toUpperCase(),
                                           style: const TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.w600,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                        subtitle: Text(
-                                          '${medication['type']}: ${medication['quantity']}\n${medication['status']}',
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      spacing: 8,
+                                      children: [
+                                        Text(
+                                          medication['type']
+                                                  .toString()[0]
+                                                  .toUpperCase() +
+                                              medication['type']
+                                                  .toString()
+                                                  .substring(1),
                                           style: const TextStyle(
                                             fontSize: 14,
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                      ),
+                                        const Text(
+                                          '-',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${medication['status']}",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      ],
                                     ),
+                                    const SizedBox(height: 8),
                                     Text(
                                       timeFormat(
                                         DateTime.parse(medication['date']),
                                       ),
                                       style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      style: const ButtonStyle(
-                                        backgroundColor:
-                                            WidgetStatePropertyAll<Color>(
-                                          Colors.black12,
-                                        ),
-                                        alignment: Alignment.center,
-                                        animationDuration:
-                                            Duration(milliseconds: 300),
-                                      ),
-                                      onPressed: () =>
-                                          _shareMedication(medication),
-                                      child: const Icon(
-                                        Icons.send_rounded,
-                                        color: Colors.white,
-                                        size: 22,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
+                              IconButton(
+                                onPressed: () => _shareMedication(medication),
+                                icon: const Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   );
                 },
               ),
             ),
-          );
+    );
+  }
+
+  _getQuantityBadge(medication) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(
+        color: Colors.cyan,
+        shape: BoxShape.circle,
+      ),
+      child: Text(
+        "${medication['quantity']}",
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  _showMedicationStatusDialog(context, medication) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            SizedBox(width: 10),
+            Text(
+              'Ajuste o estado da medicação',
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Escolha uma opção para o estado da medicação:',
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton.icon(
+            onPressed: () async {
+              if (await _updateMedicationScheduleStatus(medication['date'],
+                  'Tomado', medication['medication_id'], medication['id'])) {
+                onChange(searchDate);
+              }
+            },
+            iconAlignment: IconAlignment.end,
+            icon: const Icon(
+              Icons.check_circle_outline_rounded,
+              size: 20,
+            ),
+            label: const Text(
+              'Tomado',
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () async {
+              if (await _updateMedicationScheduleStatus(medication['date'],
+                  'Atrasado', medication['medication_id'], medication['id'])) {
+                onChange(searchDate);
+              }
+            },
+            iconAlignment: IconAlignment.end,
+            icon: const Icon(
+              Icons.restore,
+              size: 20,
+            ),
+            label: const Text(
+              'Atrasado',
+              style: TextStyle(
+                color: Colors.orange,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () async {
+              if (await _updateMedicationScheduleStatus(medication['date'],
+                  'Esquecido', medication['medication_id'], medication['id'])) {
+                onChange(searchDate);
+              }
+            },
+            iconAlignment: IconAlignment.end,
+            icon: const Icon(
+              Icons.hide_source,
+              size: 20,
+            ),
+            label: const Text(
+              'Esquecido',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

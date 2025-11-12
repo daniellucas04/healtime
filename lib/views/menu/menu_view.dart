@@ -145,7 +145,10 @@ class _MenuViewState extends State<MenuView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Seguir o tema do sistema'),
+                const Text(
+                  'Seguir o tema do sistema',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
                 Switch(
                   activeThumbColor: currentTheme.brightness == Brightness.dark
                       ? secondaryDarkTheme
