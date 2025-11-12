@@ -63,7 +63,7 @@ class MedicationsCard extends StatelessWidget {
     var userMedication = await UserMedicationController()
         .getUserFromMedication(medication['id']);
 
-    String username = userMedication[0]['name'];
+    String username = userMedication[0]['name']!;
     String medicationName = medication['name'];
     String medicationDate = dateFormat(
       DateTime.parse(medication['date']),
@@ -88,7 +88,7 @@ class MedicationsCard extends StatelessWidget {
               SizedBox(
                 width: context.widthPercentage(1),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 80, left: 30, right: 30),
+                  padding: const EdgeInsets.only(top: 80, left: 30, right: 30),
                   child: FilledButton.icon(
                     onPressed: () {
                       Navigator.of(context).push(

@@ -55,8 +55,8 @@ class _CreateMedicationStep9NotificationsState
           context: context,
           builder: (context) => Alert(
             title: 'Notificações',
-            message:
-                'É necessário conceder permissão de notificação para receber os alertas.',
+            content: Text(
+                'É necessário conceder permissão de notificação para receber os alertas.'),
             actions: [
               TextButton(
                 onPressed: () async {

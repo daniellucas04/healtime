@@ -70,7 +70,7 @@ class _CreateMedicationStep8UserMedicationState
 
   Future<void> _handleFinish() async {
     if (selectedUser == null) {
-      _showAlert('Selecione um usuário', 'Usuário obrigatório');
+      _showAlert('Campo inválido', 'Selecione um usuário');
       return;
     }
 
@@ -152,7 +152,7 @@ class _CreateMedicationStep8UserMedicationState
       barrierDismissible: false,
       builder: (context) => Alert(
         title: title,
-        message: message,
+        content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -175,7 +175,7 @@ class _CreateMedicationStep8UserMedicationState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(
+      appBar: const Header(
         title: 'Usuário',
         subtitle: 'O remédio vai ser para qual usuário?',
       ),

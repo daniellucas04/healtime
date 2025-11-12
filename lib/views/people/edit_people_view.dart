@@ -75,7 +75,6 @@ class _EditPeopleState extends State<EditPeople> {
 
       return authenticated;
     } catch (e) {
-      print('Erro na autenticação: $e');
       return false;
     }
   }
@@ -121,7 +120,7 @@ class _EditPeopleState extends State<EditPeople> {
         barrierDismissible: false,
         builder: (context) => Alert(
           title: 'Erro ao Atualizar',
-          message: 'Ocorreu um erro ao atualizar o usuário',
+          content: const Text('Ocorreu um erro ao atualizar o usuário'),
           actions: [
             TextButton(
               onPressed: () {
@@ -139,7 +138,7 @@ class _EditPeopleState extends State<EditPeople> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Alert(
-          message: 'Dados inválidos',
+          content: const Text('Dados inválidos'),
           title: 'Preencha os dados corretamente',
           actions: [
             TextButton(
@@ -253,7 +252,8 @@ class _EditPeopleState extends State<EditPeople> {
                           context: context,
                           builder: (context) => Alert(
                             title: 'Último Usuário',
-                            message: 'Deve haver pelo menos um usuário criado',
+                            content: const Text(
+                                'Deve haver pelo menos um usuário criado'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -272,7 +272,8 @@ class _EditPeopleState extends State<EditPeople> {
                           context: context,
                           builder: (context) => Alert(
                             title: 'Usuário Padrão',
-                            message: 'O usuário padrão não pode ser excluído',
+                            content: const Text(
+                                'O usuário padrão não pode ser excluído'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -292,8 +293,8 @@ class _EditPeopleState extends State<EditPeople> {
                           barrierDismissible: false,
                           builder: (context) => Alert(
                             title: 'O Usuario $peopleName será removido!',
-                            message:
-                                'Tem certeza que deseja realizar esta ação?',
+                            content: const Text(
+                                'Tem certeza que deseja realizar esta ação?'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {

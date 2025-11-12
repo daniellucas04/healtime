@@ -129,11 +129,9 @@ class NotificationService {
   }
 
   void _onNotificationResponse(NotificationResponse response) {
-    print('Notificação recebida com ID: ${response.id}');
     _notificationResponseController.add(response);
   }
 
-  /// Verifica permissões de notificação
   Future<void> _checkPermissions() async {
     if (Platform.isAndroid) {
       final bool granted = await _notifications
@@ -169,7 +167,6 @@ class NotificationService {
     return false;
   }
 
-  /// Solicita permissões de notificação
   Future<bool> requestPermissions() async {
     if (Platform.isIOS || Platform.isMacOS) {
       final bool? result = await _notifications
@@ -208,7 +205,6 @@ class NotificationService {
     return false;
   }
 
-  /// Mostra uma notificação simples
   Future<void> showNotification({
     required int id,
     required String title,
@@ -296,17 +292,14 @@ class NotificationService {
     }
   }
 
-  /// Cancela uma notificação específica
   Future<void> cancelNotification(int id) async {
     await _notifications.cancel(id);
   }
 
-  /// Cancela todas as notificações
   Future<void> cancelAllNotifications() async {
     await _notifications.cancelAll();
   }
 
-  /// Obtém detalhes de lançamento da app
   Future<NotificationAppLaunchDetails?>
       getNotificationAppLaunchDetails() async {
     if (!kIsWeb && !Platform.isLinux) {

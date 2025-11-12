@@ -108,14 +108,15 @@ class CreateMedicationStep5Duration extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => Alert(
-                              message: 'Adicione o intervalo de tempo',
+                              content:
+                                  const Text('Adicione o intervalo de tempo'),
                               title: 'Campo Inválido',
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     navigator.pop();
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 )
                               ],
                             ),
