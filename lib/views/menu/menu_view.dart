@@ -2,6 +2,7 @@ import 'package:app/database/database_helper.dart';
 import 'package:app/helpers/authentication.dart';
 import 'package:app/helpers/session.dart';
 import 'package:app/providers/theme_provider.dart';
+import 'package:app/services/notifications.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/navigation_bar.dart';
 import 'package:app/views/components/sidebar.dart';
@@ -93,7 +94,9 @@ class _MenuViewState extends State<MenuView> {
           ),
           ElevatedButton(
             onPressed: () async {
+              NotificationService notification = NotificationService();
               await DatabaseHelper.instance.resetDatabase();
+              notification.cancelAllNotifications();
               Navigator.pushNamedAndRemoveUntil(
                   context, '/tutorial_screen', (_) => false);
             },
@@ -142,7 +145,10 @@ class _MenuViewState extends State<MenuView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Seguir o tema do sistema'),
+                const Text(
+                  'Seguir o tema do sistema',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
                 Switch(
                   activeThumbColor: currentTheme.brightness == Brightness.dark
                       ? secondaryDarkTheme

@@ -64,7 +64,7 @@ class CreatePeopleStep1Name extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => Alert(
-                              message: 'Digite o seu nome',
+                              content: const Text('Digite o seu nome'),
                               title: 'Campo Inválido',
                               actions: [
                                 TextButton(

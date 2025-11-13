@@ -108,89 +108,94 @@ class _HomePageScreenState extends State<HomePageScreen> {
       appBar: Header(
         title: 'Seja bem-vindo!',
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: getAll(searchDate, userId: selectedUserId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await getAll(searchDate, userId: selectedUserId);
+        },
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: getAll(searchDate, userId: selectedUserId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Erro: ${snapshot.error}'));
-          }
+            if (snapshot.hasError) {
+              return Center(child: Text('Erro: ${snapshot.error}'));
+            }
 
-          final items = snapshot.data ?? [];
+            final items = snapshot.data ?? [];
 
-          return Stack(
-            children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            searchDate =
-                                searchDate.add(const Duration(days: -1));
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.keyboard_double_arrow_left_outlined,
-                          size: 34,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          DateTime? selectedDate = await datePicker(
-                              context: context, initialDate: searchDate);
-                          setState(() {
-                            if (selectedDate != null) {
-                              searchDate = selectedDate;
-                            }
-                          });
-                        },
-                        child: Text(
-                          DateFormat('dd/MM').format(searchDate),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+            return Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              searchDate =
+                                  searchDate.add(const Duration(days: -1));
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.keyboard_double_arrow_left_outlined,
+                            size: 34,
                           ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            searchDate =
-                                searchDate.add(const Duration(days: 1));
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.keyboard_double_arrow_right_outlined,
-                          size: 34,
+                        TextButton(
+                          onPressed: () async {
+                            DateTime? selectedDate = await datePicker(
+                                context: context, initialDate: searchDate);
+                            setState(() {
+                              if (selectedDate != null) {
+                                searchDate = selectedDate;
+                              }
+                            });
+                          },
+                          child: Text(
+                            DateFormat('dd/MM').format(searchDate),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              searchDate =
+                                  searchDate.add(const Duration(days: 1));
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.keyboard_double_arrow_right_outlined,
+                            size: 34,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              MedicationsCard(
-                items: items,
-                searchDate: searchDate,
-                onChange: (DateTime? newSearchDate) {
-                  setState(() {
-                    searchDate = newSearchDate!;
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-            ],
-          );
-        },
+                MedicationsCard(
+                  items: items,
+                  searchDate: searchDate,
+                  onChange: (DateTime? newSearchDate) {
+                    setState(() {
+                      searchDate = newSearchDate!;
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        ),
       ),
       bottomNavigationBar: const NavBar(
         pageIndex: 0,

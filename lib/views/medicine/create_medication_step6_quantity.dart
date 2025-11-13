@@ -116,14 +116,14 @@ class CreateMedicationStep6Quantity extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => Alert(
-                              message: 'Adicione a quantidade',
+                              content: const Text('Adicione a quantidade'),
                               title: 'Campo Inválido',
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     navigator.pop();
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 )
                               ],
                             ),

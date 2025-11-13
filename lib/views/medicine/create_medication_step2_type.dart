@@ -25,7 +25,7 @@ class CreateMedicationStep2Type extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(
+      appBar: const Header(
         title: 'Forma de consumo',
         subtitle: 'Qual a forma de consumo?',
       ),

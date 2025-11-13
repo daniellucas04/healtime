@@ -40,7 +40,7 @@ class _CreateMedicationStep7FirstMedicationState
       context: context,
       builder: (context) => Alert(
         title: title,
-        message: message,
+        content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -105,7 +105,8 @@ class _CreateMedicationStep7FirstMedicationState
                           if (picked != null) {
                             setState(() {
                               medicationFirstDate = picked;
-                              medicationDate.text = dateHourFormat(picked); // Função utilitária para formatar
+                              medicationDate.text = dateHourFormat(
+                                  picked); // Função utilitária para formatar
                             });
                           }
                         },

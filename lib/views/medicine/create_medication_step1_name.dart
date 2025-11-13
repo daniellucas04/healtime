@@ -1,4 +1,3 @@
-import 'package:app/helpers/screen_size.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/form_input.dart';
@@ -17,7 +16,7 @@ class CreateMedicationStep1Name extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(
+      appBar: const Header(
         title: "Nome do medicamento",
         subtitle: 'Qual o nome do medicamento?',
       ),
@@ -64,14 +63,15 @@ class CreateMedicationStep1Name extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => Alert(
-                              message: 'Digite o nome do medicamento',
+                              content:
+                                  const Text('Digite o nome do medicamento'),
                               title: 'Campo Inválido',
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     navigator.pop();
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 )
                               ],
                             ),

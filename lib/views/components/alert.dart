@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
 
 class Alert extends StatelessWidget {
+  final Function? onChange;
   final String title;
-  final String message;
+  final Widget content;
   final List<Widget> actions;
 
   const Alert({
     Key? key,
     required this.title,
-    required this.message,
+    this.onChange,
+    required this.content,
     required this.actions,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(message),
-          ],
-        ),
+      title: Row(
+        children: [
+          const SizedBox(width: 10),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [content],
       ),
       actions: actions,
     );

@@ -1,3 +1,4 @@
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/types/medication_info.dart';
 import 'package:app/controllers/medication_controller.dart';
@@ -122,7 +123,7 @@ class _EditMedicationState extends State<EditMedication> {
         context: context,
         barrierDismissible: false,
         builder: (context) => Alert(
-          message: 'Ocorreu um erro ao atualizar o medicamento',
+          content: const Text('Ocorreu um erro ao atualizar o medicamento'),
           title: 'Erro ao Atualizar',
           actions: [
             TextButton(
@@ -141,7 +142,7 @@ class _EditMedicationState extends State<EditMedication> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Alert(
-        message: 'Dados inválidos',
+        content: const Text('Dados inválidos'),
         title: 'Preencha os dados corretamente',
         actions: [
           TextButton(
@@ -180,7 +181,7 @@ class _EditMedicationState extends State<EditMedication> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Alert(
-        message: 'Ocorreu um erro ao excluir o medicamento',
+        content: const Text('Ocorreu um erro ao excluir o medicamento'),
         title: 'Erro ao Excluir',
         actions: [
           TextButton(
@@ -197,6 +198,7 @@ class _EditMedicationState extends State<EditMedication> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: Header(
         title: medicationName.toUpperCase(),
         subtitle: 'Edite as informações do medicamento',
@@ -208,7 +210,9 @@ class _EditMedicationState extends State<EditMedication> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 12),
+                SizedBox(
+                  height: (context.heightPercentage(0.05)),
+                ),
                 FormInput(
                   label: 'Nome do medicamento',
                   key: const Key('medication_name'),
@@ -282,7 +286,8 @@ class _EditMedicationState extends State<EditMedication> {
                         context: context,
                         barrierDismissible: false,
                         builder: (context) => Alert(
-                          message: 'Tem certeza que deseja realizar esta ação?',
+                          content: const Text(
+                              'Tem certeza que deseja realizar esta ação?'),
                           title: 'O medicamento será excluído!',
                           actions: [
                             TextButton(

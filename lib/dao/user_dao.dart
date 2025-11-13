@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:app/models/user.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,18 +12,18 @@ class UserDao {
   }
 
   Future<User?> findById(int id) async {
-  final result = await database.query(
-    'users',
-    where: 'id = ?',
-    whereArgs: [id],
-  );
+    final result = await database.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
 
-  if (result.isNotEmpty) {
-    return User.fromMap(result.first);
+    if (result.isNotEmpty) {
+      return User.fromMap(result.first);
+    }
+
+    return null;
   }
-
-  return null;
-}
 
   Future<int> update(User user) async {
     return await database

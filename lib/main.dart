@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/homepage_screen.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,181 +83,85 @@ class _MyAppState extends State<MyApp> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (snapshot.hasData && snapshot.data == true) {
-              return MaterialApp(
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('pt'),
-                ],
-                debugShowCheckedModeBanner: false,
-                theme: AppThemes.lightTheme,
-                darkTheme: AppThemes.darkTheme,
-                themeMode: themeProvider.themeMode,
-                initialRoute: '/tutorial_screen',
-                onGenerateRoute: (settings) {
-                  final WidgetBuilder builder = routes[settings.name] ??
-                      (context) => const HomePageScreen();
+            bool isFirstTime = snapshot.data ?? false;
 
-                  return PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      final page = builder(context);
-                      return page;
-                    },
-                    transitionDuration: const Duration(milliseconds: 400),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      if (settings.name == '/tutorial_screen') {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      } else if (settings.name == '/medicine_registration' ||
-                          settings.name == '/create_people') {
-                        const begin = Offset(0.0, 1.0);
-                        const end = Offset.zero;
-                        const curve = Curves.easeInOut;
+            Widget _buildPageRouteTransition(
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,
+              String? routeName,
+            ) {
+              const curve = Curves.easeInOut;
 
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
+              if (routeName == '/tutorial_screen' || routeName == '/homepage') {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              } else {
+                Offset begin;
+                if (routeName == '/medicine_registration' ||
+                    routeName == '/create_people') {
+                  begin = const Offset(0.0, 1.0);
+                } else if (routeName == '/people' || routeName == '/menu') {
+                  begin = const Offset(1.0, 0.0);
+                } else {
+                  begin = const Offset(0.0, 0.0);
+                }
 
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      } else if (settings.name == '/people') {
-                        const begin = Offset(1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
+                const end = Offset.zero;
 
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
 
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      }
-                      if (settings.name == '/menu') {
-                        const begin = Offset(-1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
-
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      } else {
-                        const begin = Offset(0.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.easeInOut;
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-                        return SlideTransition(
-                            position: offsetAnimation, child: child);
-                      }
-                    },
-                  );
-                },
-              );
-            } else {
-              return MaterialApp(
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('pt'),
-                ],
-                debugShowCheckedModeBanner: false,
-                theme: AppThemes.lightTheme,
-                darkTheme: AppThemes.darkTheme,
-                themeMode: themeProvider.themeMode,
-                initialRoute: '/homepage',
-                onGenerateRoute: (settings) {
-                  final WidgetBuilder builder = routes[settings.name] ??
-                      (context) => const HomePageScreen();
-
-                  return PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      final page = builder(context);
-                      return page;
-                    },
-                    transitionDuration: const Duration(milliseconds: 400),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      if (settings.name == '/tutorial_screen') {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      } else if (settings.name == '/medicine_registration' ||
-                          settings.name == '/create_people') {
-                        const begin = Offset(0.0, 1.0);
-                        const end = Offset.zero;
-                        const curve = Curves.easeInOut;
-
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      } else if (settings.name == '/people') {
-                        const begin = Offset(1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
-
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      }
-                      if (settings.name == '/menu') {
-                        const begin = Offset(-1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
-
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      } else {
-                        const begin = Offset(0.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.easeInOut;
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-                        return SlideTransition(
-                            position: offsetAnimation, child: child);
-                      }
-                    },
-                  );
-                },
-              );
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              }
             }
+
+            Widget app = MaterialApp(
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('pt'),
+              ],
+              debugShowCheckedModeBanner: false,
+              theme: AppThemes.lightTheme,
+              darkTheme: AppThemes.darkTheme,
+              themeMode: themeProvider.themeMode,
+              initialRoute: isFirstTime ? '/tutorial_screen' : '/homepage',
+              onGenerateRoute: (settings) {
+                final WidgetBuilder builder = routes[settings.name] ??
+                    (context) => const HomePageScreen();
+
+                return PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    final page = builder(context);
+                    return page;
+                  },
+                  transitionDuration: const Duration(milliseconds: 400),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return _buildPageRouteTransition(
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                      settings.name,
+                    );
+                  },
+                );
+              },
+            );
+
+            return app;
           },
         );
       },
