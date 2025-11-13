@@ -55,6 +55,16 @@ class MedicationScheduleDao {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> getAllById(int medicationId) async {
+    String query = '''
+    SELECT * FROM medication_schedule WHERE medication_id = ?
+  ''';
+    final List<Map<String, dynamic>> result =
+        await database.rawQuery(query, [medicationId]);
+
+    return result;
+  }
+
   Future<List<Map<String, dynamic>>> updateAll(int userId) async {
     String query = '''
     SELECT 
@@ -70,6 +80,25 @@ class MedicationScheduleDao {
   ''';
 
     final List<Map<String, dynamic>> result = await database.rawQuery(query);
+
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> count(int userId) async {
+    String query = '''
+   SELECT 
+    COALESCE(medication_schedule.status,0) AS status,
+    COUNT(medication_schedule.status) AS status_count
+FROM medication_schedule
+INNER JOIN medications ON medications.id = medication_schedule.medication_id
+INNER JOIN user_medication ON user_medication.medication_id = medications.id
+WHERE user_medication.user_id = ?
+GROUP BY COALESCE(medication_schedule.status, 0)
+ORDER BY medication_schedule.status;
+  ''';
+
+    final List<Map<String, dynamic>> result =
+        await database.rawQuery(query, [userId]);
 
     return result;
   }
