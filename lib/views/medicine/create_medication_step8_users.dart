@@ -5,7 +5,6 @@ import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
-import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step9_notifications.dart';
@@ -165,10 +164,6 @@ class _CreateMedicationStep8UserMedicationState
 
   @override
   void dispose() {
-    // widget.medicationName.dispose();
-    // widget.medicationFrequencyValue.dispose();
-    // widget.medicationDuration.dispose();
-    // widget.medicationQuantity.dispose();
     super.dispose();
   }
 

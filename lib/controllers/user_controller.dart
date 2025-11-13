@@ -1,7 +1,6 @@
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/user.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 class UserController {
   String? name;

@@ -52,7 +52,6 @@ class _SidebarState extends State<Sidebar> {
     final provider = Provider.of<ThemeProvider>(context, listen: false);
     hasSystemTheme = provider.isSystemThemeActive;
     isSwitched = hasSystemTheme ? true : provider.themeMode == ThemeMode.dark;
-    print(isSwitched);
   }
 
   @override
@@ -86,7 +85,13 @@ class _SidebarState extends State<Sidebar> {
                     color: Colors.white,
                   ),
                 ),
-                Text(userName),
+                Text(
+                  userName.toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
@@ -120,10 +125,8 @@ class _SidebarState extends State<Sidebar> {
             ),
           ),
           const Divider(),
-
-          // FutureBuilder para carregar os usuários do banco de dados
           FutureBuilder<List<User>>(
-            future: _getUsersWithDefault(), // método para obter usuários
+            future: _getUsersWithDefault(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -137,55 +140,19 @@ class _SidebarState extends State<Sidebar> {
                 return const Center(child: Text('Nenhum usuário encontrado'));
               }
 
-              // ListView para exibir os usuários
               var users = snapshot.data!;
               return Column(
                 children: users.map((user) {
                   return ListTile(
-                    title: Text(user.name),
+                    title: Text(
+                        user.name[0].toUpperCase() + user.name.substring(1)),
                     onTap: () {
                       widget.onUserSelected(user.id);
-                      //Navigator.pop(context);
                     },
                   );
                 }).toList(),
               );
             },
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Center(
-                  child: TextButton(
-                    style: ButtonStyle(
-                      iconColor:
-                          const WidgetStatePropertyAll(Colors.greenAccent),
-                      iconSize: const WidgetStatePropertyAll(20),
-                      backgroundColor: WidgetStatePropertyAll(
-                          currentTheme.brightness == Brightness.dark
-                              ? secondaryDarkTheme
-                              : accentLightTheme),
-                      textStyle: const WidgetStatePropertyAll(
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Text('Definir usuário padrão'),
-                        Icon(
-                          Icons.check_circle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

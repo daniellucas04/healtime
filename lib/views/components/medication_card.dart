@@ -8,7 +8,6 @@ import 'package:app/views/medicine/edit_medication_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/controllers/user_medication_controller.dart';
-import 'package:app/dao/medication_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medication.dart';
 import 'package:share_plus/share_plus.dart';
@@ -224,7 +223,7 @@ class MedicationsCard extends StatelessWidget {
                                         DateTime.parse(medication['date']),
                                       ),
                                       style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                       ),
@@ -300,8 +299,12 @@ class MedicationsCard extends StatelessWidget {
         actions: <Widget>[
           TextButton.icon(
             onPressed: () async {
-              if (await _updateMedicationScheduleStatus(medication['date'],
-                  'Tomado', medication['medication_id'], medication['id'])) {
+              if (await _updateMedicationScheduleStatus(
+                medication['date'],
+                'Tomado',
+                medication['medication_id'],
+                medication['id'],
+              )) {
                 onChange(searchDate);
               }
             },
@@ -320,8 +323,12 @@ class MedicationsCard extends StatelessWidget {
           ),
           TextButton.icon(
             onPressed: () async {
-              if (await _updateMedicationScheduleStatus(medication['date'],
-                  'Atrasado', medication['medication_id'], medication['id'])) {
+              if (await _updateMedicationScheduleStatus(
+                medication['date'],
+                'Atrasado',
+                medication['medication_id'],
+                medication['id'],
+              )) {
                 onChange(searchDate);
               }
             },
@@ -340,8 +347,12 @@ class MedicationsCard extends StatelessWidget {
           ),
           TextButton.icon(
             onPressed: () async {
-              if (await _updateMedicationScheduleStatus(medication['date'],
-                  'Esquecido', medication['medication_id'], medication['id'])) {
+              if (await _updateMedicationScheduleStatus(
+                medication['date'],
+                'Esquecido',
+                medication['medication_id'],
+                medication['id'],
+              )) {
                 onChange(searchDate);
               }
             },

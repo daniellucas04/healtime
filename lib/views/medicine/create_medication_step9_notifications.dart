@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medicationschedule.dart';
@@ -55,7 +53,7 @@ class _CreateMedicationStep9NotificationsState
           context: context,
           builder: (context) => Alert(
             title: 'Notificações',
-            content: Text(
+            content: const Text(
                 'É necessário conceder permissão de notificação para receber os alertas.'),
             actions: [
               TextButton(
@@ -132,7 +130,7 @@ class _CreateMedicationStep9NotificationsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: Header(
+        appBar: const Header(
           title: 'Notificações',
           subtitle: 'Quando deseja receber a notificação?',
         ),
