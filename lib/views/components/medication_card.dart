@@ -119,25 +119,32 @@ class MedicationsCard extends StatelessWidget {
               ),
             )
           : Padding(
-              padding: const EdgeInsets.only(top: 54),
+              padding: const EdgeInsets.only(top: 56),
               child: ListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final medication = items[index];
 
                   return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.blue.shade900,
+                          Colors.blue.shade700,
+                          _setMedicationColor(medication['status']),
+                          _setMedicationColor(medication['status']),
+                        ],
+                      ),
+                    ),
                     child: Card(
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
-                        side: BorderSide(
-                          strokeAlign: BorderSide.strokeAlignOutside,
-                          width: 4,
-                          style: BorderStyle.solid,
-                          color: _setMedicationColor(medication['status']),
-                        ),
                       ),
                       shadowColor: Colors.black45,
                       child: InkWell(
@@ -163,7 +170,7 @@ class MedicationsCard extends StatelessWidget {
                           }
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(12),
                           child: Row(
                             children: [
                               Expanded(
@@ -172,33 +179,33 @@ class MedicationsCard extends StatelessWidget {
                                   children: [
                                     Row(
                                       children: [
-                                        _getQuantityBadge(medication),
-                                        const SizedBox(width: 10),
                                         Text(
                                           medication['name'].toUpperCase(),
                                           style: const TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.white,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: 4),
                                     Row(
                                       spacing: 8,
                                       children: [
                                         Text(
-                                          medication['type']
-                                                  .toString()[0]
-                                                  .toUpperCase() +
-                                              medication['type']
-                                                  .toString()
-                                                  .substring(1),
+                                          "${medication['type'].toString()[0].toUpperCase()}${medication['type'].toString().substring(1)}:",
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          medication['quantity'].toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                         const Text(
@@ -217,13 +224,13 @@ class MedicationsCard extends StatelessWidget {
                                         )
                                       ],
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: 4),
                                     Text(
                                       timeFormat(
                                         DateTime.parse(medication['date']),
                                       ),
                                       style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                       ),
@@ -252,15 +259,15 @@ class MedicationsCard extends StatelessWidget {
 
   _getQuantityBadge(medication) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       decoration: const BoxDecoration(
-        color: Colors.cyan,
+        color: Color.fromARGB(255, 0, 204, 231),
         shape: BoxShape.circle,
       ),
       child: Text(
         "${medication['quantity']}",
         style: const TextStyle(
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),

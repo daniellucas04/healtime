@@ -316,7 +316,6 @@ class NotificationService {
         in pendingNotificationRequests) {}
   }
 
-  /// Dispose do serviço
   void dispose() {
     _notificationResponseController.close();
   }

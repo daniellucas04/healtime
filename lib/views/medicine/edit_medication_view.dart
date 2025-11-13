@@ -1,3 +1,4 @@
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/types/medication_info.dart';
 import 'package:app/controllers/medication_controller.dart';
@@ -197,6 +198,7 @@ class _EditMedicationState extends State<EditMedication> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: Header(
         title: medicationName.toUpperCase(),
         subtitle: 'Edite as informações do medicamento',
@@ -208,7 +210,9 @@ class _EditMedicationState extends State<EditMedication> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 12),
+                SizedBox(
+                  height: (context.heightPercentage(0.05)),
+                ),
                 FormInput(
                   label: 'Nome do medicamento',
                   key: const Key('medication_name'),
