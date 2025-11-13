@@ -46,10 +46,6 @@ class _MenuViewState extends State<MenuView> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
         title: const Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 32),
