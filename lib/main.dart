@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'package:app/dao/user_dao.dart';
+import 'package:app/database/database_helper.dart';
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/homepage_screen.dart';
@@ -63,11 +66,25 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
+  Future<bool> _getUsersWithDefault() async {
+  var users =
+      await UserDao(database: await DatabaseHelper.instance.database).getAll();
+
+  if(users.isEmpty){
+    return false;
+  }else{
+    return true;
+  }
+
+}
+
   Future<bool> _checkFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-    if (isFirstTime) {
+    bool user = await _getUsersWithDefault();
+    if (isFirstTime && user) {
       prefs.setBool('isFirstTime', false);
+      isFirstTime = !isFirstTime;
     }
     return isFirstTime;
   }
