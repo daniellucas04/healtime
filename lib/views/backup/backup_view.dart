@@ -8,6 +8,7 @@ import 'package:path/path.dart' as path;
 import 'dart:convert';
 import 'package:app/database/database_helper.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BackupView extends StatefulWidget {
   const BackupView({super.key});
@@ -24,8 +25,8 @@ class _BackupViewState extends State<BackupView> {
   final List<String> _tables = [
     'users',
     'medications',
-    'medicationSchedule',
-    'usersMedication',
+    'medication_schedule',
+    'user_medication',
   ];
 
   @override
@@ -35,24 +36,97 @@ class _BackupViewState extends State<BackupView> {
   }
 
   Future<String?> _getPersistentBackupPath() async {
-    final status = await Permission.storage.request();
+    try {
+      if (Platform.isAndroid) {
+        final storageStatus = await Permission.storage.request();
+        if (!storageStatus.isGranted) {
+          if (await Permission.manageExternalStorage.isDenied) {
+            await Permission.manageExternalStorage.request();
+          }
+          if (!await Permission.manageExternalStorage.isGranted) {
+            return null;
+          }
+        }
 
-    if (status.isGranted) {
-      final directory = await getDownloadsDirectory();
-      if (directory != null) {
-        return path.join(directory.path, _backupFileName);
+        try {
+          final dirs = await getExternalStorageDirectories(
+              type: StorageDirectory.downloads);
+          if (dirs != null && dirs.isNotEmpty) {
+            final candidate = dirs.first.path;
+            if (!candidate.contains('/Android/data/')) {
+              return path.join(candidate, _backupFileName);
+            }
+          }
+        } catch (_) {}
+
+        final publicCandidates = <String>[
+          '/storage/emulated/0/Download',
+          '/sdcard/Download',
+        ];
+
+        for (final p in publicCandidates) {
+          try {
+            final dir = Directory(p);
+            if (await dir.exists()) {
+              return path.join(p, _backupFileName);
+            }
+          } catch (_) {}
+        }
+
+        final dir = await getExternalStorageDirectory();
+        if (dir != null) return path.join(dir.path, _backupFileName);
+
+        return null;
+      } else {
+        final directory = await getDownloadsDirectory();
+        if (directory != null) {
+          return path.join(directory.path, _backupFileName);
+        }
+
+        final appDoc = await getApplicationDocumentsDirectory();
+        return path.join(appDoc.path, _backupFileName);
       }
+    } catch (e) {
+      print('Erro ao obter caminho persistente: $e');
+      return null;
     }
-
-    return null;
   }
 
-  void _loadLastBackupDate() {
-    // TODO: Carregar a data do SharedPreferences.
+  void _loadLastBackupDate() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('lastBackup')) {
+        final ms = prefs.getInt('lastBackup');
+        if (ms != null) {
+          setState(() {
+            _lastBackupDate = DateTime.fromMillisecondsSinceEpoch(ms);
+          });
+          return;
+        }
+      }
+
+      final backupPath = await _getPersistentBackupPath();
+      if (backupPath != null) {
+        final f = File(backupPath);
+        if (await f.exists()) {
+          final modified = await f.lastModified();
+          setState(() {
+            _lastBackupDate = modified;
+          });
+        }
+      }
+    } catch (e) {
+      print('Erro ao carregar data do último backup: $e');
+    }
   }
 
-  void _saveLastBackupDate(DateTime date) {
-    // TODO: Salvar a data no SharedPreferences.
+  void _saveLastBackupDate(DateTime date) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('lastBackup', date.millisecondsSinceEpoch);
+    } catch (e) {
+      print('Erro ao salvar data do último backup: $e');
+    }
   }
 
   Future<void> _createBackup() async {
@@ -85,6 +159,7 @@ class _BackupViewState extends State<BackupView> {
 
       final jsonString = json.encode(backupData);
       final backupFile = File(backupPath);
+      await backupFile.parent.create(recursive: true);
       await backupFile.writeAsString(jsonString);
 
       final now = DateTime.now();
@@ -95,8 +170,7 @@ class _BackupViewState extends State<BackupView> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Backup JSON criado com sucesso e salvo! ✅')),
+          SnackBar(content: Text('Backup criado e salvo em: $backupPath ✅')),
         );
       }
     } catch (e) {
@@ -177,7 +251,6 @@ class _BackupViewState extends State<BackupView> {
     }
   }
 
-  // --- Estrutura da UI ---
   @override
   Widget build(BuildContext context) {
     final String lastBackupText = _lastBackupDate == null
