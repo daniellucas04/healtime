@@ -1,4 +1,5 @@
 import 'package:app/views/components/tutorial_screen.dart';
+import 'package:app/views/backup/backup_view.dart';
 import 'package:app/views/homepage_screen.dart';
 import 'package:app/views/medicine/create_medication_view.dart';
 import 'package:app/views/menu/menu_view.dart';
@@ -14,5 +15,5 @@ var routes = {
   '/people': (BuildContext context) => const HomePeople(),
   '/create_people': (BuildContext context) => const CreatePeopleView(),
   '/menu': (BuildContext context) => const MenuView(),
-  '/report': (BuildContext context) => const ReportView()
+  '/backup': (BuildContext context) => const BackupView()
 };

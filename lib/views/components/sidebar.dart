@@ -1,4 +1,5 @@
 import 'package:app/providers/theme_provider.dart';
+import 'package:app/views/backup/backup_view.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:flutter/material.dart';
@@ -153,6 +154,75 @@ class _SidebarState extends State<Sidebar> {
                 }).toList(),
               );
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Center(
+                  child: TextButton(
+                    style: ButtonStyle(
+                      iconColor:
+                          const WidgetStatePropertyAll(Colors.greenAccent),
+                      iconSize: const WidgetStatePropertyAll(20),
+                      backgroundColor: WidgetStatePropertyAll(
+                          currentTheme.brightness == Brightness.dark
+                              ? secondaryDarkTheme
+                              : accentLightTheme),
+                      textStyle: const WidgetStatePropertyAll(
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 10,
+                      children: [
+                        Text('Definir usuário padrão'),
+                        Icon(
+                          Icons.check_circle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: TextButton(
+                    style: ButtonStyle(
+                      iconColor:
+                          const WidgetStatePropertyAll(Colors.orangeAccent),
+                      iconSize: const WidgetStatePropertyAll(20),
+                      backgroundColor: WidgetStatePropertyAll(
+                          currentTheme.brightness == Brightness.dark
+                              ? secondaryDarkTheme
+                              : accentLightTheme),
+                      textStyle: const WidgetStatePropertyAll(
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const BackupView(),
+                        ),
+                      );
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 10,
+                      children: [
+                        Text('Backup'),
+                        Icon(
+                          Icons.cloud_upload,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
