@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
+import 'package:app/views/components/snackbar.dart';
 import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -54,8 +53,8 @@ class _CreateMedicationStep9NotificationsState
           context: context,
           builder: (context) => Alert(
             title: 'Notificações',
-            message:
-                'É necessário conceder permissão de notificação para receber os alertas.',
+            content: const Text(
+                'É necessário conceder permissão de notificação para receber os alertas.'),
             actions: [
               TextButton(
                 onPressed: () async {
@@ -110,8 +109,11 @@ class _CreateMedicationStep9NotificationsState
       Navigator.pushNamedAndRemoveUntil(context, '/homepage', (_) => false);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao agendar notificações: $e')),
+        Snackbar.showSnackBar(
+          context,
+          message: 'Não foi possível agendar as notificações',
+          backgroundColor: Colors.redAccent,
+          icon: Icons.error,
         );
       }
     } finally {
@@ -128,7 +130,7 @@ class _CreateMedicationStep9NotificationsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: Header(
+        appBar: const Header(
           title: 'Notificações',
           subtitle: 'Quando deseja receber a notificação?',
         ),

@@ -1,21 +1,18 @@
+import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/types/medication_info.dart';
 import 'package:app/controllers/medication_controller.dart';
-import 'package:app/dao/medicationschedule_dao.dart';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/dao/usermedication_dao.dart';
 import 'package:app/database/database_helper.dart';
 import 'package:app/helpers/medication_validations.dart';
 import 'package:app/models/medication.dart';
-import 'package:app/models/medicationschedule.dart';
 import 'package:app/models/user.dart';
 import 'package:app/models/usermedication.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/components/form_input.dart';
 import 'package:app/views/components/header.dart';
-import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
-import 'package:app/views/theme/theme.dart';
 
 class EditMedication extends StatefulWidget {
   const EditMedication({super.key, required this.medication});
@@ -43,13 +40,12 @@ class _EditMedicationState extends State<EditMedication> {
   late TextEditingController frequencyValueInputController;
   late TextEditingController firstMedicationController;
 
-  User? usuarioVinculado; // 👤 Usuário vinculado ao medicamento
+  User? associateUser;
 
   @override
   void initState() {
     super.initState();
 
-    // Inicializa dados do medicamento vindo da tela anterior
     medicationId = widget.medication.id;
     medicationName = widget.medication.name;
     medicationDuration = widget.medication.duration;
@@ -71,10 +67,10 @@ class _EditMedicationState extends State<EditMedication> {
       text: dateHourFormat(firstMedication!),
     );
 
-    buscarUsuarioVinculado(); // 🔍 Busca o usuário associado
+    findAssociateUser();
   }
 
-  Future<void> buscarUsuarioVinculado() async {
+  Future<void> findAssociateUser() async {
     final db = await DatabaseHelper.instance.database;
     final userMedicationDao = UserMedicationDao(database: db);
     final userDao = UserDao(database: db);
@@ -90,7 +86,7 @@ class _EditMedicationState extends State<EditMedication> {
       final user = await userDao.findById(vinculo.userId);
       if (user != null) {
         setState(() {
-          usuarioVinculado = user;
+          associateUser = user;
         });
       }
     }
@@ -127,7 +123,7 @@ class _EditMedicationState extends State<EditMedication> {
         context: context,
         barrierDismissible: false,
         builder: (context) => Alert(
-          message: 'Ocorreu um erro ao atualizar o medicamento',
+          content: const Text('Ocorreu um erro ao atualizar o medicamento'),
           title: 'Erro ao Atualizar',
           actions: [
             TextButton(
@@ -146,7 +142,7 @@ class _EditMedicationState extends State<EditMedication> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Alert(
-        message: 'Dados inválidos',
+        content: const Text('Dados inválidos'),
         title: 'Preencha os dados corretamente',
         actions: [
           TextButton(
@@ -185,7 +181,7 @@ class _EditMedicationState extends State<EditMedication> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Alert(
-        message: 'Ocorreu um erro ao excluir o medicamento',
+        content: const Text('Ocorreu um erro ao excluir o medicamento'),
         title: 'Erro ao Excluir',
         actions: [
           TextButton(
@@ -202,6 +198,7 @@ class _EditMedicationState extends State<EditMedication> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: Header(
         title: medicationName.toUpperCase(),
         subtitle: 'Edite as informações do medicamento',
@@ -213,7 +210,9 @@ class _EditMedicationState extends State<EditMedication> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 12),
+                SizedBox(
+                  height: (context.heightPercentage(0.05)),
+                ),
                 FormInput(
                   label: 'Nome do medicamento',
                   key: const Key('medication_name'),
@@ -248,11 +247,8 @@ class _EditMedicationState extends State<EditMedication> {
                   key: const Key('medication_quantity'),
                   controller: quantityInputController,
                 ),
-
                 const SizedBox(height: 20),
-
-                // 🧍 Mostra o nome do usuário vinculado
-                if (usuarioVinculado != null)
+                if (associateUser != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Row(
@@ -260,7 +256,7 @@ class _EditMedicationState extends State<EditMedication> {
                         const Icon(Icons.person, color: Colors.blueAccent),
                         const SizedBox(width: 8),
                         Text(
-                          'Usuário: ${usuarioVinculado!.name}',
+                          'Usuário: ${associateUser!.name}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -269,10 +265,7 @@ class _EditMedicationState extends State<EditMedication> {
                       ],
                     ),
                   ),
-
                 const SizedBox(height: 24),
-
-                // 🔘 Botões de ação
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -293,7 +286,8 @@ class _EditMedicationState extends State<EditMedication> {
                         context: context,
                         barrierDismissible: false,
                         builder: (context) => Alert(
-                          message: 'Tem certeza que deseja realizar esta ação?',
+                          content: const Text(
+                              'Tem certeza que deseja realizar esta ação?'),
                           title: 'O medicamento será excluído!',
                           actions: [
                             TextButton(

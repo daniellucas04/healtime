@@ -27,7 +27,7 @@ class CreatePeopleStep2Date extends StatelessWidget {
         context: context,
         barrierDismissible: false,
         builder: (context) => Alert(
-          message: 'Adicione a data',
+          content: const Text('Adicione a data'),
           title: 'Campo Inválido',
           actions: [
             TextButton(
@@ -68,7 +68,7 @@ class CreatePeopleStep2Date extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (context) => Alert(
-        message: 'Ocorreu um erro ao cadastrar o usuário',
+        content: const Text('Ocorreu um erro ao cadastrar o usuário'),
         title: 'Erro ao Cadastrar',
         actions: [
           TextButton(
@@ -86,10 +86,7 @@ class CreatePeopleStep2Date extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(
-        title: 'Data de nascimento',
-        subtitle: 'Qual é a data de nascimento?',
-      ),
+      appBar: const Header(title: 'Data de nascimento'),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

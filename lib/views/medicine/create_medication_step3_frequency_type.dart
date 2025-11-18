@@ -27,7 +27,7 @@ class CreateMedicationStep3FrequencyType extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(
+      appBar: const Header(
         title: 'Frequência de consumo',
         subtitle: 'Qual a freqência que deve tomar?',
       ),

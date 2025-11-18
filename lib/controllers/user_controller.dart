@@ -22,4 +22,9 @@ class UserController {
 
     return userDao.delete(user);
   }
+
+  Future<User?> getById(int id) async {
+    final userDao = UserDao(database: await DatabaseHelper.instance.database);
+    return userDao.getById(id);
+  }
 }

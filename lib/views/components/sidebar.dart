@@ -9,7 +9,7 @@ import 'package:app/dao/user_dao.dart';
 
 class Sidebar extends StatefulWidget {
   final Function(int? userId) onUserSelected;
-  final int userId; // Callback para passar o userId
+  final int userId;
 
   const Sidebar(
       {super.key, required this.onUserSelected, required this.userId});
@@ -51,10 +51,8 @@ class _SidebarState extends State<Sidebar> {
     super.initState();
     _getUserName();
     final provider = Provider.of<ThemeProvider>(context, listen: false);
-    isSwitched = (provider.isSystemThemeActive)
-        ? true
-        : provider.themeMode == ThemeMode.dark;
     hasSystemTheme = provider.isSystemThemeActive;
+    isSwitched = hasSystemTheme ? true : provider.themeMode == ThemeMode.dark;
   }
 
   @override
@@ -88,7 +86,13 @@ class _SidebarState extends State<Sidebar> {
                     color: Colors.white,
                   ),
                 ),
-                Text(userName),
+                Text(
+                  userName.toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
@@ -106,16 +110,16 @@ class _SidebarState extends State<Sidebar> {
                     activeThumbColor: currentTheme.brightness == Brightness.dark
                         ? secondaryDarkTheme
                         : accentLightTheme,
-                    onChanged: (!hasSystemTheme)
-                        ? (value) {
+                    onChanged: (hasSystemTheme)
+                        ? null
+                        : (value) {
                             setState(() {
                               isSwitched = value;
                               Provider.of<ThemeProvider>(context, listen: false)
                                   .toggleTheme();
                             });
-                          }
-                        : null,
-                    value: !isSwitched,
+                          },
+                    value: isSwitched,
                   ),
                 ],
               ),
@@ -141,10 +145,10 @@ class _SidebarState extends State<Sidebar> {
               return Column(
                 children: users.map((user) {
                   return ListTile(
-                    title: Text(user.name),
+                    title: Text(
+                        user.name[0].toUpperCase() + user.name.substring(1)),
                     onTap: () {
                       widget.onUserSelected(user.id);
-                      //Navigator.pop(context);
                     },
                   );
                 }).toList(),

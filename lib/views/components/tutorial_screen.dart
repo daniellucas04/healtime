@@ -99,7 +99,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       shape: BoxShape.circle,
                       color: _current == entry.key
                           ? Colors.blue
-                          : Colors.grey.withOpacity(0.4),
+                          : Colors.grey.withAlpha(40),
                     ),
                   ),
                 );
@@ -119,7 +119,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   _current == tutorialData.length - 1
                       ? ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/create_people');
+                            Navigator.pushReplacementNamed(
+                                context, '/create_people');
                           },
                           child: const Text("Começar"),
                         )
@@ -138,4 +139,3 @@ class _TutorialScreenState extends State<TutorialScreen> {
     );
   }
 }
-

@@ -5,7 +5,6 @@ import 'package:app/models/medication.dart';
 import 'package:app/models/medicationschedule.dart';
 import 'package:app/views/components/alert.dart';
 import 'package:app/views/components/header.dart';
-import 'package:app/views/components/date_time_picker.dart';
 import 'package:app/views/medicine/create_medication_step2_type.dart';
 import 'package:app/views/medicine/create_medication_step3_frequency_type.dart';
 import 'package:app/views/medicine/create_medication_step9_notifications.dart';
@@ -70,7 +69,7 @@ class _CreateMedicationStep8UserMedicationState
 
   Future<void> _handleFinish() async {
     if (selectedUser == null) {
-      _showAlert('Selecione um usuário', 'Usuário obrigatório');
+      _showAlert('Campo inválido', 'Selecione um usuário');
       return;
     }
 
@@ -152,7 +151,7 @@ class _CreateMedicationStep8UserMedicationState
       barrierDismissible: false,
       builder: (context) => Alert(
         title: title,
-        message: message,
+        content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -165,17 +164,13 @@ class _CreateMedicationStep8UserMedicationState
 
   @override
   void dispose() {
-    // widget.medicationName.dispose();
-    // widget.medicationFrequencyValue.dispose();
-    // widget.medicationDuration.dispose();
-    // widget.medicationQuantity.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(
+      appBar: const Header(
         title: 'Usuário',
         subtitle: 'O remédio vai ser para qual usuário?',
       ),

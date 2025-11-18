@@ -4,7 +4,6 @@ import 'package:app/models/user.dart';
 import 'package:app/views/components/header.dart';
 import 'package:app/views/components/navigation_bar.dart';
 import 'package:app/views/people/edit_people_view.dart';
-import 'package:app/views/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -47,7 +46,9 @@ class _HomePeopleState extends State<HomePeople> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Header(title: 'Seja bem-vindo!'),
+      appBar: const Header(
+        title: 'Pessoas',
+      ),
       body: FutureBuilder<List<User>>(
         future: _userList,
         builder: (context, snapshot) {
@@ -65,63 +66,58 @@ class _HomePeopleState extends State<HomePeople> {
             itemCount: users.length,
             itemBuilder: (context, index) {
               final user = users[index];
-              return Card(
-                shadowColor: Colors.black87,
-                elevation: 8,
-                margin: const EdgeInsets.all(12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    gradient: const LinearGradient(
-                      colors: [
-                        accentLightTheme,
-                        Color.fromARGB(255, 8, 50, 150),
-                      ],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                    ),
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Card(
+                  shadowColor: Colors.black45,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    side: BorderSide(width: 1, color: Colors.blue.shade800),
                   ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      highlightColor: Colors.blue.withAlpha(100),
-                      onTap: () async {},
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          highlightColor: Colors.blue.withAlpha(100),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPeople(
-                                  people: user, userLenght: users.length),
+                  child: InkWell(
+                    highlightColor: Colors.blue.withAlpha(100),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        highlightColor: Colors.blue.withAlpha(100),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPeople(
+                              people: user,
+                              userLenght: users.length,
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: ListTile(
-                                    dense: true,
-                                    textColor: Colors.white,
-                                    title: Text(
-                                      user.name,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ListTile(
+                                  textColor: Colors.white,
+                                  title: Text(
+                                    user.name[0].toUpperCase() +
+                                        user.name.substring(1),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
                                     ),
-                                    subtitle: Text(
-                                      DateFormat('dd/MM/yyyy').format(
-                                          DateTime.parse(user.birthDate)),
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    'Nascimento: ${DateFormat('dd/MM/yyyy').format(
+                                      DateTime.parse(user.birthDate),
+                                    )}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -138,13 +134,11 @@ class _HomePeopleState extends State<HomePeople> {
         child: const Icon(
           Icons.add,
           size: 35,
-          color: backgroundDarkTheme50,
         ),
         onPressed: () async {
-          // Aguarda o cadastro e recarrega a lista
           await Navigator.pushNamed(context, '/create_people');
           setState(() {
-            _loadUsers(); // Recarrega a lista ao voltar
+            _loadUsers();
           });
         },
       ),

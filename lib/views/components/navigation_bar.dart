@@ -27,7 +27,9 @@ class _NavBar extends State<NavBar> {
           }
           break;
         case 1:
-          // Navigator.pushNamed(context, '/calendar');
+          if (index != _selectedIndex) {
+            Navigator.pushReplacementNamed(context, '/report');
+          }
           break;
         case 2:
           if (index != _selectedIndex) {
@@ -53,11 +55,11 @@ class _NavBar extends State<NavBar> {
         destinations: const <Widget>[
           NavigationDestination(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Início',
           ),
           NavigationDestination(
-            icon: Icon(Icons.calendar_month),
-            label: 'Calendário',
+            icon: Icon(Icons.paste),
+            label: 'Relátorio',
           ),
           NavigationDestination(
             icon: Icon(Icons.people),

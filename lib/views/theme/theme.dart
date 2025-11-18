@@ -42,8 +42,9 @@ class AppThemes {
       bodyMedium: TextStyle(color: textLightTheme),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: accentLightTheme,
-      foregroundColor: textLightTheme900,
+      elevation: 1,
+      backgroundColor: accentDarkTheme,
+      foregroundColor: Colors.white,
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
@@ -81,6 +82,13 @@ class AppThemes {
         ),
       ),
     ),
+    filledButtonTheme: const FilledButtonThemeData(
+      style: ButtonStyle(
+        elevation: WidgetStatePropertyAll(0),
+        backgroundColor: WidgetStatePropertyAll(secondaryLightTheme),
+        foregroundColor: WidgetStatePropertyAll(textDarkTheme),
+      ),
+    ),
     inputDecorationTheme: InputDecorationThemeData(
       floatingLabelAlignment: FloatingLabelAlignment.start,
       floatingLabelStyle: const TextStyle(
@@ -106,10 +114,13 @@ class AppThemes {
         backgroundColor: WidgetStatePropertyAll(backgroundLightTheme50),
       ),
     ),
-    cardTheme: const CardThemeData(
+    cardTheme: CardThemeData(
       color: accentLightTheme,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       shadowColor: Colors.black38,
-      elevation: 1,
+      elevation: 0,
     ),
     listTileTheme: const ListTileThemeData(
       iconColor: primaryLightTheme,
@@ -174,7 +185,7 @@ class AppThemes {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       elevation: 1,
       backgroundColor: primaryDarkTheme,
-      foregroundColor: secondaryLightTheme,
+      foregroundColor: Colors.white,
     ),
     filledButtonTheme: const FilledButtonThemeData(
       style: ButtonStyle(
@@ -210,15 +221,19 @@ class AppThemes {
       shadowColor: Colors.white30,
       elevation: 1,
     ),
-    dialogTheme: const DialogThemeData(
+    dialogTheme: DialogThemeData(
+      elevation: 1,
       backgroundColor: backgroundDarkTheme50,
       shadowColor: Colors.white30,
       iconColor: textDarkTheme,
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         color: textDarkTheme,
         fontSize: 24,
       ),
-      contentTextStyle: TextStyle(color: textDarkTheme),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      contentTextStyle: const TextStyle(color: textDarkTheme),
     ),
     listTileTheme: const ListTileThemeData(
       iconColor: primaryDarkTheme,
