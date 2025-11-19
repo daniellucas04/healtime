@@ -34,16 +34,29 @@ class HomePageScreen extends StatefulWidget {
 class _HomePageScreenState extends State<HomePageScreen> {
   DateTime searchDate = DateTime.now();
   int? selectedUserId;
-  late Timer _timer;
+  Timer? _timer;
 
   Future<void> loadUser() async {
     final id = await Session.getActiveUser();
+
     setState(() {
       selectedUserId = id;
     });
+
+    if (selectedUserId != null) {
+      _updateData(Timer(const Duration(), () {}));
+
+      _timer = Timer.periodic(const Duration(minutes: 10), _updateData);
+    }
   }
 
   void _updateData(Timer timer) async {
+    if (selectedUserId == null) {
+      print(
+          'Aviso: selectedUserId é nulo. A atualização dos dados foi ignorada.');
+      return;
+    }
+
     var meds = await MedicationScheduleDao(
             database: await DatabaseHelper.instance.database)
         .updateAll(selectedUserId!);
@@ -60,7 +73,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 id: med['id'],
                 date: med['date'],
                 status:
-                    (med['status'] == 'Atrasado' || med['status'] == 'Pendente') ? 'Esquecido' : med['status'],
+                    (med['status'] == 'Atrasado' || med['status'] == 'Pendente')
+                        ? 'Esquecido'
+                        : med['status'],
                 medicationId: med['medication_id']),
           );
         } else {
@@ -84,13 +99,11 @@ class _HomePageScreenState extends State<HomePageScreen> {
   void initState() {
     super.initState();
     loadUser();
-    _updateData(Timer(const Duration(),(){}));
-    _timer = Timer.periodic(const Duration(minutes: 10), _updateData);
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -101,7 +114,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
         onUserSelected: (userId) {
           setState(() {
             selectedUserId = userId;
-            Session.setActiveUser(selectedUserId!);
+            if (selectedUserId != null) {
+              Session.setActiveUser(selectedUserId!);
+            }
           });
         },
         userId: selectedUserId ?? 1,
@@ -113,6 +128,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           await getAll(searchDate, userId: selectedUserId);
+          setState(() {});
         },
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: getAll(searchDate, userId: selectedUserId),
