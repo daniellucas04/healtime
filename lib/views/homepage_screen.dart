@@ -105,7 +105,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         userId: selectedUserId ?? 1,
       ),
       resizeToAvoidBottomInset: false,
-      appBar: Header(
+      appBar: const Header(
         title: 'Seja bem-vindo!',
       ),
       body: RefreshIndicator(

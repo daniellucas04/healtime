@@ -308,14 +308,6 @@ class NotificationService {
     return null;
   }
 
-  Future<void> _checkPendingNotificationRequests() async {
-    final List<PendingNotificationRequest> pendingNotificationRequests =
-        await _notifications.pendingNotificationRequests();
-
-    for (PendingNotificationRequest pendingNotificationRequest
-        in pendingNotificationRequests) {}
-  }
-
   void dispose() {
     _notificationResponseController.close();
   }

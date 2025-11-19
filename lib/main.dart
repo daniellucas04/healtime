@@ -67,16 +67,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> _getUsersWithDefault() async {
-  var users =
-      await UserDao(database: await DatabaseHelper.instance.database).getAll();
+    var users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getAll();
 
-  if(users.isEmpty){
-    return false;
-  }else{
-    return true;
+    if (users.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
   }
-
-}
 
   Future<bool> _checkFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

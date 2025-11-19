@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 var routes = {
   '/homepage': (BuildContext context) => const HomePageScreen(),
+  '/report': (BuildContext context) => const ReportView(),
   '/tutorial_screen': (BuildContext context) => const TutorialScreen(),
   '/medicine_registration': (BuildContext context) => const CreateMedication(),
   '/people': (BuildContext context) => const HomePeople(),

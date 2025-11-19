@@ -48,12 +48,12 @@ class _ReportViewState extends State<ReportView> {
   }
 
   Future<void> _getUserName(int userId) async {
-  var users = await UserDao(database: await DatabaseHelper.instance.database)
-      .getById(userId);
-  setState(() {
-    userName = users!.name;
-  });
-}
+    var users = await UserDao(database: await DatabaseHelper.instance.database)
+        .getById(userId);
+    setState(() {
+      userName = users!.name;
+    });
+  }
 
   _medicationInformation(int id) async {
     List<Map<String, dynamic>> medicationDetails = await getAllById(id);
@@ -100,16 +100,18 @@ class _ReportViewState extends State<ReportView> {
               const SizedBox(height: 16),
               Text(
                 'Início: ${dateFormat(DateTime.parse(medicationDetails.first['date']))}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Text(
                 'Fim: ${dateFormat(DateTime.parse(medicationDetails.last['date']))}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               medicationDetails.last['status'] != 'Pendente'
-                ? const Text('Todas as doses já foram tomadas')
-                : Text('Próxima dose: ${dateHourFormat(next!)}'),
+                  ? const Text('Todas as doses já foram tomadas')
+                  : Text('Próxima dose: ${dateHourFormat(next!)}'),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,17 +126,19 @@ class _ReportViewState extends State<ReportView> {
                         context: context,
                         isScrollControlled: true,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16)),
                         ),
                         builder: (context) {
-                          final ScrollController scrollController = ScrollController();
+                          final ScrollController scrollController =
+                              ScrollController();
                           int itemsToShow = 20;
                           return StatefulBuilder(
                             builder: (context, setState) {
                               scrollController.addListener(() {
                                 if (scrollController.position.pixels ==
-                                    scrollController.position.maxScrollExtent) {
-                                }
+                                    scrollController
+                                        .position.maxScrollExtent) {}
                               });
                               return Padding(
                                 padding: const EdgeInsets.all(16),
@@ -150,10 +154,13 @@ class _ReportViewState extends State<ReportView> {
                                     ),
                                     const SizedBox(height: 12),
                                     SizedBox(
-                                      height: MediaQuery.of(context).size.height * 0.6,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.6,
                                       child: ListView.builder(
                                         controller: scrollController,
-                                        itemCount: itemsToShow > medicationDetails.length
+                                        itemCount: itemsToShow >
+                                                medicationDetails.length
                                             ? medicationDetails.length
                                             : itemsToShow,
                                         itemBuilder: (context, index) {
@@ -184,16 +191,19 @@ class _ReportViewState extends State<ReportView> {
                                           return ListTile(
                                             leading: Icon(icon, color: color),
                                             title: Text(
-                                              dateHourFormat(DateTime.parse(dose['date'])),
+                                              dateHourFormat(
+                                                  DateTime.parse(dose['date'])),
                                             ),
-                                            subtitle: Text('Status: ${dose['status']}'),
+                                            subtitle: Text(
+                                                'Status: ${dose['status']}'),
                                           );
                                         },
                                       ),
                                     ),
                                     const SizedBox(height: 10),
                                     ElevatedButton(
-                                      onPressed: () => Navigator.of(context).pop(),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
                                       child: const Text('Fechar'),
                                     ),
                                   ],
@@ -248,7 +258,8 @@ class _ReportViewState extends State<ReportView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.blueAccent.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -257,8 +268,10 @@ class _ReportViewState extends State<ReportView> {
                       children: [
                         CircleAvatar(
                           radius: 22,
-                          backgroundColor: Colors.blueAccent.withValues(alpha: 0.2),
-                          child: const Icon(Icons.person, color: Colors.blueAccent),
+                          backgroundColor:
+                              Colors.blueAccent.withValues(alpha: 0.2),
+                          child: const Icon(Icons.person,
+                              color: Colors.blueAccent),
                         ),
                         const SizedBox(width: 12),
                         Text(
@@ -297,7 +310,8 @@ class _ReportViewState extends State<ReportView> {
 
                   if (items.isEmpty) {
                     return const Center(
-                        child: Text('Nenhum medicamento registrado até o momento'));
+                        child: Text(
+                            'Nenhum medicamento registrado até o momento'));
                   }
 
                   return ListView.separated(
@@ -308,8 +322,8 @@ class _ReportViewState extends State<ReportView> {
                     itemBuilder: (context, index) {
                       final medication = items[index];
                       return Container(
-                        margin:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
                           gradient: LinearGradient(
@@ -329,7 +343,8 @@ class _ReportViewState extends State<ReportView> {
                           shadowColor: Colors.black45,
                           child: InkWell(
                             onTap: () async {
-                              _medicationInformation(medication['medication_id']);
+                              _medicationInformation(
+                                  medication['medication_id']);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(12),
@@ -337,7 +352,8 @@ class _ReportViewState extends State<ReportView> {
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -371,7 +387,7 @@ class _ReportViewState extends State<ReportView> {
                                               ),
                                             ),
                                           ],
-                                        ),                                   
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -414,7 +430,8 @@ class _ReportViewState extends State<ReportView> {
                     return const Center(
                       child: Text(
                         'Nenhum medicamento encontrado.',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     );
                   }
@@ -468,14 +485,17 @@ class _ReportViewState extends State<ReportView> {
                                 chipIcon = Icons.check_circle;
                             }
                             return Chip(
-                              label: Text('${status[index]}: ${quantidade[index]}'),
-                              backgroundColor: chipColor.withValues(alpha: 0.15),
+                              label: Text(
+                                  '${status[index]}: ${quantidade[index]}'),
+                              backgroundColor:
+                                  chipColor.withValues(alpha: 0.15),
                               labelStyle: TextStyle(
                                 color: chipColor,
                                 fontWeight: FontWeight.bold,
                               ),
                               avatar: Icon(chipIcon, color: chipColor),
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                             );
                           }),
                         ),
