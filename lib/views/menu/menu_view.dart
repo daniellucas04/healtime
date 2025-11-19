@@ -127,6 +127,7 @@ class _MenuViewState extends State<MenuView> {
         onUserSelected: (userId) {
           setState(() {
             selectedUserId = userId;
+            Session.setActiveUser(selectedUserId!);
           });
         },
         userId: selectedUserId ?? 1,

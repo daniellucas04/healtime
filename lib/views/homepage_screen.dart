@@ -60,7 +60,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 id: med['id'],
                 date: med['date'],
                 status:
-                    med['status'] == 'Atrasado' ? 'Esquecido' : med['status'],
+                    (med['status'] == 'Atrasado' || med['status'] == 'Pendente') ? 'Esquecido' : med['status'],
                 medicationId: med['medication_id']),
           );
         } else {
@@ -84,6 +84,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   void initState() {
     super.initState();
     loadUser();
+    _updateData(Timer(const Duration(),(){}));
     _timer = Timer.periodic(const Duration(minutes: 10), _updateData);
   }
 
@@ -100,6 +101,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         onUserSelected: (userId) {
           setState(() {
             selectedUserId = userId;
+            Session.setActiveUser(selectedUserId!);
           });
         },
         userId: selectedUserId ?? 1,

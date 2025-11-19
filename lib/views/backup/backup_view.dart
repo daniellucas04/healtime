@@ -227,7 +227,7 @@ class _BackupViewState extends State<BackupView> {
         for (var table in _tables) {
           final List<dynamic> records = backupData[table];
           for (var record in records) {
-            (record as Map<String, dynamic>).remove('id');
+            //(record as Map<String, dynamic>).remove('id');
 
             await txn.insert(table, record,
                 conflictAlgorithm: ConflictAlgorithm.replace);

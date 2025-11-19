@@ -38,9 +38,9 @@ class _SidebarState extends State<Sidebar> {
   late bool hasSystemTheme;
   late String userName = '';
 
-  Future<void> _getUserName() async {
+  Future<void> _getUserName(int? id) async {
     var users = await UserDao(database: await DatabaseHelper.instance.database)
-        .getById(widget.userId);
+        .getById(id ?? widget.userId);
     setState(() {
       userName = users!.name;
     });
@@ -49,7 +49,7 @@ class _SidebarState extends State<Sidebar> {
   @override
   void initState() {
     super.initState();
-    _getUserName();
+    _getUserName(null);
     final provider = Provider.of<ThemeProvider>(context, listen: false);
     hasSystemTheme = provider.isSystemThemeActive;
     isSwitched = hasSystemTheme ? true : provider.themeMode == ThemeMode.dark;
@@ -149,6 +149,7 @@ class _SidebarState extends State<Sidebar> {
                         user.name[0].toUpperCase() + user.name.substring(1)),
                     onTap: () {
                       widget.onUserSelected(user.id);
+                      _getUserName(user.id);
                     },
                   );
                 }).toList(),
@@ -159,33 +160,6 @@ class _SidebarState extends State<Sidebar> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                Center(
-                  child: TextButton(
-                    style: ButtonStyle(
-                      iconColor:
-                          const WidgetStatePropertyAll(Colors.greenAccent),
-                      iconSize: const WidgetStatePropertyAll(20),
-                      backgroundColor: WidgetStatePropertyAll(
-                          currentTheme.brightness == Brightness.dark
-                              ? secondaryDarkTheme
-                              : accentLightTheme),
-                      textStyle: const WidgetStatePropertyAll(
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Text('Definir usuário padrão'),
-                        Icon(
-                          Icons.check_circle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(
