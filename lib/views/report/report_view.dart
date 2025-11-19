@@ -42,7 +42,7 @@ class _ReportViewState extends State<ReportView> {
   Future<void> loadUser() async {
     int activeUserId = await Session.getActiveUser();
     setState(() {
-      selectedUserId = activeUserId;
+      selectedUserId ??= activeUserId;
     });
     _getUserName(selectedUserId!);
   }
@@ -61,7 +61,7 @@ class _ReportViewState extends State<ReportView> {
     int counter = 0;
 
     medicationDetails.forEach((med) {
-      if (DateTime.parse(med['date']).isAfter(DateTime.now()) && counter == 0) {
+      if (DateTime.parse(med['date']).isAfter(DateTime.now()) && counter == 0 && med['status'] == 'Pendente') {
         next = DateTime.parse(med['date']);
         counter++;
       }
@@ -236,12 +236,13 @@ class _ReportViewState extends State<ReportView> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData currentTheme = Theme.of(context);
     return Scaffold(
       endDrawer: Sidebar(
         onUserSelected: (userId) {
           setState(() {
             selectedUserId = userId;
+            Session.setActiveUser(selectedUserId!);
+            _getUserName(selectedUserId!);
           });
         },
         userId: selectedUserId ?? 1,

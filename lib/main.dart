@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 import 'package:app/dao/user_dao.dart';
 import 'package:app/database/database_helper.dart';
+import 'package:app/helpers/session.dart';
 import 'package:app/providers/theme_provider.dart';
 import 'package:app/services/notifications.dart';
 import 'package:app/views/homepage_screen.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final NotificationService _notificationService = NotificationService();
   StreamSubscription? _notificationSubscription;
   late Future<bool> _firstTimeFuture;
@@ -44,8 +45,17 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _configureNotificationListener();
     _firstTimeFuture = _checkFirstTime();
+  }
+
+   void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.detached) {
+      // App está sendo encerrado
+      Session.clearUser();
+    }
+
   }
 
   void _configureNotificationListener() {
@@ -62,6 +72,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _notificationSubscription?.cancel();
     super.dispose();
   }
