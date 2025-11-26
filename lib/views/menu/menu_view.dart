@@ -93,6 +93,7 @@ class _MenuViewState extends State<MenuView> {
               NotificationService notification = NotificationService();
               await DatabaseHelper.instance.resetDatabase();
               notification.cancelAllNotifications();
+              Session.clearUser();
               Navigator.pushNamedAndRemoveUntil(
                   context, '/tutorial_screen', (_) => false);
             },

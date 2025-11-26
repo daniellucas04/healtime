@@ -43,56 +43,56 @@ class _HomePageScreenState extends State<HomePageScreen> {
       selectedUserId = id;
     });
 
-    if (selectedUserId != null) {
-      _updateData(Timer(const Duration(), () {}));
+    _updateData(Timer(const Duration(), () {}));
 
-      _timer = Timer.periodic(const Duration(minutes: 10), _updateData);
-    }
+    _timer = Timer.periodic(const Duration(minutes: 10), _updateData);
   }
 
   void _updateData(Timer timer) async {
-    if (selectedUserId == null) {
-      print(
-          'Aviso: selectedUserId é nulo. A atualização dos dados foi ignorada.');
-      return;
-    }
+    if (selectedUserId == null) return;
+    final db = await DatabaseHelper.instance.database;
+    final dao = MedicationScheduleDao(database: db);
 
-    var meds = await MedicationScheduleDao(
-            database: await DatabaseHelper.instance.database)
-        .updateAll(selectedUserId!);
+    // Obtém todos os medicamentos agendados do usuário
+    final meds = await dao.updateAll(selectedUserId!);
+
+    final now = DateTime.now();
 
     for (var med in meds) {
-      if (DateTime.parse(med['date']).isBefore(DateTime.now())) {
-        Duration difference =
-            DateTime.parse(med['date']).difference(DateTime.now());
-        if (difference < const Duration(hours: -10)) {
-          await MedicationScheduleDao(
-                  database: await DatabaseHelper.instance.database)
-              .update(
-            MedicationSchedule(
-                id: med['id'],
-                date: med['date'],
-                status:
-                    (med['status'] == 'Atrasado' || med['status'] == 'Pendente')
-                        ? 'Esquecido'
-                        : med['status'],
-                medicationId: med['medication_id']),
-          );
+      final medDate = DateTime.parse(med['date']);
+      final currentStatus = med['status'];
+
+      if (medDate.isBefore(now)) {
+        final hoursDiff = now.difference(medDate).inHours;
+
+        String newStatus = currentStatus;
+
+        if (hoursDiff >= 10) {
+          // Já passaram mais de 10 horas → 'Esquecido'
+          if (currentStatus == 'Atrasado' || currentStatus == 'Pendente') {
+            newStatus = 'Esquecido';
+          }
         } else {
-          await MedicationScheduleDao(
-                  database: await DatabaseHelper.instance.database)
-              .update(
+          // Entre 0 e 10 horas → 'Atrasado'
+          if (currentStatus == 'Pendente') {
+            newStatus = 'Atrasado';
+          }
+        }
+        // Atualiza somente se necessário
+        if (newStatus != currentStatus) {
+          await dao.update(
             MedicationSchedule(
-                id: med['id'],
-                date: med['date'],
-                status:
-                    med['status'] == 'Pendente' ? 'Atrasado' : med['status'],
-                medicationId: med['medication_id']),
+              id: med['id'],
+              date: med['date'],
+              status: newStatus,
+              medicationId: med['medication_id'],
+            ),
           );
         }
       }
     }
-    setState(() {});
+
+    if (mounted) setState(() {});
   }
 
   @override

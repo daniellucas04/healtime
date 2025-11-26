@@ -176,12 +176,7 @@ class _SidebarState extends State<Sidebar> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const BackupView(),
-                        ),
-                      );
+                      Navigator.pushNamed(context, '/backup');
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -50,12 +50,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     _firstTimeFuture = _checkFirstTime();
   }
 
-   void didChangeAppLifecycleState(AppLifecycleState state) async {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.detached) {
       // App está sendo encerrado
       Session.clearUser();
     }
-
   }
 
   void _configureNotificationListener() {
@@ -92,9 +91,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
     bool user = await _getUsersWithDefault();
-    if (isFirstTime && user) {
-      prefs.setBool('isFirstTime', false);
-      isFirstTime = !isFirstTime;
+    if (!user) {
+      if (isFirstTime) {
+        prefs.setBool('isFirstTime', false);
+        isFirstTime = !isFirstTime;
+        print(isFirstTime);
+      }
+      isFirstTime = true;
+      print(isFirstTime);
     }
     return isFirstTime;
   }
@@ -187,7 +191,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 );
               },
             );
-
             return app;
           },
         );

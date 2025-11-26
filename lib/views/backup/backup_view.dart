@@ -1,3 +1,4 @@
+import 'package:app/helpers/session.dart';
 import 'package:app/views/components/header.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -235,11 +236,20 @@ class _BackupViewState extends State<BackupView> {
         }
       });
 
+      Session.clearUser();
+      Session.getActiveUser();
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Restauração de dados concluída com sucesso! ✨')),
-        );
+        await ScaffoldMessenger.of(context)
+            .showSnackBar(
+              const SnackBar(
+                  duration: Duration(seconds: 1),
+                  content:
+                      Text('Restauração de dados concluída com sucesso! ✨')),
+            )
+            .closed;
+
+        Navigator.pushNamedAndRemoveUntil(context, '/homepage', (_) => false);
       }
     } catch (e) {
       print('Erro ao restaurar backup JSON: $e');
