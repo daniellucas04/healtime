@@ -55,6 +55,7 @@ class MedicationsCard extends StatelessWidget {
   void _shareMedication(medication) async {
     var userMedication = await UserMedicationController()
         .getUserFromMedication(medication['medication_id']);
+    print(userMedication);
 
     var user = await UserController().getById(userMedication[0]['user_id']);
     String? username = user?.name.toUpperCase();

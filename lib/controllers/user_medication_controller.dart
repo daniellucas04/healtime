@@ -18,7 +18,7 @@ class UserMedicationController {
   Future<List<Map<String, dynamic>>> getUserFromMedication(id) async {
     final db = await DatabaseHelper.instance.database;
     final dao = UserMedicationDao(database: db);
-    return await dao.getByUserId(id);
+    return await dao.getByMedicationId(id);
   }
 
   Future<List<Map<String, dynamic>>> getMedicationFromUser(id) async {
