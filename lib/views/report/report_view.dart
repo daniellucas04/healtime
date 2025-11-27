@@ -134,7 +134,7 @@ class _ReportViewState extends State<ReportView> {
                         builder: (context) {
                           final ScrollController scrollController =
                               ScrollController();
-                          int itemsToShow = 20;
+                          int itemsToShow = medicationDetails.length;
 
                           DateTime? selectedDate;
                           List<Map<String, dynamic>> filteredList =
