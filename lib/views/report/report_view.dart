@@ -61,7 +61,9 @@ class _ReportViewState extends State<ReportView> {
     int counter = 0;
 
     medicationDetails.forEach((med) {
-      if (DateTime.parse(med['date']).isAfter(DateTime.now()) && counter == 0 && med['status'] == 'Pendente') {
+      if (DateTime.parse(med['date']).isAfter(DateTime.now()) &&
+          counter == 0 &&
+          med['status'] == 'Pendente') {
         next = DateTime.parse(med['date']);
         counter++;
       }
@@ -133,13 +135,49 @@ class _ReportViewState extends State<ReportView> {
                           final ScrollController scrollController =
                               ScrollController();
                           int itemsToShow = 20;
+
+                          DateTime? selectedDate;
+                          List<Map<String, dynamic>> filteredList =
+                              List.from(medicationDetails);
+
                           return StatefulBuilder(
                             builder: (context, setState) {
                               scrollController.addListener(() {
                                 if (scrollController.position.pixels ==
-                                    scrollController
-                                        .position.maxScrollExtent) {}
+                                    scrollController.position.maxScrollExtent) {
+                                  if (itemsToShow < filteredList.length) {
+                                    setState(() {
+                                      itemsToShow += 20;
+                                      if (itemsToShow > filteredList.length) {
+                                        itemsToShow = filteredList.length;
+                                      }
+                                    });
+                                  }
+                                }
                               });
+
+                              void applyFilter(DateTime? date) {
+                                selectedDate = date;
+
+                                if (date == null) {
+                                  filteredList = List.from(medicationDetails);
+                                } else {
+                                  filteredList =
+                                      medicationDetails.where((dose) {
+                                    DateTime d = DateTime.parse(dose['date']);
+                                    return d.year == date.year &&
+                                        d.month == date.month &&
+                                        d.day == date.day;
+                                  }).toList();
+                                }
+
+                                itemsToShow = filteredList.length < 20
+                                    ? filteredList.length
+                                    : 20;
+
+                                setState(() {});
+                              }
+
                               return Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
@@ -153,52 +191,102 @@ class _ReportViewState extends State<ReportView> {
                                       ),
                                     ),
                                     const SizedBox(height: 12),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          selectedDate == null
+                                              ? "Todas as datas"
+                                              : "Filtrado: ${dateFormat(selectedDate!)}",
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextButton.icon(
+                                              onPressed: () async {
+                                                final picked =
+                                                    await showDatePicker(
+                                                  context: context,
+                                                  initialDate: selectedDate ??
+                                                      DateTime.now(),
+                                                  firstDate: DateTime(2020),
+                                                  lastDate: DateTime(2100),
+                                                );
+
+                                                applyFilter(picked);
+                                              },
+                                              icon: const Icon(
+                                                  Icons.calendar_today),
+                                              label: const Text("Filtrar"),
+                                            ),
+                                            if (selectedDate != null)
+                                              TextButton(
+                                                onPressed: () {
+                                                  applyFilter(null);
+                                                },
+                                                child: const Text("Limpar"),
+                                              ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
                                     SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.6,
-                                      child: ListView.builder(
-                                        controller: scrollController,
-                                        itemCount: itemsToShow >
-                                                medicationDetails.length
-                                            ? medicationDetails.length
-                                            : itemsToShow,
-                                        itemBuilder: (context, index) {
-                                          final dose = medicationDetails[index];
-                                          IconData icon;
-                                          Color color;
-                                          switch (dose['status']) {
-                                            case 'Tomado':
-                                              icon = Icons.check_circle;
-                                              color = Colors.green;
-                                              break;
-                                            case 'Pendente':
-                                              icon = Icons.schedule;
-                                              color = Colors.blue;
-                                              break;
-                                            case 'Atrasado':
-                                              icon = Icons.warning;
-                                              color = Colors.orange;
-                                              break;
-                                            case 'Esquecido':
-                                              icon = Icons.cancel;
-                                              color = Colors.redAccent;
-                                              break;
-                                            default:
-                                              icon = Icons.help_outline;
-                                              color = Colors.blueGrey;
-                                          }
-                                          return ListTile(
-                                            leading: Icon(icon, color: color),
-                                            title: Text(
-                                              dateHourFormat(
-                                                  DateTime.parse(dose['date'])),
+                                      child: filteredList.isEmpty
+                                          ? const Center(
+                                              child: Text(
+                                                  "Nenhum registro para esta data"),
+                                            )
+                                          : ListView.builder(
+                                              controller: scrollController,
+                                              itemCount: itemsToShow,
+                                              itemBuilder: (context, index) {
+                                                final dose =
+                                                    filteredList[index];
+
+                                                IconData icon;
+                                                Color color;
+                                                switch (dose['status']) {
+                                                  case 'Tomado':
+                                                    icon = Icons.check_circle;
+                                                    color = Colors.green;
+                                                    break;
+                                                  case 'Pendente':
+                                                    icon = Icons.schedule;
+                                                    color = Colors.blue;
+                                                    break;
+                                                  case 'Atrasado':
+                                                    icon = Icons.warning;
+                                                    color = Colors.orange;
+                                                    break;
+                                                  case 'Esquecido':
+                                                    icon = Icons.cancel;
+                                                    color = Colors.redAccent;
+                                                    break;
+                                                  default:
+                                                    icon = Icons.help_outline;
+                                                    color = Colors.grey;
+                                                }
+
+                                                return ListTile(
+                                                  leading:
+                                                      Icon(icon, color: color),
+                                                  title: Text(
+                                                    dateHourFormat(
+                                                      DateTime.parse(
+                                                          dose['date']),
+                                                    ),
+                                                  ),
+                                                  subtitle: Text(
+                                                    'Status: ${dose['status']}',
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                            subtitle: Text(
-                                                'Status: ${dose['status']}'),
-                                          );
-                                        },
-                                      ),
                                     ),
                                     const SizedBox(height: 10),
                                     ElevatedButton(
@@ -485,7 +573,215 @@ class _ReportViewState extends State<ReportView> {
                                 chipColor = Colors.green;
                                 chipIcon = Icons.check_circle;
                             }
-                            return Chip(
+                            return ActionChip(
+                              onPressed: () async {
+                                final chipStatus = status[index];
+                                String title = "";
+                                IconData icon;
+                                Color color;
+
+                                switch (chipStatus) {
+                                  case 'Tomado':
+                                    title = "Tomada(s)";
+                                    icon = Icons.check_circle;
+                                    color = Colors.green;
+                                    break;
+                                  case 'Pendente':
+                                    title = "Pendente(s)";
+                                    icon = Icons.schedule;
+                                    color = Colors.blue;
+                                    break;
+                                  case 'Atrasado':
+                                    title = "Atrasada(s)";
+                                    icon = Icons.warning;
+                                    color = Colors.orange;
+                                    break;
+                                  case 'Esquecido':
+                                    title = "Esquecida(s)";
+                                    icon = Icons.cancel;
+                                    color = Colors.redAccent;
+                                    break;
+                                  default:
+                                    title = "";
+                                    icon = Icons.info;
+                                    color = Colors.grey;
+                                }
+
+                                var medicationDetails =
+                                    await MedicationScheduleDao(
+                                            database: await DatabaseHelper
+                                                .instance.database)
+                                        .medicationStatus(status[index]);
+
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16)),
+                                  ),
+                                  builder: (context) {
+                                    final ScrollController scrollController =
+                                        ScrollController();
+
+                                    int itemsToShow = medicationDetails.length;
+                                    DateTime? selectedDate;
+
+                                    List<dynamic> filteredList =
+                                        List.from(medicationDetails);
+
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        scrollController.addListener(() {
+                                          if (scrollController
+                                                  .position.pixels ==
+                                              scrollController
+                                                  .position.maxScrollExtent) {
+                                            if (itemsToShow <
+                                                filteredList.length) {
+                                              setState(() {
+                                                if (itemsToShow >
+                                                    filteredList.length) {
+                                                  itemsToShow =
+                                                      filteredList.length;
+                                                }
+                                              });
+                                            }
+                                          }
+                                        });
+                                        void applyFilter(DateTime? date) {
+                                          selectedDate = date;
+                                          if (date == null) {
+                                            filteredList =
+                                                List.from(medicationDetails);
+                                          } else {
+                                            filteredList =
+                                                medicationDetails.where((dose) {
+                                              DateTime d =
+                                                  DateTime.parse(dose['date']);
+
+                                              return d.year == date.year &&
+                                                  d.month == date.month &&
+                                                  d.day == date.day;
+                                            }).toList();
+                                          }
+                                          itemsToShow = filteredList.length < 20
+                                              ? filteredList.length
+                                              : 20;
+
+                                          setState(() {});
+                                        }
+
+                                        return Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                'Histórico das Doses $title',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 12),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    selectedDate == null
+                                                        ? "Todas as datas"
+                                                        : "Filtrado: ${dateFormat(selectedDate!)}",
+                                                    style: const TextStyle(
+                                                        fontSize: 16),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      TextButton.icon(
+                                                        onPressed: () async {
+                                                          final picked =
+                                                              await showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                selectedDate ??
+                                                                    DateTime
+                                                                        .now(),
+                                                            firstDate:
+                                                                DateTime(2020),
+                                                            lastDate:
+                                                                DateTime(2100),
+                                                          );
+
+                                                          applyFilter(picked);
+                                                        },
+                                                        icon: const Icon(Icons
+                                                            .calendar_today),
+                                                        label: const Text(
+                                                            "Filtrar"),
+                                                      ),
+                                                      if (selectedDate != null)
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            applyFilter(null);
+                                                          },
+                                                          child: const Text(
+                                                              "Limpar"),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 12),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.6,
+                                                child: filteredList.isEmpty
+                                                    ? const Center(
+                                                        child: Text(
+                                                            "Nenhum resultado para esta data"),
+                                                      )
+                                                    : ListView.builder(
+                                                        controller:
+                                                            scrollController,
+                                                        itemCount: itemsToShow,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final dose =
+                                                              filteredList[
+                                                                  index];
+                                                          return ListTile(
+                                                            leading: Icon(icon,
+                                                                color: color),
+                                                            title: Text(
+                                                                '${dose['name'].toString().toUpperCase()}'),
+                                                            subtitle: Text(
+                                                              dateHourFormat(
+                                                                  DateTime.parse(
+                                                                      dose[
+                                                                          'date'])),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: const Text('Fechar'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
                               label: Text(
                                   '${status[index]}: ${quantidade[index]}'),
                               backgroundColor:

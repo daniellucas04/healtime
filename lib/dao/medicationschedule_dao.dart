@@ -103,6 +103,24 @@ ORDER BY medication_schedule.status;
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> medicationStatus(String status) async {
+    String query = '''
+   SELECT 
+    medications.name AS name,
+    medication_schedule.date AS date
+FROM medication_schedule
+INNER JOIN medications ON medications.id = medication_schedule.medication_id
+INNER JOIN user_medication ON user_medication.medication_id = medications.id
+WHERE medication_schedule.status LIKE ?
+ORDER BY medication_schedule.date asc;
+  ''';
+
+    final List<Map<String, dynamic>> result =
+        await database.rawQuery(query, [status]);
+
+    return result;
+  }
+
   Future<MedicationSchedule?> getById(int id) async {
     final medicationSchedule = await database
         .query(table, where: 'medication_id = ?', whereArgs: [id]);

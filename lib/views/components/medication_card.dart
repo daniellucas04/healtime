@@ -293,15 +293,17 @@ class MedicationsCard extends StatelessWidget {
             ),
           ],
         ),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Escolha uma opção para o estado da medicação:',
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        content: const SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Escolha uma opção para o estado da medicação:',
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton.icon(
