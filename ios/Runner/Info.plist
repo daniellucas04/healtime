@@ -34,6 +34,10 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Este app usa o Face ID para autenticação.</string>
 	<key>UIBackgroundModes</key>
+	<key>NSCameraUsageDescription</key>
+	<string>Explanation on why the camera access is needed.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Explanation on why the microphone access is needed.</string>
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>
