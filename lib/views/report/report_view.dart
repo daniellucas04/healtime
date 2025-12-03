@@ -40,18 +40,18 @@ class _ReportViewState extends State<ReportView> {
   String userName = "Usuario";
 
   Future<void> loadUser() async {
-    int activeUserId = await Session.getActiveUser();
+    int? activeUserId = await Session.getActiveUser();
     setState(() {
       selectedUserId ??= activeUserId;
     });
-    _getUserName(selectedUserId!);
+    _getUserName(selectedUserId ?? 1);
   }
 
   Future<void> _getUserName(int userId) async {
     var users = await UserDao(database: await DatabaseHelper.instance.database)
         .getById(userId);
     setState(() {
-      userName = users!.name;
+      userName = users?.name ?? 'Não encontrado';
     });
   }
 

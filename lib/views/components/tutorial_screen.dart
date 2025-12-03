@@ -112,15 +112,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/create_people');
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/create_people', (_) => false);
                     },
                     child: const Text("Pular"),
                   ),
                   _current == tutorialData.length - 1
                       ? ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(
-                                context, '/create_people');
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/create_people', (_) => false);
                           },
                           child: const Text("Começar"),
                         )

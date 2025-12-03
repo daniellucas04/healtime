@@ -30,17 +30,7 @@ class _MenuViewState extends State<MenuView> {
   }
 
   _restoreApplication() async {
-    var authenticated = await Authenticate.requestAuth();
-
-    if (!authenticated) {
-      Snackbar.showSnackBar(
-        context,
-        message: 'Falha na autenticação',
-        backgroundColor: Colors.redAccent,
-        icon: Icons.error,
-      );
-      return;
-    }
+    await Authenticate.requestAuth();
 
     showDialog(
       context: context,

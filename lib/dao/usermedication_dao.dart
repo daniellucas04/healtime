@@ -34,7 +34,7 @@ class UserMedicationDao {
   Future<List<Map<String, dynamic>>> getByUserId(int id) async {
     List<Map<String, dynamic>> result = await database.rawQuery(
         'SELECT * FROM user_medication inner join medications on medications.id = user_medication.medication_id where user_id = $id order by name asc');
-
+    print(result);
     return result;
   }
 }

@@ -39,8 +39,10 @@ class _SidebarState extends State<Sidebar> {
   late String userName = '';
 
   Future<void> _getUserName(int? id) async {
+    print(id);
     var users = await UserDao(database: await DatabaseHelper.instance.database)
         .getById(id ?? widget.userId);
+    print(users);
     setState(() {
       userName = users!.name;
     });

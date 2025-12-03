@@ -51,11 +51,7 @@ class _EditPeopleState extends State<EditPeople> {
 
   Future<bool> _authenticate() async {
     try {
-      bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
-
-      if (!canCheckBiometrics) {
-        return false;
-      }
+      await _localAuth.canCheckBiometrics;
 
       bool authenticated = await _localAuth.authenticate(
         authMessages: const <AuthMessages>[
@@ -243,7 +239,7 @@ class _EditPeopleState extends State<EditPeople> {
                   child: ElevatedButton(
                     onPressed: () async {
                       final navigator = Navigator.of(context);
-                      var authenticate = await _authenticate();
+                      await _authenticate();
 
                       if (!context.mounted) return;
 
@@ -287,40 +283,31 @@ class _EditPeopleState extends State<EditPeople> {
                         return;
                       }
 
-                      if (authenticate) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) => Alert(
-                            title: 'O Usuario $peopleName será removido!',
-                            content: const Text(
-                                'Tem certeza que deseja realizar esta ação?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  navigator.pop();
-                                },
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  if (await _deleteUser(context)) {
-                                    navigator.pushNamed('/people');
-                                  }
-                                },
-                                child: const Text('Confirmar'),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        Snackbar.showSnackBar(
-                          context,
-                          message: 'Falha na autenticação',
-                          backgroundColor: Colors.redAccent,
-                          icon: Icons.error,
-                        );
-                      }
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => Alert(
+                          title: 'O Usuario $peopleName será removido!',
+                          content: const Text(
+                              'Tem certeza que deseja realizar esta ação?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                navigator.pop();
+                              },
+                              child: const Text('Cancelar'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                if (await _deleteUser(context)) {
+                                  navigator.pushNamed('/people');
+                                }
+                              },
+                              child: const Text('Confirmar'),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
